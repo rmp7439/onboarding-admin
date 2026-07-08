@@ -39,9 +39,10 @@ export const getCurrentUser = (): User | null => {
 
 export const login = async (credentials: any): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/login', credentials);
-  return data.data;
+  return data.data; 
 };
 
 export const logout = async () => {
+  // Optional: Trigger backend logout/invalidation here if implemented
   removeToken();
 };
