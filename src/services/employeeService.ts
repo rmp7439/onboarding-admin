@@ -1,12 +1,15 @@
+// ... existing imports ...
 import { apiClient } from '../api/axios';
-import { type Employee, type EmployeeDetailsData } from '../types/employee';
+import { type EmployeeStatus } from '../types/employee';
 
-export const getEmployees = async (): Promise<Employee[]> => {
-  const { data } = await apiClient.get('/employees');
+// ... existing GET functions ...
+
+export const updateEmployeeStatus = async ({ id, status }: { id: string; status: EmployeeStatus }) => {
+  const { data } = await apiClient.patch('/employee/status', { id, status });
   return data;
 };
 
-export const getEmployeeById = async (id: string): Promise<EmployeeDetailsData> => {
-  const { data } = await apiClient.get(`/employee/${id}`);
+export const assignEmployeeCode = async ({ id, employeeCode }: { id: string; employeeCode: string }) => {
+  const { data } = await apiClient.patch('/employee/code', { id, employeeCode });
   return data;
 };
