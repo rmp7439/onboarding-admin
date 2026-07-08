@@ -3,10 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Ca
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
-import { statsData, recentEmployees } from "./mockData";
-import type { EmployeeStatus } from "./mockData";
+import { Skeleton } from "../../components/ui/Skeleton";
+import { ErrorState } from "../../components/ui/ErrorState";
+import { useDashboard } from "../../hooks/useDashboard";
+import type { EmployeeStatus, Employee } from "../../types/employee";
 
 export default function Dashboard() {
+  const { data, isLoading, isError, refetch } = useDashboard();
+
   const getStatusBadge = (status: EmployeeStatus) => {
     switch (status) {
       case "APPROVED":
@@ -27,6 +31,42 @@ export default function Dashboard() {
     <XCircle className="h-5 w-5 text-red-500" />,
   ];
 
+  if (isLoading) {
+    return (
+      <div className="space-y-8 pb-8">
+        <div>
+          <Skeleton className="h-10 w-48 mb-2" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+        <div className="grid grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
+        </div>
+        <Skeleton className="h-96 w-full rounded-xl" />
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="pt-8">
+        <ErrorState 
+          title="Failed to Load Dashboard" 
+          message="We could not fetch your dashboard statistics. Please check your connection." 
+          onRetry={refetch} 
+        />
+      </div>
+    );
+  }
+
+  const { stats, recentEmployees } = data;
+
+  const formattedStats = [
+    { title: "Total Employees", value: stats.total, description: "Across all active units" },
+    { title: "Pending Approvals", value: stats.pending, description: "Awaiting HR review" },
+    { title: "Approved Employees", value: stats.approved, description: "Successfully onboarded" },
+    { title: "Rejected Employees", value: stats.rejected, description: "Did not meet requirements" },
+  ];
+
   return (
     <div className="space-y-8 pb-8">
       {/* Page Header */}
@@ -37,7 +77,7 @@ export default function Dashboard() {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-4 gap-6">
-        {statsData.map((stat, index) => (
+        {formattedStats.map((stat, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-slate-600">
@@ -62,30 +102,34 @@ export default function Dashboard() {
             <CardTitle className="text-lg">Recent Employees</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Employee Code</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Unit</TableHead>
-                  <TableHead>Phone Number</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Joining Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentEmployees.map((employee) => (
-                  <TableRow key={employee.code}>
-                    <TableCell className="font-medium text-slate-900">{employee.code}</TableCell>
-                    <TableCell>{employee.name}</TableCell>
-                    <TableCell className="text-slate-500">{employee.unit}</TableCell>
-                    <TableCell className="text-slate-500">{employee.phone}</TableCell>
-                    <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                    <TableCell className="text-right text-slate-500">{employee.joiningDate}</TableCell>
+            {recentEmployees.length === 0 ? (
+              <div className="text-center text-slate-500 py-10">No recent employees found.</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Employee Code</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Unit</TableHead>
+                    <TableHead>Phone Number</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Joining Date</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {recentEmployees.map((employee: Employee) => (
+                    <TableRow key={employee.id}>
+                      <TableCell className="font-medium text-slate-900">{employee.code}</TableCell>
+                      <TableCell>{employee.name}</TableCell>
+                      <TableCell className="text-slate-500">{employee.unit}</TableCell>
+                      <TableCell className="text-slate-500">{employee.phone}</TableCell>
+                      <TableCell>{getStatusBadge(employee.status)}</TableCell>
+                      <TableCell className="text-right text-slate-500">{employee.joiningDate}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
 

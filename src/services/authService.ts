@@ -1,4 +1,5 @@
 import { type User, type AuthResponse } from '../types/auth';
+import { apiClient } from '../api/axios';
 
 const TOKEN_KEY = 'admin_auth_token';
 const USER_KEY = 'admin_user';
@@ -37,26 +38,10 @@ export const getCurrentUser = (): User | null => {
 };
 
 export const login = async (credentials: any): Promise<AuthResponse> => {
-  // TODO: Replace with actual backend endpoint when available
-  // const { data } = await apiClient.post('/auth/login', credentials);
-  // return data;
-  
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (credentials.email === "admin@example.com" && credentials.password === "password123") {
-        resolve({
-          token: "mock_jwt_token_1234567890",
-          user: { id: "u_1", name: "System Admin", email: credentials.email, role: "ADMIN" }
-        });
-      } else {
-        reject(new Error("Invalid email or password"));
-      }
-    }, 1000);
-  });
+  const { data } = await apiClient.post('/auth/login', credentials);
+  return data.data;
 };
 
 export const logout = async () => {
-  // TODO: Optional backend logout call to invalidate token
-  // await apiClient.post('/auth/logout');
   removeToken();
 };
