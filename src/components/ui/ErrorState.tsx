@@ -1,0 +1,27 @@
+import { AlertCircle } from "lucide-react";
+import { Button } from "./Button";
+
+interface ErrorStateProps {
+  title?: string;
+  message?: string;
+  onRetry?: () => void;
+}
+
+export function ErrorState({ 
+  title = "Something went wrong", 
+  message = "We failed to load the requested data. Please try again.", 
+  onRetry 
+}: ErrorStateProps) {
+  return (
+    <div className="flex flex-col items-center justify-center p-12 text-center border border-gray-200 rounded-xl bg-white shadow-sm w-full">
+      <AlertCircle className="h-10 w-10 text-red-500 mb-4" />
+      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+      <p className="text-sm text-gray-500 mt-1 mb-6 max-w-sm">{message}</p>
+      {onRetry && (
+        <Button onClick={onRetry} variant="outline">
+          Try Again
+        </Button>
+      )}
+    </div>
+  );
+}

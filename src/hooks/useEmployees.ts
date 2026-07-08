@@ -1,0 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
+import { getEmployees } from '../services/employeeService';
+import { type Employee } from '../types/employee';
+
+export const useEmployees = () => {
+  return useQuery<Employee[], Error>({
+    queryKey: ['employees'],
+    queryFn: getEmployees,
+  });
+};
