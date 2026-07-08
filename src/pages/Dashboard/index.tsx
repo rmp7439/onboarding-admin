@@ -1,4 +1,4 @@
-import { Users, Clock, CheckCircle2, XCircle, FileText, Settings as SettingsIcon, ChevronRight } from "lucide-react";
+import { Users, Clock, CheckCircle2, XCircle, FileText, Settings as SettingsIcon, ChevronRight, CalendarPlus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
 import { Badge } from "../../components/ui/Badge";
@@ -29,6 +29,7 @@ export default function Dashboard() {
     <Clock className="h-5 w-5 text-amber-500" />,
     <CheckCircle2 className="h-5 w-5 text-emerald-600" />,
     <XCircle className="h-5 w-5 text-red-500" />,
+    <CalendarPlus className="h-5 w-5 text-purple-500" />,
   ];
 
   if (isLoading) {
@@ -38,8 +39,9 @@ export default function Dashboard() {
           <Skeleton className="h-10 w-48 mb-2" />
           <Skeleton className="h-4 w-64" />
         </div>
-        <div className="grid grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
+        {/* Adjusted skeleton to 5 columns for the new stat */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+          {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
         </div>
         <Skeleton className="h-96 w-full rounded-xl" />
       </div>
@@ -63,8 +65,9 @@ export default function Dashboard() {
   const formattedStats = [
     { title: "Total Employees", value: stats.total, description: "Across all active units" },
     { title: "Pending Approvals", value: stats.pending, description: "Awaiting HR review" },
-    { title: "Approved Employees", value: stats.approved, description: "Successfully onboarded" },
-    { title: "Rejected Employees", value: stats.rejected, description: "Did not meet requirements" },
+    { title: "Approved", value: stats.approved, description: "Successfully onboarded" },
+    { title: "Rejected", value: stats.rejected, description: "Did not meet requirements" },
+    { title: "Today's Entries", value: stats.todayRegistrations, description: "Registered today" },
   ];
 
   return (
@@ -75,8 +78,8 @@ export default function Dashboard() {
         <p className="text-slate-500 mt-1">Employee Onboarding Overview</p>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-4 gap-6">
+      {/* Statistics Cards - Updated to grid-cols-5 */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {formattedStats.map((stat, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -94,10 +97,10 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content Area */}
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         
         {/* Recent Employees Table */}
-        <Card className="col-span-3">
+        <Card className="col-span-1 lg:col-span-3">
           <CardHeader>
             <CardTitle className="text-lg">Recent Employees</CardTitle>
           </CardHeader>
