@@ -1,5 +1,11 @@
 export type EmployeeStatus = "PENDING" | "APPROVED" | "REJECTED";
 
+export interface DocumentInfo {
+  id: string;
+  type: string;
+  originalFilename: string;
+}
+
 export interface Employee {
   id: string;
   code: string;
@@ -12,6 +18,8 @@ export interface Employee {
 
 export interface EmployeeDetailsData {
   id: string;
+  documents?: DocumentInfo[];
+  selfieFilename?: string | null;
   employmentInfo?: {
     code?: string;
     joiningDate?: string;

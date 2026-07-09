@@ -1,5 +1,8 @@
 import { useParams } from "react-router-dom";
-import { User } from "lucide-react";
+import { User, Download } from "lucide-react";
+import { Button } from "../../components/ui/Button";
+import { downloadEmployeeSelfie } from "../../services/documentService";
+import { useToast } from "../../hooks/useToast";
 import { InfoCard } from "./components/InfoCard";
 import { DetailRow } from "./components/DetailRow";
 import { DocumentCard } from "./components/DocumentCard";
@@ -8,20 +11,10 @@ import { EmployeeDetailsSkeleton } from "./components/EmployeeDetailsSkeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { useEmployee } from "../../hooks/useEmployee";
 
-// Hardcoded for UI layout matching the previous design
-const requiredDocs = [
-  "Aadhaar Card",
-  "PAN Card",
-  "Driving Licence",
-  "Bank Passbook / Cancelled Cheque",
-  "Education Proof",
-  "Voter ID",
-];
-const optionalDocs = ["Discharge Book"];
-
 export default function EmployeeDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: employee, isLoading, isError, refetch } = useEmployee(id);
+  const { toast } = useToast();
 
   if (isLoading) return <EmployeeDetailsSkeleton />;
 
@@ -45,6 +38,26 @@ export default function EmployeeDetails() {
     bankInfo,
     emergencyContact,
   } = employee;
+
+  const handleDownloadSelfie = async () => {
+    if (!employee?.id) return;
+    try {
+      const blob = await downloadEmployeeSelfie(employee.id);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `selfie-${employee.personalInfo?.firstName}.jpg`,
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toast("Failed to download selfie", "error");
+    }
+  };
 
   return (
     <div className="space-y-6 pb-8">
@@ -166,13 +179,19 @@ export default function EmployeeDetails() {
           </InfoCard>
 
           <InfoCard title="7. Uploaded Documents">
-            <div className="grid grid-cols-2 gap-4">
-              {requiredDocs.map((doc, i) => (
-                <DocumentCard key={i} name={doc} />
-              ))}
-              {optionalDocs.map((doc, i) => (
-                <DocumentCard key={`opt-${i}`} name={doc} isOptional />
-              ))}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {employee.documents && employee.documents.length > 0 ? (
+                employee.documents.map((doc) => (
+                  <DocumentCard 
+                    key={doc.id} 
+                    id={doc.id}
+                    name={doc.type.replace(/_/g, ' ')} 
+                    originalFilename={doc.originalFilename} 
+                  />
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 py-4 col-span-2">No documents have been uploaded for this employee.</p>
+              )}
             </div>
           </InfoCard>
         </div>
@@ -183,17 +202,18 @@ export default function EmployeeDetails() {
               <User className="h-12 w-12 text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900">
-              {personalInfo?.firstName || "Unknown"}{" "}
-              {personalInfo?.surname || ""}
+              {personalInfo?.firstName || "Unknown"} {personalInfo?.surname || ""}
             </h3>
-            <p className="text-sm text-gray-500">
-              {employmentInfo?.unit || "No Unit Assigned"}
-            </p>
+            <p className="text-sm text-gray-500 mb-2">{employmentInfo?.unit || "No Unit Assigned"}</p>
+            
+            {/* Selfie Download Button */}
+            {employee.selfieFilename && (
+              <Button variant="outline" size="sm" onClick={handleDownloadSelfie} className="w-full mt-2">
+                <Download className="mr-2 h-4 w-4" /> Download Selfie
+              </Button>
+            )}
           </div>
-          <ActionPanel
-            employeeId={employee.id}
-            status={employmentInfo?.status || "UNKNOWN"}
-          />
+          <ActionPanel employeeId={employee.id} status={employmentInfo?.status || "UNKNOWN"} />
         </div>
       </div>
     </div>
