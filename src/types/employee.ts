@@ -1,5 +1,3 @@
-import { string } from "zod";
-
 export type EmployeeStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export interface DocumentInfo {
