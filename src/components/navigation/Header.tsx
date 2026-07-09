@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogOut, User } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { logout } from '../../services/authService';
@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '../ui/Button';
 
 export default function Header() {
-  const { user, clearAuth } = useAuth();
+  const { clearAuth } = useAuth();
   const { toast } = useToast();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -34,11 +34,6 @@ export default function Header() {
         </h2>
         
         <div className="flex items-center space-x-4">
-          <div className="flex items-center text-sm font-medium text-gray-700 mr-2">
-            <User className="h-4 w-4 mr-2 text-gray-500" />
-            {user?.name || 'Admin'}
-          </div>
-          
           <Button 
             variant="ghost" 
             size="sm" 

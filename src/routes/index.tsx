@@ -7,7 +7,6 @@ import Dashboard from '../pages/Dashboard';
 import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
 import Reports from '../pages/Reports';
-import Settings from '../pages/Settings';
 import NotFound from '../pages/NotFound';
 
 export const router = createBrowserRouter([
@@ -46,10 +45,6 @@ export const router = createBrowserRouter([
           {
             path: 'reports',
             element: <Reports />,
-          },
-          {
-            path: 'settings',
-            element: <Settings />,
           },
         ],
       },

@@ -1,50 +1,43 @@
 import { useState, useMemo } from "react";
-import { FilterPanel } from "./components/FilterPanel";
 import { ReportCard } from "./components/ReportCard";
 import { DownloadButton } from "./components/DownloadButton";
 import { ReportEmptyState } from "./components/ReportEmptyState";
+import { Search, CalendarDays } from "lucide-react";
+import { Input } from "../../components/ui/Input";
 import { Label } from "../../components/ui/Label";
 import { Select } from "../../components/ui/Select";
+import { Button } from "../../components/ui/Button";
 import { useEmployees } from "../../hooks/useEmployees";
 import { useExportExcel, useDownloadPdf } from "../../hooks/useReports";
 import { type ReportFilters } from "../../services/reportService";
 
 const initialFilters: ReportFilters = {
-  status: "ALL",
-  unit: "ALL",
-  startDate: "",
-  endDate: "",
-  search: "",
+  code: "",
+  joiningDate: "",
 };
 
 export default function Reports() {
-  const { data: employees = [], isLoading: isLoadingEmployees } = useEmployees();
+  const { data: employees = [], isLoading: isLoadingEmployees } =
+    useEmployees();
   const [filters, setFilters] = useState<ReportFilters>(initialFilters);
-  const [appliedFilters, setAppliedFilters] = useState<ReportFilters>(initialFilters);
+  const [appliedFilters, setAppliedFilters] =
+    useState<ReportFilters>(initialFilters);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
 
   const exportExcelMutation = useExportExcel();
   const downloadPdfMutation = useDownloadPdf();
 
-  // Extract unique units for the dropdown dynamically
-  const availableUnits = useMemo(() => {
-    const units = new Set(employees.map(emp => emp.unit).filter(Boolean));
-    return Array.from(units) as string[];
-  }, [employees]);
-
-  // Client-side filtering check (to determine if we should show the Empty State)
+  // Client-side filtering check
   const filteredEmployees = useMemo(() => {
-    return employees.filter(emp => {
-      const matchSearch = !appliedFilters.search || 
-        emp.name.toLowerCase().includes(appliedFilters.search.toLowerCase()) || 
-        emp.code.toLowerCase().includes(appliedFilters.search.toLowerCase());
-      const matchStatus = appliedFilters.status === "ALL" || emp.status === appliedFilters.status;
-      const matchUnit = appliedFilters.unit === "ALL" || emp.unit === appliedFilters.unit;
-      // Note: Date filtering usually happens on the backend, but we do a basic check here for UX
-      const matchStart = !appliedFilters.startDate || new Date(emp.joiningDate) >= new Date(appliedFilters.startDate);
-      const matchEnd = !appliedFilters.endDate || new Date(emp.joiningDate) <= new Date(appliedFilters.endDate);
+    return employees.filter((emp) => {
+      const filterCode = appliedFilters.code?.trim().toLowerCase() || "";
+      const filterDate = appliedFilters.joiningDate?.trim() || "";
 
-      return matchSearch && matchStatus && matchUnit && matchStart && matchEnd;
+      const matchCode =
+        !filterCode || emp.code?.toLowerCase().includes(filterCode);
+      const matchDate = !filterDate || emp.joiningDate === filterDate;
+
+      return matchCode && matchDate;
     });
   }, [employees, appliedFilters]);
 
@@ -56,40 +49,72 @@ export default function Reports() {
 
   return (
     <div className="space-y-8 pb-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Reports</h1>
-        <p className="text-gray-500 mt-1">Generate and download employee reports</p>
+      <div className="bg-white p-4 border border-gray-200 rounded-xl shadow-sm flex items-end justify-between gap-4">
+        <div className="flex flex-1 items-end gap-4">
+          <div className="space-y-2 w-96">
+            <Label htmlFor="reportEmployeeCode" className="text-gray-700 font-medium">
+              Employee Code
+            </Label>
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+              <Input
+                id="reportEmployeeCode"
+                placeholder="Enter employee code"
+                className="pl-9"
+                value={filters.code}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, code: e.target.value }))
+                }
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 w-96">
+            <Label htmlFor="reportJoiningDate" className="text-gray-700 font-medium">
+              Date of Joining
+            </Label>
+            <div className="relative">
+              <CalendarDays className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+              <Input
+                id="reportJoiningDate"
+                type="date"
+                className="pl-9"
+                value={filters.joiningDate}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, joiningDate: e.target.value }))
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button variant="outline" onClick={handleReset}>
+            Reset
+          </Button>
+          <Button onClick={() => setAppliedFilters(filters)}>Apply Filters</Button>
+        </div>
       </div>
 
-      <FilterPanel 
-        filters={filters} 
-        setFilters={setFilters} 
-        onApply={() => setAppliedFilters(filters)} 
-        onReset={handleReset}
-        units={availableUnits.length > 0 ? availableUnits : ["Engineering", "Sales", "Marketing", "HR"]} // Fallback to mock units if empty
-      />
-
-      {/* Show empty state if filters yield no results, otherwise show report cards */}
       {!isLoadingEmployees && filteredEmployees.length === 0 ? (
         <ReportEmptyState />
       ) : (
         <div className="grid grid-cols-2 gap-6">
-          
-          {/* Card 1: Excel Report */}
           <ReportCard
             title="Employee Excel Report"
-            description="Export the master list of employees based on current filters."
             action={
-              <DownloadButton 
-                label="Export Excel" 
-                onClick={() => exportExcelMutation.mutate(appliedFilters)} 
-                isLoading={exportExcelMutation.isPending} 
+              <DownloadButton
+                label="Export Excel"
+                onClick={() => exportExcelMutation.mutate(appliedFilters)}
+                isLoading={exportExcelMutation.isPending}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
               />
             }
           >
             <div className="text-sm text-gray-600">
-              <p className="font-medium text-gray-900 mb-2">Included Columns:</p>
+              <p className="font-medium text-gray-900 mb-2">
+                Included Columns:
+              </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Employee Code</li>
                 <li>Employee Name</li>
@@ -100,29 +125,37 @@ export default function Reports() {
             </div>
           </ReportCard>
 
-          {/* Card 2: PDF Report */}
           <ReportCard
             title="Employee PDF Report"
-            description="Download a detailed, printable profile for a specific employee."
             action={
-              <DownloadButton 
-                label="Generate PDF" 
-                onClick={() => selectedEmployeeId && downloadPdfMutation.mutate(selectedEmployeeId)} 
-                isLoading={downloadPdfMutation.isPending} 
+              <DownloadButton
+                label="Generate PDF"
+                onClick={() =>
+                  selectedEmployeeId &&
+                  downloadPdfMutation.mutate(selectedEmployeeId)
+                }
+                isLoading={downloadPdfMutation.isPending}
                 disabled={!selectedEmployeeId}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               />
             }
           >
             <div className="space-y-3">
-              <Label htmlFor="employeeSelect" className="text-gray-900 font-medium">Select Employee</Label>
-              <Select 
-                id="employeeSelect" 
-                value={selectedEmployeeId} 
+              <Label
+                htmlFor="employeeSelect"
+                className="text-gray-900 font-medium"
+              >
+                Select Employee
+              </Label>
+              <Select
+                id="employeeSelect"
+                value={selectedEmployeeId}
                 onChange={(e) => setSelectedEmployeeId(e.target.value)}
               >
-                <option value="" disabled>-- Select an Employee --</option>
-                {filteredEmployees.map(emp => (
+                <option value="" disabled>
+                  -- Select an Employee --
+                </option>
+                {filteredEmployees.map((emp) => (
                   <option key={emp.id} value={emp.id}>
                     {emp.name} {emp.code ? `(${emp.code})` : ""}
                   </option>
@@ -130,7 +163,6 @@ export default function Reports() {
               </Select>
             </div>
           </ReportCard>
-
         </div>
       )}
     </div>

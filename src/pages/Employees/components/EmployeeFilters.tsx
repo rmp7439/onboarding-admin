@@ -1,60 +1,65 @@
-import { Search, RefreshCw } from "lucide-react";
+import { RefreshCw, Search, CalendarDays } from "lucide-react";
 import { Input } from "../../../components/ui/Input";
-import { Select } from "../../../components/ui/Select";
 import { Button } from "../../../components/ui/Button";
-import { mockUnits } from "../mockData";
+import { Label } from "../../../components/ui/Label";
 
 interface EmployeeFiltersProps {
-  searchTerm: string;
-  setSearchTerm: (val: string) => void;
-  statusFilter: string;
-  setStatusFilter: (val: string) => void;
-  unitFilter: string;
-  setUnitFilter: (val: string) => void;
+  employeeCode: string;
+  setEmployeeCode: (val: string) => void;
+  joiningDate: string;
+  setJoiningDate: (val: string) => void;
 }
 
 export function EmployeeFilters({
-  searchTerm,
-  setSearchTerm,
-  statusFilter,
-  setStatusFilter,
-  unitFilter,
-  setUnitFilter,
+  employeeCode,
+  setEmployeeCode,
+  joiningDate,
+  setJoiningDate,
 }: EmployeeFiltersProps) {
   return (
-    <div className="flex items-center justify-between bg-white p-4 border-b border-gray-200">
-      <div className="flex items-center space-x-4 flex-1">
-        <div className="relative w-80">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input
-            placeholder="Search by name, code, or phone..."
-            className="pl-9"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+    <div className="bg-white p-4 border border-gray-200 rounded-xl shadow-sm flex items-end justify-between gap-4">
+      <div className="flex flex-1 items-end gap-4">
         
-        <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="w-40">
-          <option value="ALL">All Statuses</option>
-          <option value="PENDING">Pending</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REJECTED">Rejected</option>
-        </Select>
+        <div className="space-y-2 w-96">
+          <Label htmlFor="code" className="text-gray-700 font-medium">
+            Employee Code
+          </Label>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              id="code"
+              placeholder="Enter employee code"
+              className="pl-9"
+              value={employeeCode}
+              onChange={(e) => setEmployeeCode(e.target.value)}
+            />
+          </div>
+        </div>
 
-        <Select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)} className="w-48">
-          <option value="ALL">All Units</option>
-          {mockUnits.map((unit) => (
-            <option key={unit} value={unit}>
-              {unit}
-            </option>
-          ))}
-        </Select>
+        <div className="space-y-2 w-96">
+          <Label htmlFor="date" className="text-gray-700 font-medium">
+            Date of Joining
+          </Label>
+          <div className="relative">
+            <CalendarDays className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              id="date"
+              type="date"
+              className="pl-9 text-gray-600"
+              value={joiningDate}
+              onChange={(e) => setJoiningDate(e.target.value)}
+            />
+          </div>
+        </div>
+
       </div>
 
-      <Button variant="outline" className="ml-4" onClick={() => {}}>
-        <RefreshCw className="mr-2 h-4 w-4 text-gray-500" />
-        Refresh
-      </Button>
+      <div className="flex items-center gap-3">
+        <Button variant="outline" onClick={() => {}}>
+          <RefreshCw className="mr-2 h-4 w-4 text-gray-500" />
+          Refresh
+        </Button>
+      </div>
     </div>
   );
 }

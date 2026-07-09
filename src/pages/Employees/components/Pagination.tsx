@@ -2,10 +2,7 @@ import { Button } from "../../../components/ui/Button";
 
 export function Pagination() {
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white rounded-b-xl">
-      <div className="text-sm text-gray-500">
-        Showing mock paginated results
-      </div>
+    <div className="flex items-center justify-center px-6 py-4 border-t border-gray-200 bg-white rounded-b-xl">
       <div className="flex items-center space-x-1">
         <Button variant="outline" size="sm" className="h-8 px-3">
           Previous

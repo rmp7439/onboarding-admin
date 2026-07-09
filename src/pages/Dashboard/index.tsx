@@ -4,7 +4,6 @@ import {
   CheckCircle2,
   XCircle,
   FileText,
-  Settings as SettingsIcon,
   ChevronRight,
   CalendarPlus,
 } from "lucide-react";
@@ -28,9 +27,11 @@ import { Skeleton } from "../../components/ui/Skeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { useDashboard } from "../../hooks/useDashboard";
 import type { EmployeeStatus, Employee } from "../../types/employee";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const { data, isLoading, isError, refetch } = useDashboard();
+  const navigate = useNavigate();
 
   const getStatusBadge = (status: EmployeeStatus) => {
     switch (status) {
@@ -89,39 +90,27 @@ export default function Dashboard() {
     {
       title: "Total Employees",
       value: stats.total,
-      description: "Across all active units",
     },
     {
       title: "Pending Approvals",
       value: stats.pending,
-      description: "Awaiting HR review",
     },
     {
       title: "Approved",
       value: stats.approved,
-      description: "Successfully onboarded",
     },
     {
       title: "Rejected",
       value: stats.rejected,
-      description: "Did not meet requirements",
     },
     {
       title: "Today's Entries",
       value: stats.todayRegistrations,
-      description: "Registered today",
     },
   ];
 
   return (
     <div className="space-y-8 pb-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-          Dashboard
-        </h1>
-        <p className="text-slate-500 mt-1">Employee Onboarding Overview</p>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {formattedStats.map((stat, index) => (
           <Card key={index}>
@@ -135,7 +124,6 @@ export default function Dashboard() {
               <div className="text-3xl font-bold text-slate-900">
                 {stat.value}
               </div>
-              <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
             </CardContent>
           </Card>
         ))}
@@ -156,30 +144,32 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Employee Code</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Unit</TableHead>
-                    <TableHead>Phone Number</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Joining Date</TableHead>
+                    <TableHead className="!text-center">
+                      Employee Code
+                    </TableHead>
+                    <TableHead className="!text-center">Name</TableHead>
+                    <TableHead className="!text-center">Unit</TableHead>
+                    <TableHead className="!text-center">Phone Number</TableHead>
+                    <TableHead className="!text-center">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {recentEmployees.map((employee: Employee) => (
                     <TableRow key={employee.id}>
-                      <TableCell className="font-medium text-slate-900">
+                      <TableCell className="text-center font-medium text-slate-900">
                         {employee.code}
                       </TableCell>
-                      <TableCell>{employee.name}</TableCell>
-                      <TableCell className="text-slate-500">
+                      <TableCell className="text-center">
+                        {employee.name}
+                      </TableCell>
+                      <TableCell className="text-center text-slate-500">
                         {employee.unit}
                       </TableCell>
-                      <TableCell className="text-slate-500">
+                      <TableCell className="text-center text-slate-500">
                         {employee.phone}
                       </TableCell>
-                      <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                      <TableCell className="text-right text-slate-500">
-                        {employee.joiningDate}
+                      <TableCell className="text-center">
+                        {getStatusBadge(employee.status)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -195,28 +185,28 @@ export default function Dashboard() {
             <CardTitle className="text-lg">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col space-y-3">
-            <Button variant="outline" className="w-full justify-between group">
+            <Button
+              variant="outline"
+              className="w-full justify-between group hover:shadow-sm hover:bg-slate-50 transition-all active:scale-[0.98] cursor-pointer"
+              onClick={() => navigate("/employees")}
+            >
               <span className="flex items-center">
-                <Users className="mr-2 h-4 w-4 text-slate-500" />
+                <Users className="mr-2 h-4 w-4 text-slate-500 group-hover:text-blue-600 transition-colors" />
                 View Employees
               </span>
-              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
             </Button>
 
-            <Button variant="outline" className="w-full justify-between group">
+            <Button
+              variant="outline"
+              className="w-full justify-between group hover:shadow-sm hover:bg-slate-50 transition-all active:scale-[0.98] cursor-pointer"
+              onClick={() => navigate("/reports")}
+            >
               <span className="flex items-center">
-                <FileText className="mr-2 h-4 w-4 text-slate-500" />
+                <FileText className="mr-2 h-4 w-4 text-slate-500 group-hover:text-blue-600 transition-colors" />
                 Generate Report
               </span>
-              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
-            </Button>
-
-            <Button variant="outline" className="w-full justify-between group">
-              <span className="flex items-center">
-                <SettingsIcon className="mr-2 h-4 w-4 text-slate-500" />
-                Settings
-              </span>
-              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
+              <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
             </Button>
           </CardContent>
         </Card>

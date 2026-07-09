@@ -1,21 +1,23 @@
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, FileBarChart, Settings } from 'lucide-react';
+import { NavLink, Link } from 'react-router-dom';
+import { LayoutDashboard, Users, FileBarChart } from 'lucide-react';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/employees', label: 'Employees', icon: Users },
-  { path: '/reports', label: 'Reports', icon: FileBarChart },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/reports', label: 'Reports', icon: FileBarChart }
 ];
 
 export default function Sidebar() {
   return (
     <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col hidden md:flex shrink-0">
-      <div className="h-16 flex items-center px-6 border-b border-gray-200 shrink-0">
-        <h1 className="text-xl font-bold text-blue-600 tracking-wide">
+      <Link 
+        to="/dashboard"
+        className="h-16 flex items-center px-6 border-b border-gray-200 shrink-0 cursor-pointer hover:bg-slate-50 transition-colors group block no-underline"
+      >
+        <h1 className="text-xl font-bold text-blue-600 tracking-wide group-hover:opacity-80 transition-opacity">
           OnboardApp
         </h1>
-      </div>
+      </Link>
       
       <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
         {navItems.map((item) => (

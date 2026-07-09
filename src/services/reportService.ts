@@ -1,11 +1,9 @@
 import { apiClient } from '../api/axios';
 
 export interface ReportFilters {
-  status?: string;
-  unit?: string;
-  startDate?: string;
-  endDate?: string;
-  search?: string;
+  code?: string;
+  name?: string;
+  joiningDate?: string;
 }
 
 export const exportEmployeeExcel = async (filters: ReportFilters): Promise<Blob> => {
