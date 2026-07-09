@@ -182,15 +182,17 @@ export default function EmployeeDetails() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {employee.documents && employee.documents.length > 0 ? (
                 employee.documents.map((doc) => (
-                  <DocumentCard 
-                    key={doc.id} 
+                  <DocumentCard
+                    key={doc.id}
                     id={doc.id}
-                    name={doc.type.replace(/_/g, ' ')} 
-                    originalFilename={doc.originalFilename} 
+                    name={doc.type.replace(/_/g, " ")}
+                    originalFilename={doc.originalFilename}
                   />
                 ))
               ) : (
-                <p className="text-sm text-gray-500 py-4 col-span-2">No documents have been uploaded for this employee.</p>
+                <p className="text-sm text-gray-500 py-4 col-span-2">
+                  No documents have been uploaded for this employee.
+                </p>
               )}
             </div>
           </InfoCard>
@@ -199,21 +201,40 @@ export default function EmployeeDetails() {
         <div className="w-[30%] space-y-6 sticky top-6">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center justify-center text-center">
             <div className="h-32 w-32 rounded-full bg-gray-100 border-4 border-white shadow-md flex items-center justify-center mb-4 overflow-hidden">
-              <User className="h-12 w-12 text-gray-400" />
+              {employee.selfieUrl ? (
+                <img
+                  src={employee.selfieUrl}
+                  alt="Employee"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <User className="h-12 w-12 text-gray-400" />
+              )}
             </div>
             <h3 className="text-lg font-semibold text-gray-900">
-              {personalInfo?.firstName || "Unknown"} {personalInfo?.surname || ""}
+              {personalInfo?.firstName || "Unknown"}{" "}
+              {personalInfo?.surname || ""}
             </h3>
-            <p className="text-sm text-gray-500 mb-2">{employmentInfo?.unit || "No Unit Assigned"}</p>
-            
+            <p className="text-sm text-gray-500 mb-2">
+              {employmentInfo?.unit || "No Unit Assigned"}
+            </p>
+
             {/* Selfie Download Button */}
             {employee.selfieFilename && (
-              <Button variant="outline" size="sm" onClick={handleDownloadSelfie} className="w-full mt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadSelfie}
+                className="w-full mt-2"
+              >
                 <Download className="mr-2 h-4 w-4" /> Download Selfie
               </Button>
             )}
           </div>
-          <ActionPanel employeeId={employee.id} status={employmentInfo?.status || "UNKNOWN"} />
+          <ActionPanel
+            employeeId={employee.id}
+            status={employmentInfo?.status || "UNKNOWN"}
+          />
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { string } from "zod";
+
 export type EmployeeStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export interface DocumentInfo {
@@ -19,6 +21,7 @@ export interface Employee {
 export interface EmployeeDetailsData {
   id: string;
   documents?: DocumentInfo[];
+  selfieUrl?: string | null;
   selfieFilename?: string | null;
   employmentInfo?: {
     code?: string;

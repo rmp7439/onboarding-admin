@@ -26,6 +26,7 @@ export const getEmployeeById = async (
 
   return {
     id: emp.id,
+    selfieUrl: emp.selfieUrl,
     employmentInfo: {
       code: emp.employeeCode || "Pending Assignment",
       joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
