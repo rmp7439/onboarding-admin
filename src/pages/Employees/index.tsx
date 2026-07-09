@@ -31,9 +31,9 @@ export default function Employees() {
 
   const filteredEmployees = employees?.filter((emp) => {
     const matchesSearch = 
-      emp.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.phone?.includes(searchTerm);
+      emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      emp.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      emp.phone.includes(searchTerm);
     
     const matchesStatus = statusFilter === "ALL" || emp.status === statusFilter;
     const matchesUnit = unitFilter === "ALL" || emp.unit === unitFilter;
@@ -88,7 +88,7 @@ export default function Employees() {
                     <TableCell>{employee.name || "-"}</TableCell>
                     <TableCell className="text-gray-500">{employee.unit || "-"}</TableCell>
                     <TableCell className="text-gray-500">{employee.phone || "-"}</TableCell>
-                    <TableCell>{employee.status ? getStatusBadge(employee.status) : "-"}</TableCell>
+                    <TableCell>{getStatusBadge(employee.status)}</TableCell>
                     <TableCell className="text-gray-500">{employee.joiningDate || "-"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end items-center space-x-2">

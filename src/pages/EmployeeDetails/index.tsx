@@ -10,6 +10,7 @@ import { ActionPanel } from "./components/ActionPanel";
 import { EmployeeDetailsSkeleton } from "./components/EmployeeDetailsSkeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { useEmployee } from "../../hooks/useEmployee";
+import { triggerDownload } from "../../hooks/useReports";
 
 export default function EmployeeDetails() {
   const { id } = useParams<{ id: string }>();
@@ -43,17 +44,7 @@ export default function EmployeeDetails() {
     if (!employee?.id) return;
     try {
       const blob = await downloadEmployeeSelfie(employee.id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `selfie-${employee.personalInfo?.firstName}.jpg`,
-      );
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      triggerDownload(blob, `selfie-${employee.personalInfo?.firstName}.jpg`);
     } catch (error) {
       toast("Failed to download selfie", "error");
     }

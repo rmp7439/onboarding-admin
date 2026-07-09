@@ -36,8 +36,8 @@ export default function Reports() {
   const filteredEmployees = useMemo(() => {
     return employees.filter(emp => {
       const matchSearch = !appliedFilters.search || 
-        emp.name?.toLowerCase().includes(appliedFilters.search.toLowerCase()) || 
-        emp.code?.toLowerCase().includes(appliedFilters.search.toLowerCase());
+        emp.name.toLowerCase().includes(appliedFilters.search.toLowerCase()) || 
+        emp.code.toLowerCase().includes(appliedFilters.search.toLowerCase());
       const matchStatus = appliedFilters.status === "ALL" || emp.status === appliedFilters.status;
       const matchUnit = appliedFilters.unit === "ALL" || emp.unit === appliedFilters.unit;
       // Note: Date filtering usually happens on the backend, but we do a basic check here for UX
@@ -48,20 +48,10 @@ export default function Reports() {
     });
   }, [employees, appliedFilters]);
 
-  const handleApply = () => setAppliedFilters(filters);
   const handleReset = () => {
     setFilters(initialFilters);
     setAppliedFilters(initialFilters);
     setSelectedEmployeeId("");
-  };
-
-  const handleExportExcel = () => {
-    exportExcelMutation.mutate(appliedFilters);
-  };
-
-  const handleDownloadPdf = () => {
-    if (!selectedEmployeeId) return;
-    downloadPdfMutation.mutate(selectedEmployeeId);
   };
 
   return (
@@ -74,7 +64,7 @@ export default function Reports() {
       <FilterPanel 
         filters={filters} 
         setFilters={setFilters} 
-        onApply={handleApply} 
+        onApply={() => setAppliedFilters(filters)} 
         onReset={handleReset}
         units={availableUnits.length > 0 ? availableUnits : ["Engineering", "Sales", "Marketing", "HR"]} // Fallback to mock units if empty
       />
@@ -92,7 +82,7 @@ export default function Reports() {
             action={
               <DownloadButton 
                 label="Export Excel" 
-                onClick={handleExportExcel} 
+                onClick={() => exportExcelMutation.mutate(appliedFilters)} 
                 isLoading={exportExcelMutation.isPending} 
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
               />
@@ -117,7 +107,7 @@ export default function Reports() {
             action={
               <DownloadButton 
                 label="Generate PDF" 
-                onClick={handleDownloadPdf} 
+                onClick={() => selectedEmployeeId && downloadPdfMutation.mutate(selectedEmployeeId)} 
                 isLoading={downloadPdfMutation.isPending} 
                 disabled={!selectedEmployeeId}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"

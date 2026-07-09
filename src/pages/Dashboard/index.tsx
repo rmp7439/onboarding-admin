@@ -1,6 +1,27 @@
-import { Users, Clock, CheckCircle2, XCircle, FileText, Settings as SettingsIcon, ChevronRight, CalendarPlus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
+import {
+  Users,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  FileText,
+  Settings as SettingsIcon,
+  ChevronRight,
+  CalendarPlus,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/Card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/Table";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -41,7 +62,9 @@ export default function Dashboard() {
         </div>
         {/* Adjusted skeleton to 5 columns for the new stat */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-          {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} className="h-28 w-full rounded-xl" />
+          ))}
         </div>
         <Skeleton className="h-96 w-full rounded-xl" />
       </div>
@@ -51,10 +74,10 @@ export default function Dashboard() {
   if (isError || !data) {
     return (
       <div className="pt-8">
-        <ErrorState 
-          title="Failed to Load Dashboard" 
-          message="We could not fetch your dashboard statistics. Please check your connection." 
-          onRetry={refetch} 
+        <ErrorState
+          title="Failed to Load Dashboard"
+          message="We could not fetch your dashboard statistics. Please check your connection."
+          onRetry={refetch}
         />
       </div>
     );
@@ -63,22 +86,42 @@ export default function Dashboard() {
   const { stats, recentEmployees } = data;
 
   const formattedStats = [
-    { title: "Total Employees", value: stats.total, description: "Across all active units" },
-    { title: "Pending Approvals", value: stats.pending, description: "Awaiting HR review" },
-    { title: "Approved", value: stats.approved, description: "Successfully onboarded" },
-    { title: "Rejected", value: stats.rejected, description: "Did not meet requirements" },
-    { title: "Today's Entries", value: stats.todayRegistrations, description: "Registered today" },
+    {
+      title: "Total Employees",
+      value: stats.total,
+      description: "Across all active units",
+    },
+    {
+      title: "Pending Approvals",
+      value: stats.pending,
+      description: "Awaiting HR review",
+    },
+    {
+      title: "Approved",
+      value: stats.approved,
+      description: "Successfully onboarded",
+    },
+    {
+      title: "Rejected",
+      value: stats.rejected,
+      description: "Did not meet requirements",
+    },
+    {
+      title: "Today's Entries",
+      value: stats.todayRegistrations,
+      description: "Registered today",
+    },
   ];
 
   return (
     <div className="space-y-8 pb-8">
-      {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          Dashboard
+        </h1>
         <p className="text-slate-500 mt-1">Employee Onboarding Overview</p>
       </div>
 
-      {/* Statistics Cards - Updated to grid-cols-5 */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {formattedStats.map((stat, index) => (
           <Card key={index}>
@@ -89,24 +132,26 @@ export default function Dashboard() {
               {statIcons[index]}
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-slate-900">{stat.value}</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {stat.value}
+              </div>
               <p className="text-xs text-slate-500 mt-1">{stat.description}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Main Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        
-        {/* Recent Employees Table */}
         <Card className="col-span-1 lg:col-span-3">
+          {/* ... existing table code remains exactly identical ... */}
           <CardHeader>
             <CardTitle className="text-lg">Recent Employees</CardTitle>
           </CardHeader>
           <CardContent>
             {recentEmployees.length === 0 ? (
-              <div className="text-center text-slate-500 py-10">No recent employees found.</div>
+              <div className="text-center text-slate-500 py-10">
+                No recent employees found.
+              </div>
             ) : (
               <Table>
                 <TableHeader>
@@ -122,12 +167,20 @@ export default function Dashboard() {
                 <TableBody>
                   {recentEmployees.map((employee: Employee) => (
                     <TableRow key={employee.id}>
-                      <TableCell className="font-medium text-slate-900">{employee.code}</TableCell>
+                      <TableCell className="font-medium text-slate-900">
+                        {employee.code}
+                      </TableCell>
                       <TableCell>{employee.name}</TableCell>
-                      <TableCell className="text-slate-500">{employee.unit}</TableCell>
-                      <TableCell className="text-slate-500">{employee.phone}</TableCell>
+                      <TableCell className="text-slate-500">
+                        {employee.unit}
+                      </TableCell>
+                      <TableCell className="text-slate-500">
+                        {employee.phone}
+                      </TableCell>
                       <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                      <TableCell className="text-right text-slate-500">{employee.joiningDate}</TableCell>
+                      <TableCell className="text-right text-slate-500">
+                        {employee.joiningDate}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -149,7 +202,7 @@ export default function Dashboard() {
               </span>
               <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
             </Button>
-            
+
             <Button variant="outline" className="w-full justify-between group">
               <span className="flex items-center">
                 <FileText className="mr-2 h-4 w-4 text-slate-500" />
@@ -157,7 +210,7 @@ export default function Dashboard() {
               </span>
               <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-900" />
             </Button>
-            
+
             <Button variant="outline" className="w-full justify-between group">
               <span className="flex items-center">
                 <SettingsIcon className="mr-2 h-4 w-4 text-slate-500" />

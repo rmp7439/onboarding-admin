@@ -3,6 +3,7 @@ import { FileText, Download, Eye, ShieldCheck, Loader2 } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
 import { downloadEmployeeDocument } from "../../../services/documentService";
 import { useToast } from "../../../hooks/useToast";
+import { triggerDownload } from "../../../hooks/useReports";
 
 interface DocumentCardProps {
   id: string;
@@ -18,14 +19,7 @@ export function DocumentCard({ id, name, originalFilename }: DocumentCardProps) 
     try {
       setIsDownloading(true);
       const blob = await downloadEmployeeDocument(id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', originalFilename);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      triggerDownload(blob, originalFilename);
     } catch (error) {
       toast("Failed to download document.", "error");
     } finally {

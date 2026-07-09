@@ -37,7 +37,7 @@ export const getCurrentUser = (): User | null => {
   return user ? JSON.parse(user) : null;
 };
 
-export const login = async (credentials: any): Promise<AuthResponse> => {
+export const login = async (credentials: { email: string; password: string }): Promise<AuthResponse> => {
   const { data } = await apiClient.post('/auth/login', credentials);
   return data.data; 
 };

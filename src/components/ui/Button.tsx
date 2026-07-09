@@ -3,14 +3,14 @@ import { Loader2 } from "lucide-react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "outline" | "ghost";
-  size?: "default" | "sm" | "lg" | "icon"; // Added size prop here
+  size?: "default" | "sm" | "lg" | "icon";
   isLoading?: boolean;
 }
 
 export function Button({ 
   className, 
   variant = "default", 
-  size = "default", // Default size
+  size = "default",
   isLoading, 
   children, 
   disabled, 
@@ -23,7 +23,6 @@ export function Button({
     ghost: "hover:bg-slate-100 hover:text-slate-900",
   };
 
-  // Added size classes mapping
   const sizes = {
     default: "h-9 px-4 py-2",
     sm: "h-8 px-3 text-xs",

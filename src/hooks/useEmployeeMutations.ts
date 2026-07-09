@@ -14,12 +14,10 @@ export const useUpdateEmployeeStatus = () => {
 
       const previousEmployees = queryClient.getQueryData(['employees']);
       
-      // Optimistic update for List
       queryClient.setQueryData(['employees'], (old: Employee[] | undefined) => 
         old?.map(emp => emp.id === newStatus.id ? { ...emp, status: newStatus.status } : emp)
       );
 
-      // Optimistic update for Details
       queryClient.setQueryData(['employee', newStatus.id], (old: EmployeeDetailsData | undefined) => {
         if (!old) return old;
         return {
