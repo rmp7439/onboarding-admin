@@ -52,15 +52,6 @@ export default function EmployeeDetails() {
 
   return (
     <div className="space-y-6 pb-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-          Employee Details
-        </h1>
-        <p className="text-gray-500 mt-1">
-          Review employee information before approval
-        </p>
-      </div>
-
       <div className="flex items-start gap-6">
         <div className="w-[70%] space-y-6">
           <InfoCard title="1. Employment Information">
@@ -191,7 +182,7 @@ export default function EmployeeDetails() {
 
         <div className="w-[30%] space-y-6 sticky top-6">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center justify-center text-center">
-            <div className="h-32 w-32 rounded-full bg-gray-100 border-4 border-white shadow-md flex items-center justify-center mb-4 overflow-hidden">
+            <div className="w-32 h-44 rounded-2xl bg-gray-100 border-4 border-white shadow-md flex items-center justify-center mb-4 overflow-hidden">
               {employee.selfieUrl ? (
                 <img
                   src={employee.selfieUrl}
