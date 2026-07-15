@@ -182,7 +182,7 @@ export default function EmployeeDetails() {
 
         <div className="w-[30%] space-y-6 sticky top-6">
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center justify-center text-center">
-            <div className="w-32 h-44 rounded-2xl bg-gray-100 border-4 border-white shadow-md flex items-center justify-center mb-4 overflow-hidden">
+            <div className="w-32 h-32 rounded-full bg-gray-100 border-4 border-white shadow-md flex items-center justify-center mb-4 overflow-hidden">
               {employee.selfieUrl ? (
                 <img
                   src={employee.selfieUrl}
