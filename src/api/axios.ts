@@ -8,7 +8,6 @@ export const apiClient = axios.create({
   },
 });
 
-// Request Interceptor: Attach Token
 apiClient.interceptors.request.use(
   (config) => {
     const token = getToken();
@@ -20,15 +19,19 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle 401 Unauthorized
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // TASK 9: Handle network failures / backend unavailability gracefully
+    if (!error.response) {
+      return Promise.reject(new Error("Network unavailable. Please check your connection."));
+    }
+    
     if (error.response && error.response.status === 401) {
       removeToken();
-      // Dispatch a custom event so the AuthContext can pick it up and update state
       window.dispatchEvent(new Event('auth:unauthorized'));
     }
+    
     return Promise.reject(error);
   }
 );
