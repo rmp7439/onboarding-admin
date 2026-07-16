@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { LogOut, Sun, Moon } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
-import { useTheme } from '../../contexts/ThemeContext';
 import { logout } from '../../services/authService';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/Dialog';
 import { Button } from '../ui/Button';
@@ -10,7 +9,6 @@ import { Button } from '../ui/Button';
 export default function Header() {
   const { clearAuth } = useAuth();
   const { toast } = useToast();
-  const { theme, toggleTheme } = useTheme();
   
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -31,26 +29,16 @@ export default function Header() {
 
   return (
     <>
-      <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0 dark:bg-slate-900 dark:border-slate-800">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+      <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0">
+        <h2 className="text-xl font-semibold text-gray-800">
           Employee Onboarding Admin
         </h2>
         
         <div className="flex items-center space-x-4">
           <Button 
             variant="ghost" 
-            size="icon" 
-            onClick={toggleTheme} 
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-            title="Toggle Theme"
-          >
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
-
-          <Button 
-            variant="ghost" 
             size="sm" 
-            className="text-gray-500 hover:text-red-600 hover:bg-red-50 dark:text-gray-400 dark:hover:bg-red-900/20"
+            className="text-gray-500 hover:text-red-600 hover:bg-red-50"
             onClick={() => setIsLogoutOpen(true)}
           >
             <LogOut className="h-4 w-4 mr-2" />
