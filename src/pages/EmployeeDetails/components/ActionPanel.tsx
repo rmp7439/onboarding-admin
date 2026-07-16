@@ -66,7 +66,6 @@ export function ActionPanel({
     );
   };
 
-  // Helper to extract backend errors safely
   const getErrorMessage = (error: any) =>
     error?.response?.data?.message ||
     error?.message ||
@@ -96,22 +95,21 @@ export function ActionPanel({
         </div>
 
         <div className="space-y-3">
-          {status === "PENDING" && (
-            <Button
-              className="w-full justify-start bg-emerald-600 hover:bg-emerald-700 text-white"
-              onClick={() => setIsApproveOpen(true)}
-            >
-              <Check className="mr-2 h-4 w-4" /> Approve Employee
-            </Button>
-          )}
+          <Button
+            className="w-full justify-start bg-emerald-600 hover:bg-emerald-700 text-white"
+            onClick={() => setIsApproveOpen(true)}
+          >
+            <Check className="mr-2 h-4 w-4" /> Approve Employee
+          </Button>
+          
           <Button
             variant="outline"
             className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
             onClick={() => setIsRejectOpen(true)}
-            disabled={status === "REJECTED"}
           >
             <X className="mr-2 h-4 w-4" /> Reject Employee
           </Button>
+
           <Button
             variant="outline"
             className="w-full justify-start"
