@@ -4,6 +4,8 @@ export interface ReportFilters {
   code?: string;
   name?: string;
   joiningDate?: string;
+  month?: string;
+  year?: string;
 }
 
 export const exportEmployeeExcel = async (filters: ReportFilters): Promise<Blob> => {
