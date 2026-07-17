@@ -202,7 +202,7 @@ export default function EmployeeDetails() {
             </p>
 
             {/* Selfie Download Button */}
-            {employee.selfieFilename && (
+            {employee.selfieUrl && (
               <Button
                 variant="outline"
                 size="sm"

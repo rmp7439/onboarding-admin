@@ -74,7 +74,6 @@ export const getEmployeeById = async (
         type: doc.type,
         originalFilename: doc.originalFilename,
       })) || [],
-    selfieFilename: emp.selfieFilename,
   };
 };
 

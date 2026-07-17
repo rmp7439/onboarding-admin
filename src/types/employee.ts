@@ -20,7 +20,6 @@ export interface EmployeeDetailsData {
   id: string;
   documents?: DocumentInfo[];
   selfieUrl?: string | null;
-  selfieFilename?: string | null;
   employmentInfo?: {
     code?: string;
     joiningDate?: string;
