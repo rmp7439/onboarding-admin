@@ -38,8 +38,9 @@ export default function Login() {
       setAuth(response.user, response.token, !!data.rememberMe);
       
       toast("Login successful", "success");
-    } catch (error: any) {
-      toast(error.message || "Invalid credentials", "error");
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : "Invalid credentials";
+      toast(msg, "error");
     } finally {
       setIsSubmitting(false);
     }

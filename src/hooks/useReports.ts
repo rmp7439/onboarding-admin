@@ -23,8 +23,10 @@ export const useExportExcel = () => {
       triggerDownload(blob, `Employee_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
       toast("Excel report downloaded successfully.", "success");
     },
-    onError: (error: any) => {
-      const msg = error?.response?.data?.message || error?.message || "Failed to generate Excel report.";
+    onError: (error: unknown) => {
+      const isAxiosError = (err: any): err is { response?: { data?: { message?: string } } } => !!err.isAxiosError;
+      const msg = (isAxiosError(error) && error.response?.data?.message) 
+        || (error instanceof Error ? error.message : "Failed to generate Excel report.");
       toast(msg, "error");
     }
   });
