@@ -21,6 +21,7 @@ export function EmployeeFilters({
   return (
     <div className="bg-white p-4 border border-gray-200 rounded-xl shadow-sm flex items-end justify-between gap-4">
       <div className="flex flex-1 items-end gap-4">
+        
         <div className="space-y-2 w-96">
           <Label htmlFor="code" className="text-gray-700 font-medium">
             Employee Code
@@ -32,10 +33,7 @@ export function EmployeeFilters({
               placeholder="Enter employee code"
               className="pl-9"
               value={employeeCode}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                setEmployeeCode(value);
-              }}
+              onChange={(e) => setEmployeeCode(e.target.value)}
             />
           </div>
         </div>
@@ -55,6 +53,7 @@ export function EmployeeFilters({
             />
           </div>
         </div>
+
       </div>
 
       <div className="flex items-center gap-3">
