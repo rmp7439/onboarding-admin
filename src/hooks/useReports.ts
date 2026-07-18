@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { exportEmployeeExcel, downloadEmployeePdf, type ReportFilters } from '../services/reportService';
-import { useToast } from './useToast';
+import { exportEmployeeExcel, downloadEmployeePdf, exportBulkPdf, type ReportFilters } from '../services/reportService';import { useToast } from './useToast';
 
 // Helper utility to trigger browser download
 export const triggerDownload = (blob: Blob, filename: string) => {
@@ -44,6 +43,21 @@ export const useDownloadPdf = () => {
     onError: (error: any) => {
       const msg = error?.response?.data?.message || error?.message || "Failed to generate PDF report.";
       toast(msg, "error");
+    }
+  });
+};
+
+export const useExportBulkPdf = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: (filters: ReportFilters) => exportBulkPdf(filters),
+    onSuccess: (blob) => {
+      triggerDownload(blob, "Employee_Bulk_Report.pdf");
+      toast("Bulk PDF report downloaded successfully.", "success");
+    },
+    onError: () => {
+      toast("Failed to generate Bulk PDF report.", "error");
     }
   });
 };

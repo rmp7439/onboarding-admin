@@ -7,10 +7,9 @@ export const useReportEmployees = (filters: ReportFilters) => {
     queryKey: ['reportEmployees', filters],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (filters.code) params.append('code', filters.code);
+      if (filters.day) params.append('day', filters.day);
       if (filters.month) params.append('month', filters.month);
       if (filters.year) params.append('year', filters.year);
-      if (filters.joiningDate) params.append('joiningDate', filters.joiningDate);
       
       const { data } = await apiClient.get(`/reports/employees?${params.toString()}`);
       return data.data;

@@ -1,9 +1,7 @@
 import { apiClient } from '../api/axios';
 
 export interface ReportFilters {
-  code?: string;
-  name?: string;
-  joiningDate?: string;
+  day?: string;
   month?: string;
   year?: string;
 }
@@ -18,6 +16,14 @@ export const exportEmployeeExcel = async (filters: ReportFilters): Promise<Blob>
 
 export const downloadEmployeePdf = async (employeeId: string): Promise<Blob> => {
   const response = await apiClient.get(`/employee/${employeeId}/pdf`, { 
+    responseType: 'blob' 
+  });
+  return response.data;
+};
+
+export const exportBulkPdf = async (filters: ReportFilters): Promise<Blob> => {
+  const response = await apiClient.get('/export/pdf/bulk', { 
+    params: filters, 
     responseType: 'blob' 
   });
   return response.data;
