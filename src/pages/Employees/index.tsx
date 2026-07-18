@@ -24,7 +24,7 @@ import { type EmployeeStatus } from "../../types/employee";
 export default function Employees() {
   const navigate = useNavigate();
   const { data: employees, isLoading, isError, refetch } = useEmployees();
-  
+
   const updateStatusMutation = useUpdateEmployeeStatus();
   const { toast } = useToast();
 
@@ -54,12 +54,15 @@ export default function Employees() {
       { id, status },
       {
         onSuccess: () => {
-          toast(`Employee ${status === "APPROVED" ? "Approved" : "Rejected"} successfully.`, "success");
+          toast(
+            `Employee ${status === "APPROVED" ? "Approved" : "Rejected"} successfully.`,
+            "success",
+          );
         },
         onError: (err: any) => {
           toast(err.message || "Failed to update status", "error");
-        }
-      }
+        },
+      },
     );
   };
 
@@ -76,6 +79,12 @@ export default function Employees() {
       return matchesCode && matchesDate && matchesStatus && matchesUnit;
     }) || [];
 
+  const handleRefresh = () => {
+    setEmployeeCode("");
+    setJoiningDate("");
+    refetch();
+  };
+
   return (
     <div className="space-y-8 pb-8">
       <EmployeeFilters
@@ -83,7 +92,7 @@ export default function Employees() {
         setEmployeeCode={setEmployeeCode}
         joiningDate={joiningDate}
         setJoiningDate={setJoiningDate}
-        onRefresh={refetch}
+        onRefresh={handleRefresh}
       />
 
       <Card className="flex flex-col shadow-sm">
@@ -159,17 +168,27 @@ export default function Employees() {
                         </Button>
                         <Button
                           variant="ghost"
-                          disabled={employee.status === "APPROVED" || updateStatusMutation.isPending}
+                          disabled={
+                            employee.status === "APPROVED" ||
+                            updateStatusMutation.isPending
+                          }
                           className="h-9 px-3 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() => handleStatusUpdate(employee.id, "APPROVED")}
+                          onClick={() =>
+                            handleStatusUpdate(employee.id, "APPROVED")
+                          }
                         >
                           <Check className="mr-1.5 h-4 w-4" /> Approve
                         </Button>
                         <Button
                           variant="ghost"
-                          disabled={employee.status === "REJECTED" || updateStatusMutation.isPending}
+                          disabled={
+                            employee.status === "REJECTED" ||
+                            updateStatusMutation.isPending
+                          }
                           className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() => handleStatusUpdate(employee.id, "REJECTED")}
+                          onClick={() =>
+                            handleStatusUpdate(employee.id, "REJECTED")
+                          }
                         >
                           <X className="mr-1.5 h-4 w-4" /> Reject
                         </Button>
