@@ -8,6 +8,7 @@ interface EmployeeFiltersProps {
   setEmployeeCode: (val: string) => void;
   joiningDate: string;
   setJoiningDate: (val: string) => void;
+  onRefresh: () => void;
 }
 
 export function EmployeeFilters({
@@ -15,6 +16,7 @@ export function EmployeeFilters({
   setEmployeeCode,
   joiningDate,
   setJoiningDate,
+  onRefresh,
 }: EmployeeFiltersProps) {
   return (
     <div className="bg-white p-4 border border-gray-200 rounded-xl shadow-sm flex items-end justify-between gap-4">
@@ -55,7 +57,7 @@ export function EmployeeFilters({
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="outline" onClick={() => {}}>
+        <Button variant="outline" onClick={onRefresh}>
           <RefreshCw className="mr-2 h-4 w-4 text-gray-500" />
           Refresh
         </Button>

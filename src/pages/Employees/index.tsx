@@ -83,6 +83,7 @@ export default function Employees() {
         setEmployeeCode={setEmployeeCode}
         joiningDate={joiningDate}
         setJoiningDate={setJoiningDate}
+        onRefresh={refetch}
       />
 
       <Card className="flex flex-col shadow-sm">
