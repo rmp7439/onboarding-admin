@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, Check, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../../components/ui/Card";
@@ -23,18 +23,27 @@ import { type EmployeeStatus } from "../../types/employee";
 
 export default function Employees() {
   const navigate = useNavigate();
-  const { data: employees, isLoading, isError, refetch } = useEmployees();
-
   const updateStatusMutation = useUpdateEmployeeStatus();
   const { toast } = useToast();
-
-  // Split state to feed the independent UI inputs
-  const [employeeCode, setEmployeeCode] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [joiningDate, setJoiningDate] = useState("");
-
-  // Keep these states hidden from UI but active in logic to preserve functionality
   const [statusFilter] = useState("ALL");
   const [unitFilter] = useState("ALL");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  const {
+    data: employees,
+    isLoading,
+    isError,
+    refetch,
+  } = useEmployees(debouncedSearch);
 
   const getStatusBadge = (status: EmployeeStatus) => {
     switch (status) {
@@ -68,19 +77,15 @@ export default function Employees() {
 
   const filteredEmployees =
     employees?.filter((emp) => {
-      const matchesCode =
-        !employeeCode ||
-        emp.code?.toLowerCase().includes(employeeCode.toLowerCase());
       const matchesDate = !joiningDate || emp.joiningDate === joiningDate;
       const matchesStatus =
         statusFilter === "ALL" || emp.status === statusFilter;
       const matchesUnit = unitFilter === "ALL" || emp.unit === unitFilter;
-
-      return matchesCode && matchesDate && matchesStatus && matchesUnit;
+      return matchesDate && matchesStatus && matchesUnit;
     }) || [];
 
   const handleRefresh = () => {
-    setEmployeeCode("");
+    setSearchQuery("");
     setJoiningDate("");
     refetch();
   };
@@ -88,8 +93,8 @@ export default function Employees() {
   return (
     <div className="space-y-8 pb-8">
       <EmployeeFilters
-        employeeCode={employeeCode}
-        setEmployeeCode={setEmployeeCode}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         joiningDate={joiningDate}
         setJoiningDate={setJoiningDate}
         onRefresh={handleRefresh}

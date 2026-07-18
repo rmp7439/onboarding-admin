@@ -4,16 +4,16 @@ import { Button } from "../../../components/ui/Button";
 import { Label } from "../../../components/ui/Label";
 
 interface EmployeeFiltersProps {
-  employeeCode: string;
-  setEmployeeCode: (val: string) => void;
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
   joiningDate: string;
   setJoiningDate: (val: string) => void;
   onRefresh: () => void;
 }
 
 export function EmployeeFilters({
-  employeeCode,
-  setEmployeeCode,
+  searchQuery,
+  setSearchQuery,
   joiningDate,
   setJoiningDate,
   onRefresh,
@@ -29,11 +29,11 @@ export function EmployeeFilters({
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
             <Input
-              id="code"
-              placeholder="Enter employee code"
+              id="search"
+              placeholder="Search employees..."
               className="pl-9"
-              value={employeeCode}
-              onChange={(e) => setEmployeeCode(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>

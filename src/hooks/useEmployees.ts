@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getEmployees } from '../services/employeeService';
 import { type Employee } from '../types/employee';
 
-export const useEmployees = () => {
+export const useEmployees = (search?: string) => {
   return useQuery<Employee[], Error>({
-    queryKey: ['employees'],
-    queryFn: getEmployees,
+    queryKey: ['employees', search],
+    queryFn: () => getEmployees(search),
   });
 };

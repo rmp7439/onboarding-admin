@@ -5,8 +5,9 @@ import {
   type EmployeeDetailsData,
 } from "../types/employee";
 
-export const getEmployees = async (): Promise<Employee[]> => {
-  const { data } = await apiClient.get("/employees");
+export const getEmployees = async (search?: string): Promise<Employee[]> => {
+  const params = search ? { search } : undefined;
+  const { data } = await apiClient.get("/employees", { params });
   return data.data.map((emp: any) => ({
     id: emp.id,
     code: emp.employeeCode || "Pending Assignment",
