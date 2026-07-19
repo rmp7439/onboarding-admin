@@ -54,6 +54,18 @@ export default function EmployeeDetails() {
     <div className="space-y-6 pb-8">
       <div className="flex items-start gap-6">
         <div className="w-[70%] space-y-6">
+          
+          {/* Conditional Rejection Card */}
+          {employmentInfo?.status === "REJECTED" && (
+            <InfoCard title="Application Rejected">
+              <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-sm font-medium text-red-800">
+                  {employmentInfo?.rejectReason || "No rejection reason provided."}
+                </p>
+              </div>
+            </InfoCard>
+          )}
+
           <InfoCard title="1. Employment Information">
             <div className="grid grid-cols-4 gap-6">
               <DetailRow
@@ -201,7 +213,6 @@ export default function EmployeeDetails() {
               {employmentInfo?.unit || "No Unit Assigned"}
             </p>
 
-            {/* Selfie Download Button */}
             {employee.selfieUrl && (
               <Button
                 variant="outline"
