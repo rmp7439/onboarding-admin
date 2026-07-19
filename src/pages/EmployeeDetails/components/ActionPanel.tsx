@@ -8,7 +8,11 @@ import {
 } from "../../../components/ui/Card";
 import { Button } from "../../../components/ui/Button";
 import { Badge } from "../../../components/ui/Badge";
-import { ConfirmationDialog, EmployeeCodeDialog } from "./Dialogs";
+import {
+  ConfirmationDialog,
+  EmployeeCodeDialog,
+  RejectDialog,
+} from "./Dialogs";
 import {
   useUpdateEmployeeStatus,
   useAssignEmployeeCode,
@@ -42,9 +46,9 @@ export function ActionPanel({
     );
   };
 
-  const handleReject = () => {
+  const handleReject = (reason: string) => {
     updateStatusMutation.mutate(
-      { id: employeeId, status: "REJECTED" },
+      { id: employeeId, status: "REJECTED", rejectReason: reason },
       {
         onSuccess: () => {
           toast("Employee Rejected successfully.", "success");
@@ -101,7 +105,7 @@ export function ActionPanel({
           >
             <Check className="mr-2 h-4 w-4" /> Approve Employee
           </Button>
-          
+
           <Button
             variant="outline"
             className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
@@ -134,12 +138,9 @@ export function ActionPanel({
         }
       />
 
-      <ConfirmationDialog
+      <RejectDialog
         open={isRejectOpen}
         onOpenChange={setIsRejectOpen}
-        title="Reject this employee?"
-        actionText="Reject"
-        isDestructive
         onConfirm={handleReject}
         isLoading={updateStatusMutation.isPending}
         error={

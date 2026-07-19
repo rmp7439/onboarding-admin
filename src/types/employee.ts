@@ -13,6 +13,7 @@ export interface Employee {
   unit: string;
   phone: string;
   status: EmployeeStatus;
+  rejectReason?: string | null;
   joiningDate: string;
 }
 
@@ -25,6 +26,7 @@ export interface EmployeeDetailsData {
     joiningDate?: string;
     unit?: string;
     status?: EmployeeStatus;
+    rejectReason?: string | null;
   };
   personalInfo?: {
     firstName?: string;

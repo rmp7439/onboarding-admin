@@ -6,8 +6,8 @@ export const useUpdateEmployeeStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: EmployeeStatus }) => 
-      updateEmployeeStatus({ id, status }),
+    mutationFn: ({ id, status, rejectReason }: { id: string; status: EmployeeStatus, rejectReason?: string}) => 
+      updateEmployeeStatus({ id, status, rejectReason }),
     onMutate: async (newStatus) => {
       await queryClient.cancelQueries({ queryKey: ['employees'] });
       await queryClient.cancelQueries({ queryKey: ['employee', newStatus.id] });
@@ -15,14 +15,14 @@ export const useUpdateEmployeeStatus = () => {
       const previousEmployees = queryClient.getQueryData(['employees']);
       
       queryClient.setQueryData(['employees'], (old: Employee[] | undefined) => 
-        old?.map(emp => emp.id === newStatus.id ? { ...emp, status: newStatus.status } : emp)
+        old?.map(emp => emp.id === newStatus.id ? { ...emp, status: newStatus.status, rejectReason: newStatus.rejectReason } : emp)
       );
 
       queryClient.setQueryData(['employee', newStatus.id], (old: EmployeeDetailsData | undefined) => {
         if (!old) return old;
         return {
           ...old,
-          employmentInfo: { ...old.employmentInfo, status: newStatus.status }
+          employmentInfo: { ...old.employmentInfo, status: newStatus.status, rejectReason: newStatus.rejectReason }
         };
       });
 

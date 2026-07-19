@@ -16,6 +16,7 @@ import { ErrorState } from "../../components/ui/ErrorState";
 import { EmployeeFilters } from "./components/EmployeeFilters";
 import { Pagination } from "./components/Pagination";
 import { LoadingSkeleton } from "./components/LoadingSkeleton";
+import { RejectDialog } from "../EmployeeDetails/components/Dialogs";
 import { useEmployees } from "../../hooks/useEmployees";
 import { useUpdateEmployeeStatus } from "../../hooks/useEmployeeMutations";
 import { useToast } from "../../hooks/useToast";
@@ -25,11 +26,13 @@ export default function Employees() {
   const navigate = useNavigate();
   const updateStatusMutation = useUpdateEmployeeStatus();
   const { toast } = useToast();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [joiningDate, setJoiningDate] = useState("");
   const [statusFilter] = useState("ALL");
   const [unitFilter] = useState("ALL");
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -67,6 +70,22 @@ export default function Employees() {
             `Employee ${status === "APPROVED" ? "Approved" : "Rejected"} successfully.`,
             "success",
           );
+        },
+        onError: (err: any) => {
+          toast(err.message || "Failed to update status", "error");
+        },
+      },
+    );
+  };
+
+  const handleRejectSubmit = (reason: string) => {
+    if (!rejectingId) return;
+    updateStatusMutation.mutate(
+      { id: rejectingId, status: "REJECTED", rejectReason: reason },
+      {
+        onSuccess: () => {
+          toast("Employee Rejected successfully.", "success");
+          setRejectingId(null);
         },
         onError: (err: any) => {
           toast(err.message || "Failed to update status", "error");
@@ -191,9 +210,7 @@ export default function Employees() {
                             updateStatusMutation.isPending
                           }
                           className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() =>
-                            handleStatusUpdate(employee.id, "REJECTED")
-                          }
+                          onClick={() => setRejectingId(employee.id)} // <-- CHANGED
                         >
                           <X className="mr-1.5 h-4 w-4" /> Reject
                         </Button>
@@ -207,6 +224,13 @@ export default function Employees() {
         </div>
         <Pagination />
       </Card>
+
+      <RejectDialog
+        open={!!rejectingId}
+        onOpenChange={(open) => !open && setRejectingId(null)}
+        onConfirm={handleRejectSubmit}
+        isLoading={updateStatusMutation.isPending}
+      />
     </div>
   );
 }

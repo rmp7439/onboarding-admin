@@ -15,6 +15,7 @@ export const getEmployees = async (search?: string): Promise<Employee[]> => {
     unit: "N/A",
     phone: emp.mobile,
     status: emp.status,
+    rejectReason: emp.rejectReason,
     joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
   }));
 };
@@ -33,6 +34,7 @@ export const getEmployeeById = async (
       joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
       unit: "N/A",
       status: emp.status,
+      rejectReason: emp.rejectReason,
     },
     personalInfo: {
       firstName: emp.firstName,
@@ -81,11 +83,13 @@ export const getEmployeeById = async (
 export const updateEmployeeStatus = async ({
   id,
   status,
+  rejectReason
 }: {
   id: string;
   status: EmployeeStatus;
+  rejectReason?: string;
 }) => {
-  const { data } = await apiClient.patch("/employee/status", { id, status });
+  const { data } = await apiClient.patch("/employee/status", { id, status, rejectReason});
   return data.data;
 };
 
