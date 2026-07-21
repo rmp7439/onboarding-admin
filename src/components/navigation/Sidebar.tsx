@@ -1,10 +1,11 @@
 import { NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, FileBarChart } from 'lucide-react';
+import { LayoutDashboard, Users, FileBarChart, UserCog } from 'lucide-react'; // MODIFIED: Added UserCog
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/employees', label: 'Employees', icon: Users },
-  { path: '/reports', label: 'Reports', icon: FileBarChart }
+  { path: '/reports', label: 'Reports', icon: FileBarChart },
+  { path: '/users', label: 'System Users', icon: UserCog } // MODIFIED: Added new route
 ];
 
 export default function Sidebar() {

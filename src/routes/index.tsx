@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard';
 import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
 import Reports from '../pages/Reports';
+import Users from '../pages/Users'; // MODIFIED: Imported Users page
 import NotFound from '../pages/NotFound';
 
 export const router = createBrowserRouter([
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
           {
             path: 'reports',
             element: <Reports />,
+          },
+          {
+            path: 'users', // MODIFIED: Added Users route
+            element: <Users />,
           },
         ],
       },
