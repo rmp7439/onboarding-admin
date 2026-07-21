@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Edit, Trash2, MapPin, Plus } from "lucide-react";
+import { Edit, Trash2, Plus } from "lucide-react";
 import { Card, CardContent } from "../../components/ui/Card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
-import { UserFormDialog, DeleteUserDialog, AssignUnitsDialog } from "./components/Dialogs";
+import { UserFormDialog, DeleteUserDialog, type UserFormValues } from "./components/Dialogs";
 import { useUsers, useCreateUser, useUpdateUser, useDeleteUser, useAssignUnits } from "../../hooks/useUsers";
 import { useToast } from "../../hooks/useToast";
 import { type User } from "../../types/user";
@@ -22,7 +22,6 @@ export default function Users() {
 
   const [formOpen, setFormOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [assignOpen, setAssignOpen] = useState(false);
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -38,36 +37,52 @@ export default function Users() {
     setDeleteOpen(true);
   };
 
-  const handleOpenAssign = (user: User) => {
-    setSelectedUser(user);
-    setApiError(null);
-    setAssignOpen(true);
-  };
-
   const extractError = (err: any) => err?.response?.data?.error || err.message || "An unexpected error occurred.";
 
-  const handleSaveUser = (data: any) => {
+  const handleSaveUser = (data: UserFormValues) => {
     setApiError(null);
+    
     if (!selectedUser && !data.password) {
       setApiError("Password is required to create a new user.");
       return;
     }
 
-    // Clean up empty password field during updates
-    const payload = { ...data };
-    if (!payload.password) delete payload.password;
+    const { unitIds, ...userData } = data;
+    if (!userData.password) delete userData.password;
 
     if (selectedUser) {
       updateMutation.mutate(
-        { id: selectedUser.id, payload },
+        { id: selectedUser.id, payload: userData },
         {
-          onSuccess: () => { toast("User updated successfully", "success"); setFormOpen(false); },
+          onSuccess: () => {
+            assignUnitsMutation.mutate(
+              { id: selectedUser.id, unitIds },
+              {
+                onSuccess: () => {
+                  toast("User and units updated successfully", "success");
+                  setFormOpen(false);
+                },
+                onError: (err) => setApiError(extractError(err))
+              }
+            );
+          },
           onError: (err) => setApiError(extractError(err))
         }
       );
     } else {
-      createMutation.mutate(payload, {
-        onSuccess: () => { toast("User created successfully", "success"); setFormOpen(false); },
+      createMutation.mutate(userData, {
+        onSuccess: (newUser) => {
+          assignUnitsMutation.mutate(
+            { id: newUser.id, unitIds },
+            {
+              onSuccess: () => {
+                toast("User created and units assigned successfully", "success");
+                setFormOpen(false);
+              },
+              onError: (err) => setApiError(extractError(err))
+            }
+          );
+        },
         onError: (err) => setApiError(extractError(err))
       });
     }
@@ -79,18 +94,6 @@ export default function Users() {
       onSuccess: () => { toast("User deleted successfully", "success"); setDeleteOpen(false); },
       onError: (err) => toast(extractError(err), "error")
     });
-  };
-
-  const handleAssignUnits = (unitIds: string[]) => {
-    if (!selectedUser) return;
-    setApiError(null);
-    assignUnitsMutation.mutate(
-      { id: selectedUser.id, unitIds },
-      {
-        onSuccess: () => { toast("Units assigned successfully", "success"); setAssignOpen(false); },
-        onError: (err) => setApiError(extractError(err))
-      }
-    );
   };
 
   if (isLoading) {
@@ -148,9 +151,6 @@ export default function Users() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
-                      <Button variant="ghost" size="sm" className="text-purple-600 hover:bg-purple-50" onClick={() => handleOpenAssign(user)}>
-                        <MapPin className="h-4 w-4 mr-1" /> Assign Units
-                      </Button>
                       <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50" onClick={() => handleOpenForm(user)}>
                         <Edit className="h-4 w-4 mr-1" /> Edit
                       </Button>
@@ -167,17 +167,19 @@ export default function Users() {
       </Card>
 
       <UserFormDialog 
-        open={formOpen} onOpenChange={setFormOpen} user={selectedUser} 
-        onSave={handleSaveUser} isLoading={createMutation.isPending || updateMutation.isPending} error={apiError} 
+        open={formOpen} 
+        onOpenChange={setFormOpen} 
+        user={selectedUser} 
+        onSave={handleSaveUser} 
+        isLoading={createMutation.isPending || updateMutation.isPending || assignUnitsMutation.isPending} 
+        error={apiError} 
       />
 
       <DeleteUserDialog 
-        open={deleteOpen} onOpenChange={setDeleteOpen} onConfirm={handleDeleteUser} isLoading={deleteMutation.isPending} 
-      />
-
-      <AssignUnitsDialog 
-        open={assignOpen} onOpenChange={setAssignOpen} user={selectedUser} 
-        onSave={handleAssignUnits} isLoading={assignUnitsMutation.isPending} error={apiError} 
+        open={deleteOpen} 
+        onOpenChange={setDeleteOpen} 
+        onConfirm={handleDeleteUser} 
+        isLoading={deleteMutation.isPending} 
       />
     </div>
   );

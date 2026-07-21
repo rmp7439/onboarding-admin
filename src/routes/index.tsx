@@ -7,7 +7,8 @@ import Dashboard from '../pages/Dashboard';
 import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
 import Reports from '../pages/Reports';
-import Users from '../pages/Users'; // MODIFIED: Imported Users page
+import Users from '../pages/Users';
+import Units from '../pages/Units/index';
 import NotFound from '../pages/NotFound';
 
 export const router = createBrowserRouter([
@@ -48,8 +49,12 @@ export const router = createBrowserRouter([
             element: <Reports />,
           },
           {
-            path: 'users', // MODIFIED: Added Users route
+            path: 'users',
             element: <Users />,
+          },
+          {
+            path: 'units',
+            element: <Units />,
           },
         ],
       },

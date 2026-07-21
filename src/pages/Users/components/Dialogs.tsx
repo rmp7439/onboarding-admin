@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../../components/ui/Dialog";
@@ -11,15 +11,16 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import { type User } from "../../../types/user";
 import { useUnits } from "../../../hooks/useUnits";
 
-// --- User Form Dialog (Add & Edit) ---
 const userSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  mobile: z.string().min(10, "Mobile number is required"),
+  name: z.string().min(1, "Name is required").trim(),
+  mobile: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid 10-digit mobile number."),
   password: z.string().optional(),
   active: z.boolean(),
+  // REMOVED .default([]) to fix the TypeScript Resolver error
+  unitIds: z.array(z.string()) 
 });
 
-type UserFormValues = z.infer<typeof userSchema>;
+export type UserFormValues = z.infer<typeof userSchema>;
 
 export function UserFormDialog({
   open, onOpenChange, user, onSave, isLoading, error
@@ -28,23 +29,32 @@ export function UserFormDialog({
   onSave: (data: UserFormValues) => void; isLoading?: boolean; error?: string | null;
 }) {
   const isEdit = !!user;
+  const { data: units = [], isLoading: isLoadingUnits } = useUnits();
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<UserFormValues>({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: { name: "", mobile: "", password: "", active: true }
+    defaultValues: { name: "", mobile: "", password: "", active: true, unitIds: [] }
   });
 
   useEffect(() => {
     if (open) {
-      reset(user ? { name: user.name, mobile: user.mobile, active: user.active, password: "" } : { name: "", mobile: "", active: true, password: "" });
+      reset(user ? { 
+        name: user.name, 
+        mobile: user.mobile, 
+        active: user.active, 
+        password: "",
+        unitIds: user.units?.map(u => u.unit.id) || []
+      } : { 
+        name: "", 
+        mobile: "", 
+        active: true, 
+        password: "",
+        unitIds: []
+      });
     }
   }, [open, user, reset]);
 
   const onSubmit = (data: UserFormValues) => {
-    if (!isEdit && !data.password) {
-      // Manual error if creating and no password
-      return;
-    }
     onSave(data);
   };
 
@@ -53,7 +63,7 @@ export function UserFormDialog({
       <DialogHeader>
         <DialogTitle>{isEdit ? "Edit User" : "Add User"}</DialogTitle>
       </DialogHeader>
-      <DialogContent className="space-y-4">
+      <DialogContent className="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
         <form id="user-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name *</Label>
@@ -63,7 +73,7 @@ export function UserFormDialog({
 
           <div className="space-y-2">
             <Label htmlFor="mobile">Mobile Number *</Label>
-            <Input id="mobile" {...register("mobile")} disabled={isLoading} />
+            <Input id="mobile" {...register("mobile")} disabled={isLoading} maxLength={10} placeholder="e.g. 9876543210" />
             {errors.mobile && <p className="text-xs text-red-500">{errors.mobile.message}</p>}
           </div>
 
@@ -81,6 +91,46 @@ export function UserFormDialog({
             </Select>
           </div>
 
+          <div className="space-y-2 border-t border-gray-100 pt-4 mt-2">
+            <Label>Assign Units</Label>
+            {isLoadingUnits ? (
+              <div className="flex items-center justify-center p-4"><Loader2 className="h-5 w-5 animate-spin text-gray-400" /></div>
+            ) : (
+              <div className="space-y-3 max-h-40 overflow-y-auto p-1 bg-gray-50 rounded-md border border-gray-100">
+                {units.length === 0 ? (
+                  <p className="text-sm text-gray-500 p-2">No units available in the system.</p>
+                ) : (
+                  <Controller
+                    name="unitIds"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        {units.map((unit) => {
+                          const isChecked = field.value.includes(unit.id);
+                          return (
+                            <div key={unit.id} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 cursor-pointer" 
+                              onClick={() => {
+                                const newValue = isChecked ? field.value.filter(id => id !== unit.id) : [...field.value, unit.id];
+                                field.onChange(newValue);
+                              }}>
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {}}
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                              />
+                              <Label className="cursor-pointer">{unit.name}</Label>
+                            </div>
+                          );
+                        })}
+                      </>
+                    )}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+
           {error && (
             <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
               <AlertCircle className="h-4 w-4" />
@@ -91,13 +141,12 @@ export function UserFormDialog({
       </DialogContent>
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
-        <Button type="submit" form="user-form" isLoading={isLoading}>Save</Button>
+        <Button type="submit" form="user-form" isLoading={isLoading}>Save User</Button>
       </DialogFooter>
     </Dialog>
   );
 }
 
-// --- Delete Dialog ---
 export function DeleteUserDialog({
   open, onOpenChange, onConfirm, isLoading
 }: {
@@ -114,68 +163,6 @@ export function DeleteUserDialog({
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
         <Button onClick={onConfirm} isLoading={isLoading} className="bg-red-600 text-white hover:bg-red-700">Delete</Button>
-      </DialogFooter>
-    </Dialog>
-  );
-}
-
-// --- Assign Units Dialog ---
-export function AssignUnitsDialog({
-  open, onOpenChange, user, onSave, isLoading, error
-}: {
-  open: boolean; onOpenChange: (open: boolean) => void; user: User | null; 
-  onSave: (unitIds: string[]) => void; isLoading?: boolean; error?: string | null;
-}) {
-  const { data: units = [], isLoading: isLoadingUnits } = useUnits();
-  const [selectedUnitIds, setSelectedUnitIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (open && user) {
-      setSelectedUnitIds(user.units?.map(u => u.unit.id) || []);
-    }
-  }, [open, user]);
-
-  const toggleUnit = (unitId: string) => {
-    setSelectedUnitIds(prev => prev.includes(unitId) ? prev.filter(id => id !== unitId) : [...prev, unitId]);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogHeader>
-        <DialogTitle>Assign Units for {user?.name}</DialogTitle>
-      </DialogHeader>
-      <DialogContent className="space-y-4">
-        {isLoadingUnits ? (
-          <div className="flex items-center justify-center p-6"><Loader2 className="h-6 w-6 animate-spin text-gray-400" /></div>
-        ) : (
-          <div className="space-y-3 max-h-64 overflow-y-auto p-1">
-            {units.length === 0 ? (
-              <p className="text-sm text-gray-500">No units available in the system.</p>
-            ) : (
-              units.map((unit) => (
-                <div key={unit.id} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-50 cursor-pointer" onClick={() => toggleUnit(unit.id)}>
-                  <input
-                    type="checkbox"
-                    checked={selectedUnitIds.includes(unit.id)}
-                    onChange={() => {}}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
-                  />
-                  <Label className="cursor-pointer">{unit.name}</Label>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-        {error && (
-          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
-            <AlertCircle className="h-4 w-4" />
-            <span>{error}</span>
-          </div>
-        )}
-      </DialogContent>
-      <DialogFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading || isLoadingUnits}>Cancel</Button>
-        <Button onClick={() => onSave(selectedUnitIds)} isLoading={isLoading} disabled={isLoadingUnits}>Save</Button>
       </DialogFooter>
     </Dialog>
   );
