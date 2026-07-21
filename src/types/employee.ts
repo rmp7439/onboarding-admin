@@ -1,4 +1,4 @@
-export type EmployeeStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type EmployeeStatus = "PENDING" | "APPROVED" | "REJECTED" | "RETURNED_FOR_CORRECTION";
 
 export interface DocumentInfo {
   id: string;
@@ -14,6 +14,7 @@ export interface Employee {
   phone: string;
   status: EmployeeStatus;
   rejectReason?: string | null;
+  correctionRemark?: string | null;
   joiningDate: string;
 }
 
@@ -27,6 +28,7 @@ export interface EmployeeDetailsData {
     unit?: string;
     status?: EmployeeStatus;
     rejectReason?: string | null;
+    correctionRemark?: string | null;
   };
   personalInfo?: {
     firstName?: string;

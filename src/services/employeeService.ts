@@ -16,6 +16,7 @@ export const getEmployees = async (search?: string): Promise<Employee[]> => {
     phone: emp.mobile,
     status: emp.status,
     rejectReason: emp.rejectReason,
+    correctionRemark: emp.correctionRemark,
     joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
   }));
 };
@@ -35,6 +36,7 @@ export const getEmployeeById = async (
       unit: "N/A",
       status: emp.status,
       rejectReason: emp.rejectReason,
+      correctionRemark: emp.correctionRemark,
     },
     personalInfo: {
       firstName: emp.firstName,
@@ -103,6 +105,19 @@ export const assignEmployeeCode = async ({
   const { data } = await apiClient.patch("/employee/code", {
     id,
     employeeCode,
+  });
+  return data.data;
+};
+
+export const returnEmployeeForCorrection = async ({
+  id,
+  remark,
+}: {
+  id: string;
+  remark: string;
+}) => {
+  const { data } = await apiClient.patch(`/employee/${id}/return`, {
+    remark,
   });
   return data.data;
 };

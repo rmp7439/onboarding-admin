@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, Check, X } from "lucide-react";
+import { Eye, Check, X, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../../components/ui/Card";
 import {
@@ -16,15 +16,16 @@ import { ErrorState } from "../../components/ui/ErrorState";
 import { EmployeeFilters } from "./components/EmployeeFilters";
 import { Pagination } from "./components/Pagination";
 import { LoadingSkeleton } from "./components/LoadingSkeleton";
-import { RejectDialog } from "../EmployeeDetails/components/Dialogs";
+import { RejectDialog, ReturnForCorrectionDialog } from "../EmployeeDetails/components/Dialogs";
 import { useEmployees } from "../../hooks/useEmployees";
-import { useUpdateEmployeeStatus } from "../../hooks/useEmployeeMutations";
+import { useUpdateEmployeeStatus, useReturnEmployeeForCorrection } from "../../hooks/useEmployeeMutations";
 import { useToast } from "../../hooks/useToast";
 import { type EmployeeStatus } from "../../types/employee";
 
 export default function Employees() {
   const navigate = useNavigate();
   const updateStatusMutation = useUpdateEmployeeStatus();
+  const returnMutation = useReturnEmployeeForCorrection();
   const { toast } = useToast();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +34,7 @@ export default function Employees() {
   const [statusFilter] = useState("ALL");
   const [unitFilter] = useState("ALL");
   const [rejectingId, setRejectingId] = useState<string | null>(null);
+  const [returningId, setReturningId] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -56,6 +58,8 @@ export default function Employees() {
         return <Badge variant="warning">PENDING</Badge>;
       case "REJECTED":
         return <Badge variant="destructive">REJECTED</Badge>;
+      case "RETURNED_FOR_CORRECTION":
+        return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">RETURNED</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -91,6 +95,22 @@ export default function Employees() {
           toast(err.message || "Failed to update status", "error");
         },
       },
+    );
+  };
+
+  const handleReturnSubmit = (remark: string) => {
+    if (!returningId) return;
+    returnMutation.mutate(
+      { id: returningId, remark },
+      {
+        onSuccess: () => {
+          toast("Employee returned for correction successfully.", "success");
+          setReturningId(null);
+        },
+        onError: (err: any) => {
+          toast(err.message || "Failed to return application", "error");
+        },
+      }
     );
   };
 
@@ -210,9 +230,21 @@ export default function Employees() {
                             updateStatusMutation.isPending
                           }
                           className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() => setRejectingId(employee.id)} // <-- CHANGED
+                          onClick={() => setRejectingId(employee.id)}
                         >
                           <X className="mr-1.5 h-4 w-4" /> Reject
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          disabled={
+                            employee.status === "APPROVED" ||
+                            employee.status === "RETURNED_FOR_CORRECTION" ||
+                            returnMutation.isPending
+                          }
+                          className="h-9 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
+                          onClick={() => setReturningId(employee.id)}
+                        >
+                          <RotateCcw className="mr-1.5 h-4 w-4" /> Return
                         </Button>
                       </div>
                     </TableCell>
@@ -230,6 +262,18 @@ export default function Employees() {
         onOpenChange={(open) => !open && setRejectingId(null)}
         onConfirm={handleRejectSubmit}
         isLoading={updateStatusMutation.isPending}
+      />
+
+      <ReturnForCorrectionDialog
+        open={!!returningId}
+        onOpenChange={(open) => !open && setReturningId(null)}
+        onConfirm={handleReturnSubmit}
+        isLoading={returnMutation.isPending}
+        error={
+          returnMutation.isError
+            ? (returnMutation.error as any)?.response?.data?.error || returnMutation.error.message || "Failed to return application."
+            : null
+        }
       />
     </div>
   );

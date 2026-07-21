@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateEmployeeStatus, assignEmployeeCode } from '../services/employeeService';
+import { updateEmployeeStatus, assignEmployeeCode, returnEmployeeForCorrection } from '../services/employeeService';
 import { type EmployeeStatus, type Employee, type EmployeeDetailsData } from '../types/employee';
 
 export const useUpdateEmployeeStatus = () => {
@@ -29,11 +29,24 @@ export const useUpdateEmployeeStatus = () => {
       return { previousEmployees };
     },
     onError: (_err, _newStatus, context) => {
-      // Rollback on failure
       if (context?.previousEmployees) {
         queryClient.setQueryData(['employees'], context.previousEmployees);
       }
     },
+    onSettled: (_data, _error, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['employee', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+};
+
+export const useReturnEmployeeForCorrection = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, remark }: { id: string; remark: string }) => 
+      returnEmployeeForCorrection({ id, remark }),
     onSettled: (_data, _error, variables) => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       queryClient.invalidateQueries({ queryKey: ['employee', variables.id] });
