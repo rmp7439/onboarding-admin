@@ -8,12 +8,14 @@ import { useExportExcel, triggerDownload, useExportBulkPdf} from "../../hooks/us
 import { type ReportFilters, downloadEmployeePdf } from "../../services/reportService";
 import { useToast } from "../../hooks/useToast";
 
-const initialFilters: ReportFilters = { day: "", month: "", year: "" };
+const initialFilters: ReportFilters = { day: "", month: "", year: "", unit: "", userId: "" };
 
 export default function Reports() {
   const [filters, setFilters] = useState<ReportFilters>(initialFilters);
   const [appliedFilters, setAppliedFilters] = useState<ReportFilters>(initialFilters);
   const [isDownloadingPdfs, setIsDownloadingPdfs] = useState(false);
+
+  const hasValidFilter = !!(appliedFilters.year || appliedFilters.month || appliedFilters.day || appliedFilters.unit || appliedFilters.userId);
 
   const exportBulkPdfMutation = useExportBulkPdf();
   
@@ -26,12 +28,9 @@ export default function Reports() {
     setAppliedFilters(initialFilters);
   };
 
-  // Determine if a valid DOJ filter has been applied
-  const hasValidFilter = !!(appliedFilters.year || appliedFilters.month || appliedFilters.day);
-
   const handleDownloadAllPdfs = async () => {
     if (!hasValidFilter) {
-      toast("Please apply a Date of Joining filter before exporting individual reports.", "info");
+      toast("Please apply a filter before exporting individual reports.", "info");
       return;
     }
 
@@ -66,7 +65,7 @@ export default function Reports() {
 
   const handleBulkPdf = () => {
     if (!hasValidFilter) {
-      toast("Apply a Date of Joining filter before generating a Bulk PDF.", "info");
+      toast("Please apply a filter before generating a Bulk PDF.", "info");
       return;
     }
     

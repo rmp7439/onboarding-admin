@@ -2,6 +2,8 @@ import { Label } from "../../../components/ui/Label";
 import { Button } from "../../../components/ui/Button";
 import { Select } from "../../../components/ui/Select";
 import { type ReportFilters } from "../../../services/reportService";
+import { useUnits } from "../../../hooks/useUnits";
+import { useUsers } from "../../../hooks/useUsers";
 
 interface FilterPanelProps {
   filters: ReportFilters;
@@ -32,25 +34,25 @@ export function FilterPanel({
   onReset,
 }: FilterPanelProps) {
   const currentYear = new Date().getFullYear();
-
   const years = Array.from({ length: currentYear - 1997 + 1 }, (_, i) =>
     (currentYear - i).toString(),
   );
-
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+
+  const { data: units = [] } = useUnits();
+  const { data: users = [] } = useUsers();
 
   const handleChange = (key: keyof ReportFilters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Prevent applying invalid filter combinations
   const isInvalid =
     (filters.day && (!filters.month || !filters.year)) ||
     (filters.month && !filters.year);
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="space-y-2">
           <Label htmlFor="day">Day</Label>
           <Select
@@ -94,6 +96,38 @@ export function FilterPanel({
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="unit">Unit</Label>
+          <Select
+            id="unit"
+            value={filters.unit || ""}
+            onChange={(e) => handleChange("unit", e.target.value)}
+          >
+            <option value="">All Units</option>
+            {units.map((u) => (
+              <option key={u.id} value={u.name}>
+                {u.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="userId">User</Label>
+          <Select
+            id="userId"
+            value={filters.userId || ""}
+            onChange={(e) => handleChange("userId", e.target.value)}
+          >
+            <option value="">All Users</option>
+            {users.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name}
               </option>
             ))}
           </Select>

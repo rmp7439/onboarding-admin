@@ -10,6 +10,8 @@ export const useReportEmployees = (filters: ReportFilters) => {
       if (filters.day) params.append('day', filters.day);
       if (filters.month) params.append('month', filters.month);
       if (filters.year) params.append('year', filters.year);
+      if (filters.unit) params.append('unit', filters.unit);
+      if (filters.userId) params.append('userId', filters.userId);
       
       const { data } = await apiClient.get(`/reports/employees?${params.toString()}`);
       return data.data;
