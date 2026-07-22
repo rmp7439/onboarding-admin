@@ -12,7 +12,7 @@ export const getEmployees = async (search?: string): Promise<Employee[]> => {
     id: emp.id,
     code: emp.employeeCode || "Pending Assignment",
     name: `${emp.firstName} ${emp.surname}`,
-    unit: emp.unit, // Removed hardcoded 'N/A' map to use verified DB string
+    unit: emp.unit, // Replaced 'N/A' placeholder mapping
     phone: emp.mobile,
     status: emp.status,
     rejectReason: emp.rejectReason,
@@ -33,7 +33,7 @@ export const getEmployeeById = async (
     employmentInfo: {
       code: emp.employeeCode || "Pending Assignment",
       joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
-      unit: emp.unit, // Removed hardcoded 'N/A' map
+      unit: emp.unit, // Replaced 'N/A' placeholder mapping
       status: emp.status,
       rejectReason: emp.rejectReason,
       correctionRemark: emp.correctionRemark,
