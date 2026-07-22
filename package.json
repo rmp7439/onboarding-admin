@@ -55,11 +55,12 @@
       "output": "release"
     },
     "files": [
-      "electron/**/*"
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
     ],
     "win": {
-      "target": "nsis",
-      "icon": "build/icon.ico"
+      "target": "nsis"
     }
   }
 }
