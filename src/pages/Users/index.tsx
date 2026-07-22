@@ -47,7 +47,8 @@ export default function Users() {
       return;
     }
 
-    const { unitIds, ...userData } = data;
+    // Exclude confirmPassword from the API payload
+    const { unitIds, confirmPassword, ...userData } = data;
     if (!userData.password) delete userData.password;
 
     if (selectedUser) {
@@ -122,8 +123,9 @@ export default function Users() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>User ID</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Mobile Number</TableHead>
+              <TableHead>Contact (Mobile)</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Assigned Units</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -132,12 +134,13 @@ export default function Users() {
           <TableBody>
             {users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-10 text-gray-500">No users found.</TableCell>
+                <TableCell colSpan={6} className="text-center py-10 text-gray-500">No users found.</TableCell>
               </TableRow>
             ) : (
               users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium text-gray-900">{user.name}</TableCell>
+                  <TableCell className="font-medium text-gray-900">{user.userId}</TableCell>
+                  <TableCell className="text-gray-900">{user.name}</TableCell>
                   <TableCell className="text-gray-600">{user.mobile}</TableCell>
                   <TableCell>
                     <Badge variant={user.active ? "success" : "destructive"}>

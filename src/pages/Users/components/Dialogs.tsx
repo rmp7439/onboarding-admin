@@ -12,12 +12,21 @@ import { type User } from "../../../types/user";
 import { useUnits } from "../../../hooks/useUnits";
 
 const userSchema = z.object({
+  userId: z.string().min(1, "User ID is required").trim(),
   name: z.string().min(1, "Name is required").trim(),
   mobile: z.string().regex(/^[6-9]\d{9}$/, "Please enter a valid 10-digit mobile number."),
   password: z.string().optional(),
+  confirmPassword: z.string().optional(),
   active: z.boolean(),
-  // REMOVED .default([]) to fix the TypeScript Resolver error
   unitIds: z.array(z.string()) 
+}).refine((data) => {
+  if (data.password && data.password !== data.confirmPassword) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 export type UserFormValues = z.infer<typeof userSchema>;
@@ -33,22 +42,26 @@ export function UserFormDialog({
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: { name: "", mobile: "", password: "", active: true, unitIds: [] }
+    defaultValues: { userId: "", name: "", mobile: "", password: "", confirmPassword: "", active: true, unitIds: [] }
   });
 
   useEffect(() => {
     if (open) {
       reset(user ? { 
+        userId: user.userId,
         name: user.name, 
         mobile: user.mobile, 
         active: user.active, 
         password: "",
+        confirmPassword: "",
         unitIds: user.units?.map(u => u.unit.id) || []
       } : { 
+        userId: "",
         name: "", 
         mobile: "", 
         active: true, 
         password: "",
+        confirmPassword: "",
         unitIds: []
       });
     }
@@ -65,6 +78,13 @@ export function UserFormDialog({
       </DialogHeader>
       <DialogContent className="space-y-4 max-h-[75vh] overflow-y-auto pr-2">
         <form id="user-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          
+          <div className="space-y-2">
+            <Label htmlFor="userId">User ID (Login ID) *</Label>
+            <Input id="userId" {...register("userId")} disabled={isLoading} placeholder="e.g. FM-1001" />
+            {errors.userId && <p className="text-xs text-red-500">{errors.userId.message}</p>}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="name">Name *</Label>
             <Input id="name" {...register("name")} disabled={isLoading} />
@@ -72,18 +92,26 @@ export function UserFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="mobile">Mobile Number *</Label>
+            <Label htmlFor="mobile">Contact Mobile Number *</Label>
             <Input id="mobile" {...register("mobile")} disabled={isLoading} maxLength={10} placeholder="e.g. 9876543210" />
             {errors.mobile && <p className="text-xs text-red-500">{errors.mobile.message}</p>}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">{isEdit ? "Password (leave blank to keep current)" : "Password *"}</Label>
-            <Input id="password" type="password" {...register("password")} disabled={isLoading} />
-            {!isEdit && !errors.password && <p className="text-xs text-gray-500">Required for new users.</p>}
+          <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 mt-2">
+            <div className="space-y-2">
+              <Label htmlFor="password">{isEdit ? "New Password" : "Password *"}</Label>
+              <Input id="password" type="password" {...register("password")} disabled={isLoading} />
+              {!isEdit && !errors.password && <p className="text-xs text-gray-500">Required for new users.</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Input id="confirmPassword" type="password" {...register("confirmPassword")} disabled={isLoading} />
+              {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
+            </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 border-t border-gray-100 pt-4 mt-2">
             <Label htmlFor="active">Status</Label>
             <Select id="active" {...register("active")} disabled={isLoading} onChange={(e) => reset(prev => ({ ...prev, active: e.target.value === 'true' }))}>
               <option value="true">Active</option>
@@ -91,7 +119,7 @@ export function UserFormDialog({
             </Select>
           </div>
 
-          <div className="space-y-2 border-t border-gray-100 pt-4 mt-2">
+          <div className="space-y-2">
             <Label>Assign Units</Label>
             {isLoadingUnits ? (
               <div className="flex items-center justify-center p-4"><Loader2 className="h-5 w-5 animate-spin text-gray-400" /></div>

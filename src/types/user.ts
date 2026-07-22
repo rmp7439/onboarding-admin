@@ -6,6 +6,7 @@ export interface UserUnit {
 
 export interface User {
   id: string;
+  userId: string;
   name: string;
   mobile: string;
   active: boolean;
@@ -15,6 +16,7 @@ export interface User {
 }
 
 export interface CreateUserPayload {
+  userId: string;
   name: string;
   mobile: string;
   password?: string;
