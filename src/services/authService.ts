@@ -46,3 +46,8 @@ export const logout = async () => {
   // Optional: Trigger backend logout/invalidation here if implemented
   removeToken();
 };
+
+export const changePassword = async (payload: { currentPassword: string; newPassword: string }) => {
+  const { data } = await apiClient.patch('/admin/password', payload);
+  return data;
+};

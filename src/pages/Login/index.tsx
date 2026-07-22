@@ -56,9 +56,6 @@ export default function Login() {
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Admin Portal</h1>
           <p className="text-sm text-slate-500 mt-1">Sign in to manage employee onboarding</p>
-          <div className="mt-4 p-3 bg-blue-50 text-blue-800 text-xs rounded-md w-full text-center border border-blue-100">
-            Use <b>admin@example.com</b> / <b>password123</b> to mock login
-          </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -77,7 +74,7 @@ export default function Login() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password">Password</Label>
-              <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-700" onClick={(e) => { e.preventDefault(); toast("Password reset workflow not implemented.", "info"); }}>
+              <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-700" onClick={(e) => { e.preventDefault(); toast("Please contact your IT administrator.", "info"); }}>
                 Forgot password?
               </a>
             </div>
