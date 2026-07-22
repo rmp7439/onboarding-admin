@@ -11,6 +11,10 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import { type User } from "../../../types/user";
 import { useUnits } from "../../../hooks/useUnits";
 
+// ---------------------------------------------------------------------------
+// 1. CREATE / EDIT USER DIALOG
+// ---------------------------------------------------------------------------
+
 const userSchema = z.object({
   userId: z.string().min(1, "User ID is required").trim(),
   name: z.string().min(1, "Name is required").trim(),
@@ -175,6 +179,10 @@ export function UserFormDialog({
   );
 }
 
+// ---------------------------------------------------------------------------
+// 2. DELETE USER DIALOG
+// ---------------------------------------------------------------------------
+
 export function DeleteUserDialog({
   open, onOpenChange, onConfirm, isLoading
 }: {
@@ -191,6 +199,91 @@ export function DeleteUserDialog({
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
         <Button onClick={onConfirm} isLoading={isLoading} className="bg-red-600 text-white hover:bg-red-700">Delete</Button>
+      </DialogFooter>
+    </Dialog>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 3. RESET PASSWORD DIALOG
+// ---------------------------------------------------------------------------
+
+const resetPasswordSchema = z.object({
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
+
+export function ResetPasswordDialog({
+  open, onOpenChange, user, onConfirm, isLoading, error
+}: {
+  open: boolean; onOpenChange: (open: boolean) => void; user: User | null;
+  onConfirm: (password: string) => void; isLoading?: boolean; error?: string | null;
+}) {
+  const { register, handleSubmit, reset, formState: { errors, isValid } } = useForm<ResetPasswordValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    mode: "onChange",
+    defaultValues: { password: "", confirmPassword: "" }
+  });
+
+  useEffect(() => {
+    if (!open) reset({ password: "", confirmPassword: "" });
+  }, [open, reset]);
+
+  const onSubmit = (data: ResetPasswordValues) => {
+    onConfirm(data.password);
+  };
+
+  if (!user) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogHeader>
+        <DialogTitle>Reset Password</DialogTitle>
+      </DialogHeader>
+      <DialogContent className="space-y-4">
+        <form id="reset-password-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          
+          <div className="grid grid-cols-2 gap-4 pb-2 border-b border-gray-100">
+            <div className="space-y-1">
+              <Label className="text-gray-500">Name</Label>
+              <div className="text-sm font-medium text-gray-900">{user.name}</div>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-gray-500">User ID</Label>
+              <div className="text-sm font-medium text-gray-900">{user.userId}</div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="new-password">New Password *</Label>
+            <Input id="new-password" type="password" {...register("password")} disabled={isLoading} />
+            {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="confirm-new-password">Confirm Password *</Label>
+            <Input id="confirm-new-password" type="password" {...register("confirmPassword")} disabled={isLoading} />
+            {errors.confirmPassword && <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>}
+          </div>
+
+          {error && (
+            <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+              <AlertCircle className="h-4 w-4" />
+              <span>{error}</span>
+            </div>
+          )}
+        </form>
+      </DialogContent>
+      <DialogFooter>
+        <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
+        <Button type="submit" form="reset-password-form" isLoading={isLoading} disabled={!isValid}>
+          Reset Password
+        </Button>
       </DialogFooter>
     </Dialog>
   );

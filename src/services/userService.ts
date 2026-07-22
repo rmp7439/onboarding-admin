@@ -24,3 +24,7 @@ export const assignUnits = async (id: string, unitIds: string[]): Promise<User> 
   const { data } = await apiClient.put(`/users/${id}/units`, { unitIds });
   return data.data;
 };
+
+export const resetPassword = async (id: string, password: string): Promise<void> => {
+  await apiClient.patch(`/users/${id}/password`, { password });
+};
