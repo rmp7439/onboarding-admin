@@ -55,7 +55,6 @@ export default function Users() {
       return;
     }
 
-    // Exclude confirmPassword from the API payload
     const { unitIds, confirmPassword, ...userData } = data;
     if (!userData.password) delete userData.password;
 
@@ -163,7 +162,16 @@ export default function Users() {
               users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium text-gray-900">{user.userId}</TableCell>
-                  <TableCell className="text-gray-900">{user.name}</TableCell>
+                  <TableCell className="text-gray-900">
+                    <div className="flex items-center space-x-2">
+                      <span>{user.name}</span>
+                      {user.isProtected && (
+                        <Badge variant="default" className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0 border border-slate-200">
+                          Protected
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-gray-600">{user.mobile}</TableCell>
                   <TableCell>
                     <Badge variant={user.active ? "success" : "destructive"}>
@@ -177,13 +185,30 @@ export default function Users() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
-                      <Button variant="ghost" size="sm" className="text-amber-600 hover:bg-amber-50" onClick={() => handleOpenResetPassword(user)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-amber-600 hover:bg-amber-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                        disabled={user.isProtected} 
+                        onClick={() => handleOpenResetPassword(user)}
+                      >
                         <Key className="h-4 w-4 mr-1" /> Reset Pwd
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50" onClick={() => handleOpenForm(user)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-blue-600 hover:bg-blue-50" 
+                        onClick={() => handleOpenForm(user)}
+                      >
                         <Edit className="h-4 w-4 mr-1" /> Edit
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => handleOpenDelete(user)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                        disabled={user.isProtected} 
+                        onClick={() => handleOpenDelete(user)}
+                      >
                         <Trash2 className="h-4 w-4 mr-1" /> Delete
                       </Button>
                     </div>

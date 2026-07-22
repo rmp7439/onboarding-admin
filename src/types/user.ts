@@ -10,6 +10,7 @@ export interface User {
   name: string;
   mobile: string;
   active: boolean;
+  isProtected: boolean;
   createdAt: string;
   updatedAt: string;
   units?: UserUnit[];
