@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Edit, Trash2, Plus } from "lucide-react";
 import { Card, CardContent } from "../../components/ui/Card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
+import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
@@ -101,16 +102,37 @@ export default function Units() {
             ) : (
               units.map((unit) => (
                 <TableRow key={unit.id}>
-                  <TableCell className="font-medium text-gray-900">{unit.name}</TableCell>
+                  <TableCell className="font-medium text-gray-900">
+                    <div className="flex items-center space-x-2">
+                      <span>{unit.name}</span>
+                      {unit.isProtected && (
+                        <Badge variant="default" className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0 border border-slate-200">
+                          Protected
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-gray-600">
                     {new Date(unit.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-2">
-                      <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50" onClick={() => handleOpenForm(unit)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-blue-600 hover:bg-blue-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                        disabled={unit.isProtected}
+                        onClick={() => handleOpenForm(unit)}
+                      >
                         <Edit className="h-4 w-4 mr-1" /> Edit
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => handleOpenDelete(unit)}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                        disabled={unit.isProtected}
+                        onClick={() => handleOpenDelete(unit)}
+                      >
                         <Trash2 className="h-4 w-4 mr-1" /> Delete
                       </Button>
                     </div>
