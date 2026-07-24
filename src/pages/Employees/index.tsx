@@ -169,42 +169,6 @@ export default function Employees() {
                     Phone Number
                   </TableHead>
                   <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Gender
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Highest Education
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Marital Status
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Driving Licence
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    A/C Holder Name
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Bank Name
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    IFSC
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    MICR
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Nominee Name
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Nominee Relation
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Nominee Mobile
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Nominee %
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
                     Status
                   </TableHead>
                   <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
@@ -229,42 +193,6 @@ export default function Employees() {
                     </TableCell>
                     <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
                       {employee.phone || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.gender || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.education || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.maritalStatus || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.drivingLicence || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.accountHolderName || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.bankName || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.ifsc || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.micr || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.nomineeName || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.nomineeRelation || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.nomineeMobile || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.nomineePercentage ? `${employee.nomineePercentage}%` : "-"}
                     </TableCell>
                     <TableCell className="py-5 align-middle text-center whitespace-nowrap">
                       <div className="flex justify-center">
