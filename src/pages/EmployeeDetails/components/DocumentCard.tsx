@@ -15,15 +15,17 @@ interface DocumentCardProps {
   documents: DocumentInfo[];
   employeeCode: string;
   employeeId: string;
+  employeeName: string;
 }
 
-export function DocumentCard({ type, name, documents, employeeCode, employeeId }: DocumentCardProps) {
+export function DocumentCard({ type, name, documents, employeeId, employeeName }: DocumentCardProps) {
   const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const getFileName = () => {
-    const prefix = employeeCode && employeeCode !== "Pending Assignment" ? employeeCode : "EMP";
-    return `${prefix}_${type}.pdf`;
+    const safeName = employeeName.trim().toUpperCase().replace(/\s+/g, '_') || "EMP";
+    const safeType = type.toUpperCase().replace(/\s+/g, '_');
+    return `${safeName}_${safeType}.pdf`;
   };
 
   const handleDownload = async () => {
@@ -34,7 +36,7 @@ export function DocumentCard({ type, name, documents, employeeCode, employeeId }
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', getFileName());
+      link.setAttribute('download', getFileName()); // Forces filename override
       document.body.appendChild(link);
       link.click();
       link.parentNode?.removeChild(link);
@@ -51,6 +53,7 @@ export function DocumentCard({ type, name, documents, employeeCode, employeeId }
       setIsDownloading(true);
       const blob = await downloadMergedDocument(employeeId, type);
       
+      // Opens reliably in a new tab relying on inline Content-Disposition
       const url = window.URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (error) {
