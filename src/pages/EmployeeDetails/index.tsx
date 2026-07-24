@@ -201,11 +201,7 @@ export default function EmployeeDetails() {
                   value={addressInfo?.current || "-"}
                 />
               </div>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                <DetailRow
-                  label="Police Station"
-                  value={(addressInfo as any)?.currentPoliceStation || "-"}
-                />
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
                 <DetailRow
                   label="City"
                   value={addressInfo?.currentCity || "-"}
@@ -291,7 +287,7 @@ export default function EmployeeDetails() {
                 ))
               ) : (
                 <p className="text-sm text-gray-500 py-4 col-span-2">
-                  No documents have been uploaded for this employee.
+                  No documents have been uploaded for this employee[cite: 3].
                 </p>
               )}
             </div>
