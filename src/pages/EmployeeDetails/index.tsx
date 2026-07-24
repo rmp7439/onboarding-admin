@@ -83,32 +83,15 @@ export default function EmployeeDetails() {
 
           <InfoCard title="2. Personal Information">
             <div className="grid grid-cols-4 gap-6 gap-y-8">
-              <DetailRow
-                label="First Name"
-                value={personalInfo?.firstName || "-"}
-              />
+              <DetailRow label="First Name" value={personalInfo?.firstName || "-"} />
               <DetailRow label="Surname" value={personalInfo?.surname || "-"} />
-              <DetailRow
-                label="Father Name"
-                value={personalInfo?.fatherName || "-"}
-              />
-              <DetailRow
-                label="Husband Name"
-                value={personalInfo?.husbandName || "-"}
-              />
+              <DetailRow label="Father Name" value={personalInfo?.fatherName || "-"} />
+              <DetailRow label="Husband Name" value={personalInfo?.husbandName || "-"} />
               <DetailRow label="Gender" value={personalInfo?.gender || "-"} />
-              <DetailRow
-                label="Blood Group"
-                value={personalInfo?.bloodGroup || "-"}
-              />
-              <DetailRow
-                label="Date of Birth"
-                value={personalInfo?.dob || "-"}
-              />
-              <DetailRow
-                label="Phone Number"
-                value={personalInfo?.phone || "-"}
-              />
+              <DetailRow label="Blood Group" value={personalInfo?.bloodGroup || "-"} />
+              <DetailRow label="Highest Education" value={personalInfo?.education || "-"} /> {/* <-- Added here */}
+              <DetailRow label="Date of Birth" value={personalInfo?.dob || "-"} />
+              <DetailRow label="Phone Number" value={personalInfo?.phone || "-"} />
             </div>
           </InfoCard>
 

@@ -37,6 +37,7 @@ export interface EmployeeDetailsData {
     husbandName?: string;
     gender?: string;
     bloodGroup?: string;
+    education?: string;
     dob?: string;
     phone?: string;
   };
