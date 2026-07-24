@@ -45,6 +45,7 @@ export const getEmployeeById = async (
       husbandName: emp.husbandName,
       gender: emp.gender,
       bloodGroup: emp.bloodGroup,
+      maritalStatus: emp.maritalStatus ? emp.maritalStatus.charAt(0).toUpperCase() + emp.maritalStatus.slice(1).toLowerCase() : "",
       education: emp.education ? emp.education.replace(/_/g, ' ').replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) : "",
       dob: new Date(emp.dateOfBirth).toISOString().split("T")[0],
       phone: emp.mobile,

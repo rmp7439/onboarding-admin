@@ -89,6 +89,7 @@ export default function EmployeeDetails() {
               <DetailRow label="Husband Name" value={personalInfo?.husbandName || "-"} />
               <DetailRow label="Gender" value={personalInfo?.gender || "-"} />
               <DetailRow label="Blood Group" value={personalInfo?.bloodGroup || "-"} />
+              <DetailRow label="Marital Status" value={personalInfo?.maritalStatus || "-"} />
               <DetailRow label="Highest Education" value={personalInfo?.education || "-"} /> {/* <-- Added here */}
               <DetailRow label="Date of Birth" value={personalInfo?.dob || "-"} />
               <DetailRow label="Phone Number" value={personalInfo?.phone || "-"} />
