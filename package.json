@@ -3,13 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
-    "electron": "electron .",
-    "electron-dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "build": "tsc -b && vite build",
-    "dist": "npm run build && electron-builder",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -34,9 +30,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "autoprefixer": "^10.5.2",
-    "concurrently": "^10.0.3",
-    "electron": "^43.2.0",
-    "electron-builder": "^26.15.3",
     "eslint": "^10.6.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
@@ -45,22 +38,6 @@
     "tailwindcss": "^4.3.2",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
-    "vite": "^8.1.1",
-    "wait-on": "^9.1.0"
-  },
-  "build": {
-    "appId": "com.onboarding.admin",
-    "productName": "Employee Verification Admin",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "dist/**/*",
-      "electron/**/*",
-      "package.json"
-    ],
-    "win": {
-      "target": "nsis"
-    }
+    "vite": "^8.1.1"
   }
 }
