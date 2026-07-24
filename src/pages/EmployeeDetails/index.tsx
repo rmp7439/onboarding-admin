@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { User, Download } from "lucide-react";
 import { Button } from "../../components/ui/Button";
@@ -17,6 +18,15 @@ export default function EmployeeDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: employee, isLoading, isError, refetch } = useEmployee(id);
   const { toast } = useToast();
+
+  const groupedDocuments = useMemo(() => {
+    if (!employee?.documents) return {};
+    return employee.documents.reduce((acc: any, doc: any) => {
+      if (!acc[doc.type]) acc[doc.type] = [];
+      acc[doc.type].push(doc);
+      return acc;
+    }, {});
+  }, [employee?.documents]);
 
   if (isLoading) return <EmployeeDetailsSkeleton />;
 
@@ -276,18 +286,19 @@ export default function EmployeeDetails() {
 
           <InfoCard title="Uploaded Documents">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {employee.documents && employee.documents.length > 0 ? (
-                employee.documents.map((doc) => (
+              {Object.keys(groupedDocuments).length > 0 ? (
+                Object.entries(groupedDocuments).map(([type, docs]: [string, any]) => (
                   <DocumentCard
-                    key={doc.id}
-                    id={doc.id}
-                    name={doc.type.replace(/_/g, " ")}
-                    originalFilename={doc.originalFilename}
+                    key={type}
+                    type={type}
+                    name={type.replace(/_/g, " ")}
+                    documents={docs}
+                    employeeCode={employmentInfo?.code || "EMP"}
                   />
                 ))
               ) : (
                 <p className="text-sm text-gray-500 py-4 col-span-2">
-                  No documents have been uploaded for this employee[cite: 3].
+                  No documents have been uploaded for this employee.
                 </p>
               )}
             </div>
