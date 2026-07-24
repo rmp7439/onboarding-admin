@@ -63,6 +63,10 @@ export const getEmployeeById = async (
       city: emp.city,
       state: emp.state,
       pinCode: emp.pinCode,
+      permanentPoliceStation: emp.permanentPoliceStation, 
+      currentCity: emp.currentCity,                       
+      currentState: emp.currentState,                     
+      currentPinCode: emp.currentPinCode,                 
     },
     bankInfo: {
       bankName: emp.bankName,

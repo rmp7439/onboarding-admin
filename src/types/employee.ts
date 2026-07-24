@@ -55,6 +55,10 @@ export interface EmployeeDetailsData {
     city?: string;
     state?: string;
     pinCode?: string;
+    permanentPoliceStation?: string; 
+    currentCity?: string;            
+    currentState?: string;           
+    currentPinCode?: string;         
   };
   bankInfo?: {
     bankName?: string;
