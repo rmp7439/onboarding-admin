@@ -11,6 +11,7 @@ import Reports from "../pages/Reports";
 import Users from "../pages/Users";
 import Units from "../pages/Units/index";
 import NotFound from "../pages/NotFound";
+import ActivityLogs from "../pages/ActivityLogs";
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
           {
             path: "admins",
             element: <Admins />,
+          },
+          {
+            path: "logs",
+            element: <ActivityLogs />,
           },
         ],
       },
