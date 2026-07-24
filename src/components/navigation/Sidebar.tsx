@@ -10,8 +10,8 @@ const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/employees", label: "Employees", icon: Users },
   { path: "/reports", label: "Reports", icon: FileBarChart },
-  { path: "/users", label: "System Users", icon: UserCog },
-  { path: "/units", label: "Unit Management", icon: Building2 },
+  { path: "/users", label: "Users", icon: UserCog },
+  { path: "/units", label: "Units", icon: Building2 },
 ];
 
 export default function Sidebar() {

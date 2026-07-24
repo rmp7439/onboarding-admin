@@ -138,7 +138,7 @@ export default function Users() {
   return (
     <div className="space-y-6 pb-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">System Users</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Users</h1>
         <Button onClick={() => handleOpenForm()} className="bg-blue-600 hover:bg-blue-700">
           <Plus className="h-4 w-4 mr-2" /> Add User
         </Button>
@@ -151,7 +151,7 @@ export default function Users() {
               <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">User ID</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Name</TableHead>
-                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Contact (Mobile)</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Contact</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Status</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Assigned Units</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Actions</TableHead>
