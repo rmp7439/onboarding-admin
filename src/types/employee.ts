@@ -61,10 +61,10 @@ export interface EmployeeDetailsData {
     currentPinCode?: string;         
   };
   bankInfo?: {
+    accountHolderName?: string; 
     bankName?: string;
     accountNumber?: string;
     ifsc?: string;
-    branch?: string;
     micr?: string;
   };
   emergencyContact?: {

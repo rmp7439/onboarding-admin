@@ -69,10 +69,10 @@ export const getEmployeeById = async (
       currentPinCode: emp.currentPinCode,                 
     },
     bankInfo: {
+      accountHolderName: emp.accountHolderName, 
       bankName: emp.bankName,
       accountNumber: emp.accountNumber,
       ifsc: emp.ifsc,
-      branch: emp.branch,
       micr: emp.micr,
     },
     emergencyContact: {

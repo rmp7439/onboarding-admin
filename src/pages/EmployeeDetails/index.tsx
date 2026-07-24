@@ -54,13 +54,13 @@ export default function EmployeeDetails() {
     <div className="space-y-6 pb-8">
       <div className="flex items-start gap-6">
         <div className="w-[70%] space-y-6">
-          
           {/* Conditional Rejection Card */}
           {employmentInfo?.status === "REJECTED" && (
             <InfoCard title="Application Rejected">
               <div className="p-4 bg-red-50 border border-red-200 rounded-md">
                 <p className="text-sm font-medium text-red-800">
-                  {employmentInfo?.rejectReason || "No rejection reason provided."}
+                  {employmentInfo?.rejectReason ||
+                    "No rejection reason provided."}
                 </p>
               </div>
             </InfoCard>
@@ -83,66 +83,125 @@ export default function EmployeeDetails() {
 
           <InfoCard title="2. Personal Information">
             <div className="grid grid-cols-4 gap-6 gap-y-8">
-              <DetailRow label="First Name" value={personalInfo?.firstName || "-"} />
+              <DetailRow
+                label="First Name"
+                value={personalInfo?.firstName || "-"}
+              />
               <DetailRow label="Surname" value={personalInfo?.surname || "-"} />
-              <DetailRow label="Father Name" value={personalInfo?.fatherName || "-"} />
-              <DetailRow label="Husband Name" value={personalInfo?.husbandName || "-"} />
+              <DetailRow
+                label="Father Name"
+                value={personalInfo?.fatherName || "-"}
+              />
+              <DetailRow
+                label="Husband Name"
+                value={personalInfo?.husbandName || "-"}
+              />
               <DetailRow label="Gender" value={personalInfo?.gender || "-"} />
-              <DetailRow label="Blood Group" value={personalInfo?.bloodGroup || "-"} />
-              <DetailRow label="Marital Status" value={personalInfo?.maritalStatus || "-"} />
-              <DetailRow label="Highest Education" value={personalInfo?.education || "-"} /> {/* <-- Added here */}
-              <DetailRow label="Date of Birth" value={personalInfo?.dob || "-"} />
-              <DetailRow label="Phone Number" value={personalInfo?.phone || "-"} />
+              <DetailRow
+                label="Blood Group"
+                value={personalInfo?.bloodGroup || "-"}
+              />
+              <DetailRow
+                label="Marital Status"
+                value={personalInfo?.maritalStatus || "-"}
+              />
+              <DetailRow
+                label="Highest Education"
+                value={personalInfo?.education || "-"}
+              />{" "}
+              {/* <-- Added here */}
+              <DetailRow
+                label="Date of Birth"
+                value={personalInfo?.dob || "-"}
+              />
+              <DetailRow
+                label="Phone Number"
+                value={personalInfo?.phone || "-"}
+              />
             </div>
           </InfoCard>
 
           <InfoCard title="3. Identity Information">
             <div className="grid grid-cols-4 gap-6 gap-y-8">
-              <DetailRow label="Aadhaar Number" value={identityInfo?.aadhaar || "-"} />
+              <DetailRow
+                label="Aadhaar Number"
+                value={identityInfo?.aadhaar || "-"}
+              />
               <DetailRow label="PAN Number" value={identityInfo?.pan || "-"} />
               <DetailRow label="UAN" value={identityInfo?.uan || "-"} />
               <DetailRow label="ESIC" value={identityInfo?.esic || "-"} />
-              <DetailRow label="Driving Licence" value={identityInfo?.drivingLicence || "-"} />
+              <DetailRow
+                label="Driving Licence"
+                value={identityInfo?.drivingLicence || "-"}
+              />
             </div>
           </InfoCard>
 
           <InfoCard title="4. Address Information">
             <div className="mb-6">
-              <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">Permanent Address</h4>
+              <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">
+                Permanent Address
+              </h4>
               <div className="grid grid-cols-2 gap-6 mb-4">
-                <DetailRow label="Address" value={addressInfo?.permanent || "-"} />
-                <DetailRow label="Police Station" value={addressInfo?.permanentPoliceStation || "-"} />
+                <DetailRow
+                  label="Address"
+                  value={addressInfo?.permanent || "-"}
+                />
+                <DetailRow
+                  label="Police Station"
+                  value={addressInfo?.permanentPoliceStation || "-"}
+                />
               </div>
               <div className="grid grid-cols-3 gap-6">
                 <DetailRow label="City" value={addressInfo?.city || "-"} />
                 <DetailRow label="State" value={addressInfo?.state || "-"} />
-                <DetailRow label="PIN Code" value={addressInfo?.pinCode || "-"} />
+                <DetailRow
+                  label="PIN Code"
+                  value={addressInfo?.pinCode || "-"}
+                />
               </div>
             </div>
-            
+
             <div>
-              <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">Current Address</h4>
+              <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">
+                Current Address
+              </h4>
               <div className="grid grid-cols-1 gap-6 mb-4">
-                <DetailRow label="Address" value={addressInfo?.current || "-"} />
+                <DetailRow
+                  label="Address"
+                  value={addressInfo?.current || "-"}
+                />
               </div>
               <div className="grid grid-cols-3 gap-6">
-                <DetailRow label="City" value={addressInfo?.currentCity || "-"} />
-                <DetailRow label="State" value={addressInfo?.currentState || "-"} />
-                <DetailRow label="PIN Code" value={addressInfo?.currentPinCode || "-"} />
+                <DetailRow
+                  label="City"
+                  value={addressInfo?.currentCity || "-"}
+                />
+                <DetailRow
+                  label="State"
+                  value={addressInfo?.currentState || "-"}
+                />
+                <DetailRow
+                  label="PIN Code"
+                  value={addressInfo?.currentPinCode || "-"}
+                />
               </div>
             </div>
           </InfoCard>
 
           <InfoCard title="5. Bank Information">
             <div className="grid grid-cols-3 gap-6 gap-y-8">
+              <DetailRow
+                label="Account Holder Name"
+                value={bankInfo?.accountHolderName || "-"}
+              />
               <DetailRow label="Bank Name" value={bankInfo?.bankName || "-"} />
               <DetailRow
                 label="Account Number"
                 value={bankInfo?.accountNumber || "-"}
               />
               <DetailRow label="IFSC Code" value={bankInfo?.ifsc || "-"} />
-              <DetailRow label="Branch" value={bankInfo?.branch || "-"} />
-              <DetailRow label="MICR" value={bankInfo?.micr || "-"} />
+              <DetailRow label="MICR Code" value={bankInfo?.micr || "-"} />
             </div>
           </InfoCard>
 
