@@ -119,6 +119,9 @@ export default function Users() {
     );
   };
 
+  // Filter out developer accounts from the UI without deleting them in the DB
+  const filteredUsers = users?.filter(user => user.name !== "Developer") || [];
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -142,82 +145,83 @@ export default function Users() {
       </div>
 
       <Card className="shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>User ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Contact (Mobile)</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Assigned Units</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-gray-500">No users found.</TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">User ID</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Name</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Contact (Mobile)</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Assigned Units</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Actions</TableHead>
               </TableRow>
-            ) : (
-              users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium text-gray-900">{user.userId}</TableCell>
-                  <TableCell className="text-gray-900">
-                    <div className="flex items-center space-x-2">
-                      <span>{user.name}</span>
-                      {user.isProtected && (
-                        <Badge variant="default" className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0 border border-slate-200">
-                          Protected
-                        </Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-600">{user.mobile}</TableCell>
-                  <TableCell>
-                    <Badge variant={user.active ? "success" : "destructive"}>
-                      {user.active ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-gray-600 max-w-[250px] truncate">
-                    {user.units && user.units.length > 0
-                      ? user.units.map((u) => u.unit.name).join(", ")
-                      : <span className="text-gray-400 italic">None</span>}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-amber-600 hover:bg-amber-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                        disabled={user.isProtected} 
-                        onClick={() => handleOpenResetPassword(user)}
-                      >
-                        <Key className="h-4 w-4 mr-1" /> Reset Pwd
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-blue-600 hover:bg-blue-50" 
-                        onClick={() => handleOpenForm(user)}
-                      >
-                        <Edit className="h-4 w-4 mr-1" /> Edit
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                        disabled={user.isProtected} 
-                        onClick={() => handleOpenDelete(user)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" /> Delete
-                      </Button>
-                    </div>
-                  </TableCell>
+            </TableHeader>
+            <TableBody>
+              {filteredUsers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-10 text-gray-500">No users found.</TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                filteredUsers.map((user) => (
+                  <TableRow key={user.id} className="hover:bg-slate-50/60 transition-colors">
+                    <TableCell className="py-5 align-middle text-center font-medium text-slate-700 whitespace-nowrap">{user.userId}</TableCell>
+                    <TableCell className="py-5 align-middle text-center font-semibold text-slate-900 whitespace-nowrap">
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>{user.name}</span>
+                        {user.isProtected && (
+                          <Badge variant="default" className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0 border border-slate-200">
+                            Protected
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center text-slate-600 whitespace-nowrap">{user.mobile}</TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
+                      <div className="flex justify-center">
+                        <Badge variant={user.active ? "success" : "destructive"}>
+                          {user.active ? "Active" : "Inactive"}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center text-slate-600 max-w-[250px] truncate whitespace-nowrap">
+                      {user.units && user.units.length > 0
+                        ? user.units.map((u) => u.unit.name).join(", ")
+                        : <span className="text-gray-400 italic">None</span>}
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
+                      <div className="flex justify-center items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent" 
+                          disabled={user.isProtected} 
+                          onClick={() => handleOpenResetPassword(user)}
+                        >
+                          <Key className="mr-1.5 h-4 w-4" /> Reset Pwd
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                          onClick={() => handleOpenForm(user)}
+                        >
+                          <Edit className="mr-1.5 h-4 w-4" /> Edit
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
+                          disabled={user.isProtected} 
+                          onClick={() => handleOpenDelete(user)}
+                        >
+                          <Trash2 className="mr-1.5 h-4 w-4" /> Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       <UserFormDialog 

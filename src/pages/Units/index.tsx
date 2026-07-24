@@ -63,6 +63,9 @@ export default function Units() {
     });
   };
 
+  // Filter out the Development system unit from the UI
+  const filteredUnits = units?.filter(unit => unit.name !== "Development") || [];
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -86,61 +89,61 @@ export default function Units() {
       </div>
 
       <Card className="shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Unit Name</TableHead>
-              <TableHead>Created On</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {units.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={3} className="text-center py-10 text-gray-500">No units found.</TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Unit Name</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Created On</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Actions</TableHead>
               </TableRow>
-            ) : (
-              units.map((unit) => (
-                <TableRow key={unit.id}>
-                  <TableCell className="font-medium text-gray-900">
-                    <div className="flex items-center space-x-2">
-                      <span>{unit.name}</span>
-                      {unit.isProtected && (
-                        <Badge variant="default" className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0 border border-slate-200">
-                          Protected
-                        </Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-gray-600">
-                    {new Date(unit.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-blue-600 hover:bg-blue-50" 
-                        onClick={() => handleOpenForm(unit)}
-                      >
-                        <Edit className="h-4 w-4 mr-1" /> Edit
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                        disabled={unit.isProtected}
-                        onClick={() => handleOpenDelete(unit)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" /> Delete
-                      </Button>
-                    </div>
-                  </TableCell>
+            </TableHeader>
+            <TableBody>
+              {filteredUnits.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center py-10 text-gray-500">No units found.</TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                filteredUnits.map((unit) => (
+                  <TableRow key={unit.id} className="hover:bg-slate-50/60 transition-colors">
+                    <TableCell className="py-5 align-middle text-center font-semibold text-slate-900 whitespace-nowrap">
+                      <div className="flex items-center justify-center space-x-2">
+                        <span>{unit.name}</span>
+                        {unit.isProtected && (
+                          <Badge variant="default" className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0 border border-slate-200">
+                            Protected
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center text-slate-600 whitespace-nowrap">
+                      {new Date(unit.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
+                      <div className="flex justify-center items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
+                          onClick={() => handleOpenForm(unit)}
+                        >
+                          <Edit className="mr-1.5 h-4 w-4" /> Edit
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                          disabled={unit.isProtected}
+                          onClick={() => handleOpenDelete(unit)}
+                        >
+                          <Trash2 className="mr-1.5 h-4 w-4" /> Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       <UnitFormDialog 

@@ -5,7 +5,6 @@ import {
   FileBarChart,
   UserCog,
   Building2,
-  Landmark,
 } from "lucide-react";
 const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -13,7 +12,6 @@ const navItems = [
   { path: "/reports", label: "Reports", icon: FileBarChart },
   { path: "/users", label: "System Users", icon: UserCog },
   { path: "/units", label: "Unit Management", icon: Building2 },
-  { path: "/banks", label: "Bank Master", icon: Landmark }, // <-- Added Bank Master
 ];
 
 export default function Sidebar() {

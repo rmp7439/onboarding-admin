@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { User, Download } from "lucide-react";
 import { Button } from "../../components/ui/Button";
+import { Badge } from "../../components/ui/Badge";
 import { downloadEmployeeSelfie } from "../../services/documentService";
 import { useToast } from "../../hooks/useToast";
 import { InfoCard } from "./components/InfoCard";
@@ -45,9 +46,24 @@ export default function EmployeeDetails() {
     if (!employee?.id) return;
     try {
       const blob = await downloadEmployeeSelfie(employee.id);
-      triggerDownload(blob, `selfie-${employee.personalInfo?.firstName}.jpg`);
+      triggerDownload(blob, `selfie-${personalInfo?.firstName}.jpg`);
     } catch (error) {
       toast("Failed to download selfie", "error");
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "APPROVED":
+        return <Badge variant="success">APPROVED</Badge>;
+      case "PENDING":
+        return <Badge variant="warning">PENDING</Badge>;
+      case "REJECTED":
+        return <Badge variant="destructive">REJECTED</Badge>;
+      case "RETURNED_FOR_CORRECTION":
+        return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">RETURNED</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
     }
   };
 
@@ -67,35 +83,60 @@ export default function EmployeeDetails() {
             </InfoCard>
           )}
 
-          <InfoCard title="1. Employment Information">
-            <div className="grid grid-cols-4 gap-6">
-              <DetailRow
-                label="Employee Code"
-                value={employmentInfo?.code || "-"}
-              />
-              <DetailRow
-                label="Joining Date"
-                value={employmentInfo?.joiningDate || "-"}
-              />
-              <DetailRow label="Unit" value={employmentInfo?.unit || "-"} />
-              <DetailRow label="Status" value={employmentInfo?.status || "-"} />
+          <InfoCard title="Overview">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-32 h-32 rounded-full bg-gray-100 border-4 border-white shadow-md flex items-center justify-center overflow-hidden shrink-0">
+                  {employee.selfieUrl ? (
+                    <img
+                      src={employee.selfieUrl}
+                      alt="Employee"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-12 w-12 text-gray-400" />
+                  )}
+                </div>
+                {employee.selfieUrl && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadSelfie}
+                    className="w-full text-xs"
+                  >
+                    <Download className="mr-2 h-3 w-3" /> Download
+                  </Button>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-6 flex-1 w-full">
+                <DetailRow
+                  label="Employee Code"
+                  value={employmentInfo?.code || "-"}
+                />
+                <DetailRow
+                  label="Name"
+                  value={`${personalInfo?.firstName || ""} ${personalInfo?.surname || ""}`}
+                />
+                <DetailRow label="Unit" value={employmentInfo?.unit || "-"} />
+                <DetailRow label="Status" value={getStatusBadge(employmentInfo?.status || "UNKNOWN")} />
+                <DetailRow
+                  label="Joining Date"
+                  value={employmentInfo?.joiningDate || "-"}
+                />
+                <DetailRow
+                  label="Phone Number"
+                  value={personalInfo?.phone || "-"}
+                />
+              </div>
             </div>
           </InfoCard>
 
-          <InfoCard title="2. Personal Information">
-            <div className="grid grid-cols-4 gap-6 gap-y-8">
+          <InfoCard title="Personal Information">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <DetailRow
-                label="First Name"
-                value={personalInfo?.firstName || "-"}
-              />
-              <DetailRow label="Surname" value={personalInfo?.surname || "-"} />
-              <DetailRow
-                label="Father Name"
-                value={personalInfo?.fatherName || "-"}
-              />
-              <DetailRow
-                label="Husband Name"
-                value={personalInfo?.husbandName || "-"}
+                label="Date of Birth"
+                value={personalInfo?.dob || "-"}
               />
               <DetailRow label="Gender" value={personalInfo?.gender || "-"} />
               <DetailRow
@@ -106,29 +147,16 @@ export default function EmployeeDetails() {
                 label="Marital Status"
                 value={personalInfo?.maritalStatus || "-"}
               />
-              <DetailRow
-                label="Highest Education"
-                value={personalInfo?.education || "-"}
-              />{" "}
-              {/* <-- Added here */}
-              <DetailRow
-                label="Date of Birth"
-                value={personalInfo?.dob || "-"}
-              />
-              <DetailRow
-                label="Phone Number"
-                value={personalInfo?.phone || "-"}
-              />
             </div>
           </InfoCard>
 
-          <InfoCard title="3. Identity Information">
-            <div className="grid grid-cols-4 gap-6 gap-y-8">
+          <InfoCard title="Government IDs">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
               <DetailRow
-                label="Aadhaar Number"
+                label="Aadhaar"
                 value={identityInfo?.aadhaar || "-"}
               />
-              <DetailRow label="PAN Number" value={identityInfo?.pan || "-"} />
+              <DetailRow label="PAN" value={identityInfo?.pan || "-"} />
               <DetailRow label="UAN" value={identityInfo?.uan || "-"} />
               <DetailRow label="ESIC" value={identityInfo?.esic || "-"} />
               <DetailRow
@@ -138,7 +166,7 @@ export default function EmployeeDetails() {
             </div>
           </InfoCard>
 
-          <InfoCard title="4. Address Information">
+          <InfoCard title="Address">
             <div className="mb-6">
               <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">
                 Permanent Address
@@ -190,8 +218,8 @@ export default function EmployeeDetails() {
             </div>
           </InfoCard>
 
-          <InfoCard title="5. Bank Information">
-            <div className="grid grid-cols-3 gap-6 gap-y-8">
+          <InfoCard title="Bank Details">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-6">
               <DetailRow
                 label="Account Holder Name"
                 value={bankInfo?.accountHolderName || "-"}
@@ -206,7 +234,7 @@ export default function EmployeeDetails() {
             </div>
           </InfoCard>
 
-          <InfoCard title="6. Emergency Contact">
+          <InfoCard title="Emergency Contact">
             <div className="grid grid-cols-3 gap-6">
               <DetailRow
                 label="Contact Name"
@@ -223,8 +251,8 @@ export default function EmployeeDetails() {
             </div>
           </InfoCard>
 
-          <InfoCard title="7. Nominee Details">
-            <div className="grid grid-cols-4 gap-6">
+          <InfoCard title="Nominee Details">
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-6">
               <DetailRow
                 label="Nominee Name"
                 value={nomineeInfo?.name || "-"}
@@ -246,7 +274,7 @@ export default function EmployeeDetails() {
             </div>
           </InfoCard>
 
-          <InfoCard title="8. Uploaded Documents">
+          <InfoCard title="Uploaded Documents">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {employee.documents && employee.documents.length > 0 ? (
                 employee.documents.map((doc) => (
@@ -267,37 +295,6 @@ export default function EmployeeDetails() {
         </div>
 
         <div className="w-[30%] space-y-6 sticky top-6">
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col items-center justify-center text-center">
-            <div className="w-32 h-32 rounded-full bg-gray-100 border-4 border-white shadow-md flex items-center justify-center mb-4 overflow-hidden">
-              {employee.selfieUrl ? (
-                <img
-                  src={employee.selfieUrl}
-                  alt="Employee"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <User className="h-12 w-12 text-gray-400" />
-              )}
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              {personalInfo?.firstName || "Unknown"}{" "}
-              {personalInfo?.surname || ""}
-            </h3>
-            <p className="text-sm text-gray-500 mb-2">
-              {employmentInfo?.unit || "No Unit Assigned"}
-            </p>
-
-            {employee.selfieUrl && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownloadSelfie}
-                className="w-full mt-2"
-              >
-                <Download className="mr-2 h-4 w-4" /> Download Selfie
-              </Button>
-            )}
-          </div>
           <ActionPanel
             employeeId={employee.id}
             status={employmentInfo?.status || "UNKNOWN"}
