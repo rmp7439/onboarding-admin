@@ -1,18 +1,25 @@
-import { NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, FileBarChart, UserCog, Building2 } from 'lucide-react';
-
+import { NavLink, Link } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Users,
+  FileBarChart,
+  UserCog,
+  Building2,
+  Landmark,
+} from "lucide-react";
 const navItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/employees', label: 'Employees', icon: Users },
-  { path: '/reports', label: 'Reports', icon: FileBarChart },
-  { path: '/users', label: 'System Users', icon: UserCog },
-  { path: '/units', label: 'Unit Management', icon: Building2 }
+  { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/employees", label: "Employees", icon: Users },
+  { path: "/reports", label: "Reports", icon: FileBarChart },
+  { path: "/users", label: "System Users", icon: UserCog },
+  { path: "/units", label: "Unit Management", icon: Building2 },
+  { path: "/banks", label: "Bank Master", icon: Landmark }, // <-- Added Bank Master
 ];
 
 export default function Sidebar() {
   return (
     <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col hidden md:flex shrink-0">
-      <Link 
+      <Link
         to="/dashboard"
         className="h-16 flex items-center px-6 border-b border-gray-200 shrink-0 cursor-pointer hover:bg-slate-50 transition-colors group block no-underline"
       >
@@ -20,7 +27,7 @@ export default function Sidebar() {
           OnboardApp
         </h1>
       </Link>
-      
+
       <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
         {navItems.map((item) => (
           <NavLink
@@ -29,8 +36,8 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActive
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? "bg-blue-50 text-blue-700"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`
             }
           >
