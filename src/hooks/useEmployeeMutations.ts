@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateEmployeeStatus, assignEmployeeCode, returnEmployeeForCorrection } from '../services/employeeService';
+import { updateEmployeeStatus, assignEmployeeCode, returnEmployeeForCorrection, adminUpdateEmployee } from '../services/employeeService';
 import { type EmployeeStatus, type Employee, type EmployeeDetailsData } from '../types/employee';
 
 export const useUpdateEmployeeStatus = () => {
@@ -90,6 +90,18 @@ export const useAssignEmployeeCode = () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       queryClient.invalidateQueries({ queryKey: ['employee', variables.id] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+};
+
+export const useAdminUpdateEmployee = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: adminUpdateEmployee,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['employee', variables.id] });
     },
   });
 };

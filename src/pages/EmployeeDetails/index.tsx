@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { User, Download } from "lucide-react";
 import { Button } from "../../components/ui/Button";
@@ -13,11 +13,38 @@ import { EmployeeDetailsSkeleton } from "./components/EmployeeDetailsSkeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { useEmployee } from "../../hooks/useEmployee";
 import { triggerDownload } from "../../hooks/useReports";
+import { EditEmployeeDialog } from "./components/EditEmployeeDialog";
+import { useAdminUpdateEmployee } from "../../hooks/useEmployeeMutations";
 
 export default function EmployeeDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: employee, isLoading, isError, refetch } = useEmployee(id);
   const { toast } = useToast();
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
+  const updateMutation = useAdminUpdateEmployee();
+
+  const handleEditSubmit = (payload: any) => {
+    setEditError(null);
+    updateMutation.mutate(
+      { id: employee!.id, payload },
+      {
+        onSuccess: () => {
+          toast("Employee details updated successfully.", "success");
+          setIsEditOpen(false);
+        },
+        onError: (err: any) => {
+          setEditError(
+            err?.response?.data?.error ||
+              err.message ||
+              "Failed to update employee.",
+          );
+        },
+      },
+    );
+  };
 
   const groupedDocuments = useMemo(() => {
     if (!employee?.documents) return {};
@@ -71,7 +98,11 @@ export default function EmployeeDetails() {
       case "REJECTED":
         return <Badge variant="destructive">REJECTED</Badge>;
       case "RETURNED_FOR_CORRECTION":
-        return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">RETURNED</Badge>;
+        return (
+          <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">
+            RETURNED
+          </Badge>
+        );
       default:
         return <Badge>{status}</Badge>;
     }
@@ -118,7 +149,7 @@ export default function EmployeeDetails() {
                   </Button>
                 )}
               </div>
-              
+
               <div className="grid grid-cols-2 xl:grid-cols-3 gap-6 flex-1 w-full">
                 <DetailRow
                   label="Employee Code"
@@ -129,7 +160,10 @@ export default function EmployeeDetails() {
                   value={`${personalInfo?.firstName || ""} ${personalInfo?.surname || ""}`}
                 />
                 <DetailRow label="Unit" value={employmentInfo?.unit || "-"} />
-                <DetailRow label="Status" value={getStatusBadge(employmentInfo?.status || "UNKNOWN")} />
+                <DetailRow
+                  label="Status"
+                  value={getStatusBadge(employmentInfo?.status || "UNKNOWN")}
+                />
                 <DetailRow
                   label="Joining Date"
                   value={employmentInfo?.joiningDate || "-"}
@@ -162,10 +196,7 @@ export default function EmployeeDetails() {
 
           <InfoCard title="Government IDs">
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
-              <DetailRow
-                label="Aadhaar"
-                value={identityInfo?.aadhaar || "-"}
-              />
+              <DetailRow label="Aadhaar" value={identityInfo?.aadhaar || "-"} />
               <DetailRow label="PAN" value={identityInfo?.pan || "-"} />
               <DetailRow label="UAN" value={identityInfo?.uan || "-"} />
               <DetailRow label="ESIC" value={identityInfo?.esic || "-"} />
@@ -287,17 +318,19 @@ export default function EmployeeDetails() {
           <InfoCard title="Uploaded Documents">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {Object.keys(groupedDocuments).length > 0 ? (
-                Object.entries(groupedDocuments).map(([type, docs]: [string, any]) => (
-                  <DocumentCard
-                    key={type}
-                    type={type}
-                    name={type.replace(/_/g, " ")}
-                    documents={docs}
-                    employeeCode={employmentInfo?.code || "EMP"}
-                    employeeId={employee.id}
-                    employeeName={`${personalInfo?.firstName || ""} ${personalInfo?.surname || ""}`}
-                  />
-                ))
+                Object.entries(groupedDocuments).map(
+                  ([type, docs]: [string, any]) => (
+                    <DocumentCard
+                      key={type}
+                      type={type}
+                      name={type.replace(/_/g, " ")}
+                      documents={docs}
+                      employeeCode={employmentInfo?.code || "EMP"}
+                      employeeId={employee.id}
+                      employeeName={`${personalInfo?.firstName || ""} ${personalInfo?.surname || ""}`}
+                    />
+                  ),
+                )
               ) : (
                 <p className="text-sm text-gray-500 py-4 col-span-2">
                   No documents have been uploaded for this employee.
@@ -311,9 +344,19 @@ export default function EmployeeDetails() {
           <ActionPanel
             employeeId={employee.id}
             status={employmentInfo?.status || "UNKNOWN"}
+            onEditClick={() => setIsEditOpen(true)} // <-- Pass the click handler
           />
         </div>
       </div>
+
+      <EditEmployeeDialog
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        employee={employee}
+        onSave={handleEditSubmit}
+        isLoading={updateMutation.isPending}
+        error={editError}
+      />
     </div>
   );
 }

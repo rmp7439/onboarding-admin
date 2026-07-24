@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, X, Tag } from "lucide-react";
+import { Check, X, Tag, Edit} from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -22,9 +22,11 @@ import { useToast } from "../../../hooks/useToast";
 export function ActionPanel({
   employeeId,
   status,
+  onEditClick,
 }: {
   employeeId: string;
   status: string;
+  onEditClick: () => void;
 }) {
   const [isApproveOpen, setIsApproveOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
@@ -104,6 +106,14 @@ export function ActionPanel({
             onClick={() => setIsApproveOpen(true)}
           >
             <Check className="mr-2 h-4 w-4" /> Approve Employee
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full justify-start text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+            onClick={onEditClick}
+          >
+            <Edit className="mr-2 h-4 w-4" /> Edit Details
           </Button>
 
           <Button

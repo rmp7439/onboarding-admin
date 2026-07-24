@@ -146,3 +146,8 @@ export const returnEmployeeForCorrection = async ({
   });
   return data.data;
 };
+
+export const adminUpdateEmployee = async ({ id, payload }: { id: string; payload: any }) => {
+  const { data } = await apiClient.put(`/admin/employees/${id}`, payload);
+  return data.data;
+};
