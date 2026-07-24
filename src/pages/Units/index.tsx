@@ -37,18 +37,18 @@ export default function Units() {
 
   const extractError = (err: any) => err?.response?.data?.error || err.message || "An unexpected error occurred.";
 
-  const handleSaveUnit = (name: string) => {
+  const handleSaveUnit = (payload: { name: string; requiredFields: string[] }) => {
     setApiError(null);
     if (selectedUnit) {
       updateMutation.mutate(
-        { id: selectedUnit.id, name },
+        { id: selectedUnit.id, payload },
         {
           onSuccess: () => { toast("Unit updated successfully", "success"); setFormOpen(false); },
           onError: (err) => setApiError(extractError(err))
         }
       );
     } else {
-      createMutation.mutate(name, {
+      createMutation.mutate(payload, {
         onSuccess: () => { toast("Unit created successfully", "success"); setFormOpen(false); },
         onError: (err) => setApiError(extractError(err))
       });
@@ -120,8 +120,7 @@ export default function Units() {
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="text-blue-600 hover:bg-blue-50 disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                        disabled={unit.isProtected}
+                        className="text-blue-600 hover:bg-blue-50" 
                         onClick={() => handleOpenForm(unit)}
                       >
                         <Edit className="h-4 w-4 mr-1" /> Edit

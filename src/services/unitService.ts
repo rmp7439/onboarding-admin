@@ -6,13 +6,13 @@ export const getUnits = async (): Promise<Unit[]> => {
   return data.data;
 };
 
-export const createUnit = async (name: string): Promise<Unit> => {
-  const { data } = await apiClient.post('/units', { name });
+export const createUnit = async (payload: { name: string; requiredFields: string[] }): Promise<Unit> => {
+  const { data } = await apiClient.post('/units', payload);
   return data.data;
 };
 
-export const updateUnit = async (id: string, name: string): Promise<Unit> => {
-  const { data } = await apiClient.put(`/units/${id}`, { name });
+export const updateUnit = async (id: string, payload: { name: string; requiredFields: string[] }): Promise<Unit> => {
+  const { data } = await apiClient.put(`/units/${id}`, payload);
   return data.data;
 };
 

@@ -19,7 +19,7 @@ export const useCreateUnit = () => {
 export const useUpdateUnit = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, name }: { id: string; name: string }) => updateUnit(id, name),
+    mutationFn: ({ id, payload }: { id: string; payload: { name: string; requiredFields: string[] } }) => updateUnit(id, payload),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['units'] })
   });
 };
