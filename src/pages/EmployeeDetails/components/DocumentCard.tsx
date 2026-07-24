@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FileText, Download, Eye, ShieldCheck, Loader2 } from "lucide-react";
 import { Button } from "../../../components/ui/Button";
-import { downloadEmployeeDocument } from "../../../services/documentService";
+import { downloadMergedDocument } from "../../../services/documentService";
 import { useToast } from "../../../hooks/useToast";
 
 interface DocumentInfo {
@@ -14,94 +14,31 @@ interface DocumentCardProps {
   name: string;
   documents: DocumentInfo[];
   employeeCode: string;
+  employeeId: string;
 }
 
-export function DocumentCard({ type, name, documents, employeeCode }: DocumentCardProps) {
+export function DocumentCard({ type, name, documents, employeeCode, employeeId }: DocumentCardProps) {
   const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const getFileName = () => {
     const prefix = employeeCode && employeeCode !== "Pending Assignment" ? employeeCode : "EMP";
-    let suffix = type;
-    if (type === 'AADHAAR') suffix = 'AADHAAR_CARD';
-    if (type === 'PAN') suffix = 'PAN_CARD';
-    if (type === 'DRIVING_LICENSE') suffix = 'DRIVING_LICENCE';
-    if (type === 'VOTER_ID') suffix = 'VOTER_ID';
-    if (type === 'DISCHARGE_BOOK') suffix = 'DISCHARGE_BOOK';
-    if (type === 'BANK_PASSBOOK') suffix = 'BANK_PASSBOOK';
-    if (type === 'EDUCATION') suffix = 'EDUCATION_DOCUMENT';
-    
-    return `${prefix}_${suffix}.pdf`;
-  };
-
-  // Safely inject jsPDF via CDN to avoid package.json/build dependencies 
-  const loadJsPDF = async (): Promise<any> => {
-    if ((window as any).jspdf) return (window as any).jspdf.jsPDF;
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      script.onload = () => resolve((window as any).jspdf.jsPDF);
-      script.onerror = () => reject(new Error('Failed to load PDF library'));
-      document.head.appendChild(script);
-    });
-  };
-
-  const generatePDF = async () => {
-    const JsPDFClass = await loadJsPDF();
-    const pdf = new JsPDFClass({ orientation: "portrait", unit: "px", format: "a4" });
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    for (let i = 0; i < documents.length; i++) {
-      const doc = documents[i];
-      const blob = await downloadEmployeeDocument(doc.id);
-      
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-
-      const img = new Image();
-      img.src = base64;
-      await new Promise((resolve) => { img.onload = resolve; });
-
-      // Calculate the size to perfectly fit A4 bounds without cropping
-      const imgRatio = img.width / img.height;
-
-      let finalWidth = pdfWidth;
-      let finalHeight = pdfWidth / imgRatio;
-
-      if (finalHeight > pdfHeight) {
-        finalHeight = pdfHeight;
-        finalWidth = finalHeight * imgRatio;
-      }
-
-      // Centers the image on the PDF canvas perfectly
-      const x = (pdfWidth - finalWidth) / 2;
-      const y = (pdfHeight - finalHeight) / 2;
-
-      if (i > 0) pdf.addPage();
-      
-      const formatMatch = base64.match(/data:image\/(.*);base64/);
-      let format = formatMatch ? formatMatch[1].toUpperCase() : 'JPEG';
-      
-      // Strict format fallback to keep jsPDF happy
-      if (format === 'PNG') format = 'PNG';
-      else if (format === 'WEBP') format = 'WEBP';
-      else format = 'JPEG'; 
-
-      pdf.addImage(base64, format, x, y, finalWidth, finalHeight);
-    }
-    return pdf;
+    return `${prefix}_${type}.pdf`;
   };
 
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
-      const pdf = await generatePDF();
-      pdf.save(getFileName());
+      const blob = await downloadMergedDocument(employeeId, type);
+      
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', getFileName());
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       toast("Failed to download document.", "error");
     } finally {
@@ -112,9 +49,9 @@ export function DocumentCard({ type, name, documents, employeeCode }: DocumentCa
   const handlePreview = async () => {
     try {
       setIsDownloading(true);
-      const pdf = await generatePDF();
-      const pdfBlob = pdf.output("blob");
-      const url = window.URL.createObjectURL(pdfBlob);
+      const blob = await downloadMergedDocument(employeeId, type);
+      
+      const url = window.URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (error) {
       toast("Failed to preview document.", "error");

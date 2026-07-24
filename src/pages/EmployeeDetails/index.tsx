@@ -294,6 +294,7 @@ export default function EmployeeDetails() {
                     name={type.replace(/_/g, " ")}
                     documents={docs}
                     employeeCode={employmentInfo?.code || "EMP"}
+                    employeeId={employee.id} // <-- Added Prop
                   />
                 ))
               ) : (
