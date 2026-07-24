@@ -38,6 +38,7 @@ export default function EmployeeDetails() {
     addressInfo,
     bankInfo,
     emergencyContact,
+    nomineeInfo,
   } = employee;
 
   const handleDownloadSelfie = async () => {
@@ -222,7 +223,30 @@ export default function EmployeeDetails() {
             </div>
           </InfoCard>
 
-          <InfoCard title="7. Uploaded Documents">
+          <InfoCard title="7. Nominee Details">
+            <div className="grid grid-cols-4 gap-6">
+              <DetailRow
+                label="Nominee Name"
+                value={nomineeInfo?.name || "-"}
+              />
+              <DetailRow
+                label="Relationship"
+                value={nomineeInfo?.relationship || "-"}
+              />
+              <DetailRow
+                label="Phone Number"
+                value={nomineeInfo?.phone || "-"}
+              />
+              <DetailRow
+                label="Percentage"
+                value={
+                  nomineeInfo?.percentage ? `${nomineeInfo.percentage}%` : "-"
+                }
+              />
+            </div>
+          </InfoCard>
+
+          <InfoCard title="8. Uploaded Documents">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {employee.documents && employee.documents.length > 0 ? (
                 employee.documents.map((doc) => (

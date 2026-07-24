@@ -72,4 +72,10 @@ export interface EmployeeDetailsData {
     relationship?: string;
     phone?: string;
   };
+  nomineeInfo?: {         
+    name?: string;
+    relationship?: string;
+    phone?: string;
+    percentage?: number;
+  };
 }

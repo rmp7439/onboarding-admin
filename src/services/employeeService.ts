@@ -80,6 +80,12 @@ export const getEmployeeById = async (
       relationship: emp.emergencyRelation,
       phone: emp.emergencyPhone,
     },
+    nomineeInfo: {                  
+      name: emp.nomineeName,
+      relationship: emp.nomineeRelation,
+      phone: emp.nomineeMobile,
+      percentage: emp.nomineePercentage,
+    },
     documents:
       emp.documents?.map((doc: any) => ({
         id: doc.id,
