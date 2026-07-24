@@ -167,21 +167,21 @@ export default function EmployeeDetails() {
           </InfoCard>
 
           <InfoCard title="Address">
-            <div className="mb-6">
+            <div className="mb-8">
               <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">
                 Permanent Address
               </h4>
-              <div className="grid grid-cols-2 gap-6 mb-4">
+              <div className="grid grid-cols-1 mb-4">
                 <DetailRow
                   label="Address"
                   value={addressInfo?.permanent || "-"}
                 />
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 <DetailRow
                   label="Police Station"
                   value={addressInfo?.permanentPoliceStation || "-"}
                 />
-              </div>
-              <div className="grid grid-cols-3 gap-6">
                 <DetailRow label="City" value={addressInfo?.city || "-"} />
                 <DetailRow label="State" value={addressInfo?.state || "-"} />
                 <DetailRow
@@ -195,13 +195,17 @@ export default function EmployeeDetails() {
               <h4 className="text-md font-semibold text-gray-700 mb-4 border-b pb-2">
                 Current Address
               </h4>
-              <div className="grid grid-cols-1 gap-6 mb-4">
+              <div className="grid grid-cols-1 mb-4">
                 <DetailRow
                   label="Address"
                   value={addressInfo?.current || "-"}
                 />
               </div>
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <DetailRow
+                  label="Police Station"
+                  value={(addressInfo as any)?.currentPoliceStation || "-"}
+                />
                 <DetailRow
                   label="City"
                   value={addressInfo?.currentCity || "-"}
