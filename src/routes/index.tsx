@@ -1,22 +1,23 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { ProtectedRoute } from './ProtectedRoute';
-import { PublicRoute } from './PublicRoute';
-import AdminLayout from '../layouts/AdminLayout';
-import Login from '../pages/Login';
-import Dashboard from '../pages/Dashboard';
-import Employees from '../pages/Employees';
-import EmployeeDetails from '../pages/EmployeeDetails';
-import Reports from '../pages/Reports';
-import Users from '../pages/Users';
-import Units from '../pages/Units/index';
-import NotFound from '../pages/NotFound';
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { PublicRoute } from "./PublicRoute";
+import AdminLayout from "../layouts/AdminLayout";
+import Admins from "../pages/Admins/";
+import Login from "../pages/Login";
+import Dashboard from "../pages/Dashboard";
+import Employees from "../pages/Employees";
+import EmployeeDetails from "../pages/EmployeeDetails";
+import Reports from "../pages/Reports";
+import Users from "../pages/Users";
+import Units from "../pages/Units/index";
+import NotFound from "../pages/NotFound";
 
 export const router = createBrowserRouter([
   {
     element: <PublicRoute />,
     children: [
       {
-        path: '/login',
+        path: "/login",
         element: <Login />,
       },
     ],
@@ -25,7 +26,7 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <AdminLayout />,
         children: [
           {
@@ -33,35 +34,39 @@ export const router = createBrowserRouter([
             element: <Navigate to="/dashboard" replace />,
           },
           {
-            path: 'dashboard',
+            path: "dashboard",
             element: <Dashboard />,
           },
           {
-            path: 'employees',
+            path: "employees",
             element: <Employees />,
           },
           {
-            path: 'employees/:id',
+            path: "employees/:id",
             element: <EmployeeDetails />,
           },
           {
-            path: 'reports',
+            path: "reports",
             element: <Reports />,
           },
           {
-            path: 'users',
+            path: "users",
             element: <Users />,
           },
           {
-            path: 'units',
+            path: "units",
             element: <Units />,
+          },
+          {
+            path: "admins",
+            element: <Admins />,
           },
         ],
       },
     ],
   },
   {
-    path: '*',
+    path: "*",
     element: <NotFound />,
   },
 ]);
