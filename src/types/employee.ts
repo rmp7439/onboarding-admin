@@ -45,6 +45,7 @@ export interface EmployeeDetailsData {
     pan?: string;
     uan?: string;
     esic?: string;
+    drivingLicence?: string;
   };
   addressInfo?: {
     permanent?: string;

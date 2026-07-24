@@ -113,14 +113,12 @@ export default function EmployeeDetails() {
           </InfoCard>
 
           <InfoCard title="3. Identity Information">
-            <div className="grid grid-cols-4 gap-6">
-              <DetailRow
-                label="Aadhaar Number"
-                value={identityInfo?.aadhaar || "-"}
-              />
+            <div className="grid grid-cols-4 gap-6 gap-y-8">
+              <DetailRow label="Aadhaar Number" value={identityInfo?.aadhaar || "-"} />
               <DetailRow label="PAN Number" value={identityInfo?.pan || "-"} />
               <DetailRow label="UAN" value={identityInfo?.uan || "-"} />
               <DetailRow label="ESIC" value={identityInfo?.esic || "-"} />
+              <DetailRow label="Driving Licence" value={identityInfo?.drivingLicence || "-"} />
             </div>
           </InfoCard>
 

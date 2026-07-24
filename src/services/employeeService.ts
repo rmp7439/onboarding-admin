@@ -53,6 +53,7 @@ export const getEmployeeById = async (
       pan: emp.pan,
       uan: emp.uan,
       esic: emp.esic,
+      drivingLicence: emp.drivingLicence,
     },
     addressInfo: {
       permanent: emp.permanentAddress,
