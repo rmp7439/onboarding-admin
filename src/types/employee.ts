@@ -16,6 +16,18 @@ export interface Employee {
   rejectReason?: string | null;
   correctionRemark?: string | null;
   joiningDate: string;
+  gender?: string;
+  education?: string;
+  maritalStatus?: string;
+  drivingLicence?: string;
+  accountHolderName?: string;
+  bankName?: string;
+  ifsc?: string;
+  micr?: string;
+  nomineeName?: string;
+  nomineeRelation?: string;
+  nomineeMobile?: string;
+  nomineePercentage?: number;
 }
 
 export interface EmployeeDetailsData {
@@ -55,13 +67,13 @@ export interface EmployeeDetailsData {
     city?: string;
     state?: string;
     pinCode?: string;
-    permanentPoliceStation?: string; 
-    currentCity?: string;            
-    currentState?: string;           
-    currentPinCode?: string;         
+    permanentPoliceStation?: string;
+    currentCity?: string;
+    currentState?: string;
+    currentPinCode?: string;
   };
   bankInfo?: {
-    accountHolderName?: string; 
+    accountHolderName?: string;
     bankName?: string;
     accountNumber?: string;
     ifsc?: string;
@@ -72,7 +84,7 @@ export interface EmployeeDetailsData {
     relationship?: string;
     phone?: string;
   };
-  nomineeInfo?: {         
+  nomineeInfo?: {
     name?: string;
     relationship?: string;
     phone?: string;

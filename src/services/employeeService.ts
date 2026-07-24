@@ -12,12 +12,24 @@ export const getEmployees = async (search?: string): Promise<Employee[]> => {
     id: emp.id,
     code: emp.employeeCode || "Pending Assignment",
     name: `${emp.firstName} ${emp.surname}`,
-    unit: emp.unit, // Replaced 'N/A' placeholder mapping
+    unit: emp.unit,
     phone: emp.mobile,
     status: emp.status,
     rejectReason: emp.rejectReason,
     correctionRemark: emp.correctionRemark,
     joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
+    gender: emp.gender,
+    education: emp.education ? emp.education.replace(/_/g, ' ').replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) : undefined,
+    maritalStatus: emp.maritalStatus ? emp.maritalStatus.charAt(0).toUpperCase() + emp.maritalStatus.slice(1).toLowerCase() : undefined,
+    drivingLicence: emp.drivingLicence,
+    accountHolderName: emp.accountHolderName,
+    bankName: emp.bankName,
+    ifsc: emp.ifsc,
+    micr: emp.micr,
+    nomineeName: emp.nomineeName,
+    nomineeRelation: emp.nomineeRelation,
+    nomineeMobile: emp.nomineeMobile,
+    nomineePercentage: emp.nomineePercentage,
   }));
 };
 
@@ -33,7 +45,7 @@ export const getEmployeeById = async (
     employmentInfo: {
       code: emp.employeeCode || "Pending Assignment",
       joiningDate: new Date(emp.joiningDate).toISOString().split("T")[0],
-      unit: emp.unit, // Replaced 'N/A' placeholder mapping
+      unit: emp.unit,
       status: emp.status,
       rejectReason: emp.rejectReason,
       correctionRemark: emp.correctionRemark,
@@ -63,13 +75,13 @@ export const getEmployeeById = async (
       city: emp.city,
       state: emp.state,
       pinCode: emp.pinCode,
-      permanentPoliceStation: emp.permanentPoliceStation, 
-      currentCity: emp.currentCity,                       
-      currentState: emp.currentState,                     
-      currentPinCode: emp.currentPinCode,                 
+      permanentPoliceStation: emp.permanentPoliceStation,
+      currentCity: emp.currentCity,
+      currentState: emp.currentState,
+      currentPinCode: emp.currentPinCode,
     },
     bankInfo: {
-      accountHolderName: emp.accountHolderName, 
+      accountHolderName: emp.accountHolderName,
       bankName: emp.bankName,
       accountNumber: emp.accountNumber,
       ifsc: emp.ifsc,
@@ -80,7 +92,7 @@ export const getEmployeeById = async (
       relationship: emp.emergencyRelation,
       phone: emp.emergencyPhone,
     },
-    nomineeInfo: {                  
+    nomineeInfo: {
       name: emp.nomineeName,
       relationship: emp.nomineeRelation,
       phone: emp.nomineeMobile,
