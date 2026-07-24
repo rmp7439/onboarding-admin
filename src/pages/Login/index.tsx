@@ -13,7 +13,6 @@ import { login, storeToken, storeUser } from "../../services/authService";
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -24,8 +23,7 @@ export default function Login() {
   const { toast } = useToast();
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { rememberMe: false }
+    resolver: zodResolver(loginSchema)
   });
 
   const onSubmit = async (data: LoginFormValues) => {
@@ -33,9 +31,10 @@ export default function Login() {
       setIsSubmitting(true);
       const response = await login({ email: data.email, password: data.password });
       
-      storeToken(response.token, !!data.rememberMe);
-      storeUser(response.user, !!data.rememberMe);
-      setAuth(response.user, response.token, !!data.rememberMe);
+      // Defaulting rememberMe to false as the checkbox has been removed
+      storeToken(response.token, false);
+      storeUser(response.user, false);
+      setAuth(response.user, response.token, false);
       
       toast("Login successful", "success");
     } catch (error: unknown) {
@@ -72,12 +71,7 @@ export default function Login() {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
-              <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-700" onClick={(e) => { e.preventDefault(); toast("Please contact your IT administrator.", "info"); }}>
-                Forgot password?
-              </a>
-            </div>
+            <Label htmlFor="password">Password</Label>
             <Input 
               id="password" 
               type="password" 
@@ -86,16 +80,6 @@ export default function Login() {
               disabled={isSubmitting}
             />
             {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <input 
-              type="checkbox" 
-              id="rememberMe" 
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
-              {...register("rememberMe")}
-            />
-            <Label htmlFor="rememberMe" className="font-normal text-slate-600 cursor-pointer">Remember me for 30 days</Label>
           </div>
 
           <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" isLoading={isSubmitting}>
