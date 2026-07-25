@@ -105,6 +105,7 @@ export default function Admins() {
               <TableHead className="font-semibold text-center">Email</TableHead>
               <TableHead className="font-semibold text-center">Role</TableHead>
               <TableHead className="font-semibold text-center">Status</TableHead>
+              <TableHead className="font-semibold text-center">Created On</TableHead>
               <TableHead className="font-semibold text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -114,8 +115,8 @@ export default function Admins() {
                 <TableCell className="text-center font-medium">{admin.name}</TableCell>
                 <TableCell className="text-center text-gray-500">{admin.email}</TableCell>
                 <TableCell className="text-center">
-                  <Badge variant={admin.role === "PERME" ? "default" : "success"} className={admin.role === "PERME" ? "bg-purple-100 text-purple-800" : ""}>
-                    {admin.role === "PERME" ? "DEV (Owner)" : "ADMIN"}
+                  <Badge variant={admin.role === "DEV" ? "default" : "success"} className={admin.role === "DEV" ? "bg-purple-100 text-purple-800" : ""}>
+                    {admin.role === "DEV" ? "DEV (Owner)" : "ADMIN"}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-center">
@@ -123,22 +124,25 @@ export default function Admins() {
                     {admin.active ? "Active" : "Disabled"}
                   </Badge>
                 </TableCell>
+                <TableCell className="text-center text-gray-500">
+                  {new Date(admin.createdAt).toLocaleDateString()}
+                </TableCell>
                 <TableCell className="text-center">
                   <div className="flex justify-center items-center gap-2">
                     <Button 
-                      variant="ghost" className="text-amber-600" disabled={admin.role === "PERME"}
+                      variant="ghost" className="text-amber-600" disabled={admin.role === "DEV"}
                       onClick={() => { setSelectedAdmin(admin); setResetPasswordOpen(true); }}
                     >
                       <Key className="h-4 w-4" />
                     </Button>
                     <Button 
-                      variant="ghost" className="text-blue-600" disabled={admin.role === "PERME"}
+                      variant="ghost" className="text-blue-600" disabled={admin.role === "DEV"}
                       onClick={() => handleOpenForm(admin)}
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
                     <Button 
-                      variant="ghost" className="text-red-600" disabled={admin.role === "PERME"}
+                      variant="ghost" className="text-red-600" disabled={admin.role === "DEV"}
                       onClick={() => { setSelectedAdmin(admin); setDeleteOpen(true); }}
                     >
                       <Trash2 className="h-4 w-4" />
