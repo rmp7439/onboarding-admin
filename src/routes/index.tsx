@@ -12,6 +12,7 @@ import Users from "../pages/Users";
 import Units from "../pages/Units/index";
 import NotFound from "../pages/NotFound";
 import ActivityLogs from "../pages/ActivityLogs";
+import Banks from "../pages/Banks";
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
           {
             path: "units",
             element: <Units />,
+          },
+          {
+            path: "banks",
+            element: <Banks />,
           },
           {
             path: "admins",

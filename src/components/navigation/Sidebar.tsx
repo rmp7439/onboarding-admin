@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Users, FileBarChart, UserCog, Building2, ShieldAlert, History } from "lucide-react";
+import { LayoutDashboard, Users, FileBarChart, UserCog, Building2, ShieldAlert, History, Landmark } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   { path: "/reports", label: "Reports", icon: FileBarChart },
   { path: "/users", label: "Users", icon: UserCog },
   { path: "/units", label: "Units", icon: Building2 },
+  { path: "/banks", label: "Banks", icon: Landmark },
   { path: "/admins", label: "Admins", icon: ShieldAlert, role: "DEV" },
   { path: "/logs", label: "Activity Logs", icon: History }, 
 ];
