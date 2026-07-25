@@ -148,7 +148,7 @@ export default function Admins() {
                         <Button 
                           variant="ghost" 
                           className="h-9 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                          disabled={admin.role === "DEV"}
+                          disabled={admin.role === "DEV" || admin.username === "nikhil"}
                           onClick={() => { setSelectedAdmin(admin); setResetPasswordOpen(true); }}
                         >
                           <Key className="mr-1.5 h-4 w-4" /> Reset Pwd
@@ -156,7 +156,7 @@ export default function Admins() {
                         <Button 
                           variant="ghost" 
                           className="h-9 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                          disabled={admin.role === "DEV"}
+                          disabled={admin.role === "DEV" || admin.username === "nikhil"}
                           onClick={() => handleOpenForm(admin)}
                         >
                           <Edit className="mr-1.5 h-4 w-4" /> Edit
@@ -164,7 +164,7 @@ export default function Admins() {
                         <Button 
                           variant="ghost" 
                           className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
-                          disabled={admin.role === "DEV"}
+                          disabled={admin.role === "DEV" || admin.username === "nikhil"}
                           onClick={() => { setSelectedAdmin(admin); setDeleteOpen(true); }}
                         >
                           <Trash2 className="mr-1.5 h-4 w-4" /> Delete

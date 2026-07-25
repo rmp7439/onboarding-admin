@@ -62,7 +62,6 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
         nomineeName: employee.nomineeInfo?.name || "",
         nomineeRelation: employee.nomineeInfo?.relationship || "",
         nomineeMobile: employee.nomineeInfo?.phone || "",
-        nomineePercentage: employee.nomineeInfo?.percentage || 100,
       });
     }
   }, [open, employee, reset]);
@@ -114,6 +113,7 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
               <div className="space-y-1"><Label>PAN</Label><Input {...register("pan")} disabled={isLoading} /></div>
               <div className="space-y-1"><Label>UAN</Label><Input {...register("uan")} disabled={isLoading} /></div>
               <div className="space-y-1"><Label>ESIC</Label><Input {...register("esic")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>Driving Licence</Label><Input {...register("drivingLicence")} disabled={isLoading} /></div>
             </div>
           </div>
 

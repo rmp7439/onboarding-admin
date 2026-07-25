@@ -12,18 +12,6 @@ const CONFIGURABLE_FIELDS = [
   { key: 'uan', label: 'UAN' },
   { key: 'esic', label: 'ESIC' },
   { key: 'drivingLicence', label: 'Driving Licence' },
-  { key: 'gender', label: 'Gender' },
-  { key: 'education', label: 'Highest Education' },
-  { key: 'maritalStatus', label: 'Marital Status' },
-  { key: 'accountHolderName', label: 'Account Holder Name' },
-  { key: 'bankName', label: 'Bank Name' },
-  { key: 'accountNumber', label: 'Account Number' },
-  { key: 'ifsc', label: 'IFSC Code' },
-  { key: 'micr', label: 'MICR Code' },
-  { key: 'nomineeName', label: 'Nominee Name' },
-  { key: 'nomineeRelation', label: 'Nominee Relationship' },
-  { key: 'nomineeMobile', label: 'Nominee Mobile' },
-  { key: 'nomineePercentage', label: 'Nominee Percentage' },
 ];
 
 export function UnitFormDialog({

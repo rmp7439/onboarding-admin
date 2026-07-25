@@ -29,7 +29,6 @@ export const getEmployees = async (search?: string): Promise<Employee[]> => {
     nomineeName: emp.nomineeName,
     nomineeRelation: emp.nomineeRelation,
     nomineeMobile: emp.nomineeMobile,
-    nomineePercentage: emp.nomineePercentage,
   }));
 };
 
@@ -96,7 +95,6 @@ export const getEmployeeById = async (
       name: emp.nomineeName,
       relationship: emp.nomineeRelation,
       phone: emp.nomineeMobile,
-      percentage: emp.nomineePercentage,
     },
     documents:
       emp.documents?.map((doc: any) => ({

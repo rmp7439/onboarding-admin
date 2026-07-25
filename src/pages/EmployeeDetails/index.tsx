@@ -112,7 +112,6 @@ export default function EmployeeDetails() {
     <div className="space-y-6 pb-8">
       <div className="flex items-start gap-6">
         <div className="w-[70%] space-y-6">
-          {/* Conditional Rejection Card */}
           {employmentInfo?.status === "REJECTED" && (
             <InfoCard title="Application Rejected">
               <div className="p-4 bg-red-50 border border-red-200 rounded-md">
@@ -293,7 +292,7 @@ export default function EmployeeDetails() {
           </InfoCard>
 
           <InfoCard title="Nominee Details">
-            <div className="grid grid-cols-2 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-3 gap-6">
               <DetailRow
                 label="Nominee Name"
                 value={nomineeInfo?.name || "-"}
@@ -305,12 +304,6 @@ export default function EmployeeDetails() {
               <DetailRow
                 label="Phone Number"
                 value={nomineeInfo?.phone || "-"}
-              />
-              <DetailRow
-                label="Percentage"
-                value={
-                  nomineeInfo?.percentage ? `${nomineeInfo.percentage}%` : "-"
-                }
               />
             </div>
           </InfoCard>
@@ -344,7 +337,7 @@ export default function EmployeeDetails() {
           <ActionPanel
             employeeId={employee.id}
             status={employmentInfo?.status || "UNKNOWN"}
-            onEditClick={() => setIsEditOpen(true)} // <-- Pass the click handler
+            onEditClick={() => setIsEditOpen(true)} 
           />
         </div>
       </div>

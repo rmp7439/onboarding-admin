@@ -27,7 +27,6 @@ export interface Employee {
   nomineeName?: string;
   nomineeRelation?: string;
   nomineeMobile?: string;
-  nomineePercentage?: number;
 }
 
 export interface EmployeeDetailsData {
@@ -88,6 +87,5 @@ export interface EmployeeDetailsData {
     name?: string;
     relationship?: string;
     phone?: string;
-    percentage?: number;
   };
 }
