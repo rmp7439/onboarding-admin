@@ -11,7 +11,7 @@ import { useToast } from "../../hooks/useToast";
 import { login, storeToken, storeUser } from "../../services/authService";
 
 const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  username: z.string().min(1, "Username is required").regex(/^[a-zA-Z0-9_-]+$/, "Alphanumeric, underscores, and hyphens only"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -29,9 +29,8 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       setIsSubmitting(true);
-      const response = await login({ email: data.email, password: data.password });
+      const response = await login({ username: data.username, password: data.password });
       
-      // Defaulting rememberMe to false as the checkbox has been removed
       storeToken(response.token, false);
       storeUser(response.user, false);
       setAuth(response.user, response.token, false);
@@ -59,15 +58,16 @@ export default function Login() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="username">Username</Label>
             <Input 
-              id="email" 
-              type="email" 
-              placeholder="admin@company.com" 
-              {...register("email")} 
+              id="username" 
+              type="text" 
+              placeholder="e.g. dev_admin" 
+              autoCapitalize="none"
+              {...register("username")} 
               disabled={isSubmitting}
             />
-            {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+            {errors.username && <p className="text-xs text-red-500">{errors.username.message}</p>}
           </div>
 
           <div className="space-y-2">

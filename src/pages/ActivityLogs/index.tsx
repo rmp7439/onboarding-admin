@@ -79,7 +79,6 @@ export default function ActivityLogs() {
                   </TableCell>
                   <TableCell className="py-4">
                     <div className="font-medium text-gray-900">{log.actorName}</div>
-                    <div className="text-xs text-gray-500">{log.actorEmail}</div>
                     <Badge className="mt-1 text-[10px] px-1 py-0">{log.actorRole}</Badge>
                   </TableCell>
                   <TableCell className="py-4 whitespace-nowrap">

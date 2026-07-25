@@ -41,7 +41,7 @@ export default function Admins() {
       return;
     }
 
-    const payload = { name: data.name, email: data.email, active: data.active, password: data.password };
+    const payload = { name: data.name, username: data.username, active: data.active, password: data.password };
     if (!payload.password) delete payload.password;
 
     if (selectedAdmin) {
@@ -102,8 +102,8 @@ export default function Admins() {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Username</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Name</TableHead>
-                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Email</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Role</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Status</TableHead>
                 <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Created On</TableHead>
@@ -121,10 +121,10 @@ export default function Admins() {
                 admins.map((admin: any) => (
                   <TableRow key={admin.id} className="hover:bg-slate-50/60 transition-colors">
                     <TableCell className="py-5 align-middle text-center font-medium text-slate-900 whitespace-nowrap">
-                      {admin.name}
+                      {admin.username}
                     </TableCell>
                     <TableCell className="py-5 align-middle text-center text-slate-600 whitespace-nowrap">
-                      {admin.email}
+                      {admin.name}
                     </TableCell>
                     <TableCell className="py-5 align-middle text-center whitespace-nowrap">
                       <div className="flex justify-center">
