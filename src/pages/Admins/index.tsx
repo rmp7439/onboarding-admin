@@ -105,7 +105,6 @@ export default function Admins() {
               <TableHead className="font-semibold text-center">Email</TableHead>
               <TableHead className="font-semibold text-center">Role</TableHead>
               <TableHead className="font-semibold text-center">Status</TableHead>
-              <TableHead className="font-semibold text-center">Created On</TableHead>
               <TableHead className="font-semibold text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -123,9 +122,6 @@ export default function Admins() {
                   <Badge variant={admin.active ? "success" : "destructive"}>
                     {admin.active ? "Active" : "Disabled"}
                   </Badge>
-                </TableCell>
-                <TableCell className="text-center text-gray-500">
-                  {new Date(admin.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-center">
                   <div className="flex justify-center items-center gap-2">
