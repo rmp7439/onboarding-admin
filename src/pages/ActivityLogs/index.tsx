@@ -44,11 +44,13 @@ export default function ActivityLogs() {
   };
 
   const getActionBadge = (action: string) => {
+    // Force a consistent minimum width for all action badges to ensure visually balanced columns
+    const badgeClass = "min-w-[160px] flex justify-center";
     if (action.includes("CREATED"))
-      return <Badge variant="success">{action}</Badge>;
+      return <Badge variant="success" className={badgeClass}>{action}</Badge>;
     if (action.includes("DELETED") || action.includes("DISABLED"))
-      return <Badge variant="destructive">{action}</Badge>;
-    return <Badge className="bg-blue-100 text-blue-800">{action}</Badge>;
+      return <Badge variant="destructive" className={badgeClass}>{action}</Badge>;
+    return <Badge className={`bg-blue-100 text-blue-800 ${badgeClass}`}>{action}</Badge>;
   };
 
   if (isLoading) return <Skeleton className="h-96 w-full mt-10" />;
@@ -87,20 +89,20 @@ export default function ActivityLogs() {
       <Card className="shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/80">
-              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
+            <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
+              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
                 Timestamp
               </TableHead>
-              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
+              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
                 Actor
               </TableHead>
-              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
+              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
                 Action
               </TableHead>
-              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
+              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
                 Target
               </TableHead>
-              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
+              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
                 Changes
               </TableHead>
             </TableRow>
@@ -118,31 +120,31 @@ export default function ActivityLogs() {
             ) : (
               data?.logs.map((log: any) => (
                 <TableRow key={log.id} className="hover:bg-slate-50/60 transition-colors">
-                  <TableCell className="py-4 text-center align-middle text-sm text-gray-600 whitespace-nowrap">
+                  <TableCell className="py-5 text-center align-middle text-sm text-gray-600 whitespace-nowrap">
                     {new Date(log.createdAt).toLocaleString()}
                   </TableCell>
-                  <TableCell className="py-4 text-center align-middle">
+                  <TableCell className="py-5 text-center align-middle">
                     <div className="flex flex-col items-center justify-center">
                       <div className="font-medium text-gray-900">
                         {log.actorName}
                       </div>
-                      <Badge className="mt-1 text-[10px] px-1 py-0">
+                      <Badge className="mt-1.5 text-[10px] px-2 py-0">
                         {log.actorRole}
                       </Badge>
                     </div>
                   </TableCell>
-                  <TableCell className="py-4 text-center align-middle whitespace-nowrap">
+                  <TableCell className="py-5 text-center align-middle whitespace-nowrap">
                     <div className="flex items-center justify-center">
                       {getActionBadge(log.action)}
                     </div>
                   </TableCell>
-                  <TableCell className="py-4 text-center align-middle">
+                  <TableCell className="py-5 text-center align-middle">
                     {log.targetName ? (
                       <div className="flex flex-col items-center justify-center">
                         <div className="font-medium text-gray-900">
                           {log.targetName}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 mt-1">
                           {log.targetType}
                         </div>
                       </div>
@@ -150,8 +152,8 @@ export default function ActivityLogs() {
                       <span className="text-gray-400 italic">N/A</span>
                     )}
                   </TableCell>
-                  <TableCell className="py-4 text-center align-middle">
-                    <div className="flex justify-center items-center">
+                  <TableCell className="py-5 text-center align-middle">
+                    <div className="flex items-center justify-center">
                       {log.changes && log.changes.length > 0 ? (
                         <Button
                           variant="ghost"
