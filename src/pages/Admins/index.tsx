@@ -97,58 +97,86 @@ export default function Admins() {
         </Button>
       </div>
 
-      <Card className="shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-slate-50/80">
-              <TableHead className="font-semibold text-center">Name</TableHead>
-              <TableHead className="font-semibold text-center">Email</TableHead>
-              <TableHead className="font-semibold text-center">Role</TableHead>
-              <TableHead className="font-semibold text-center">Status</TableHead>
-              <TableHead className="font-semibold text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {admins?.map((admin: any) => (
-              <TableRow key={admin.id}>
-                <TableCell className="text-center font-medium">{admin.name}</TableCell>
-                <TableCell className="text-center text-gray-500">{admin.email}</TableCell>
-                <TableCell className="text-center">
-                  <Badge variant={admin.role === "DEV" ? "default" : "success"} className={admin.role === "DEV" ? "bg-purple-100 text-purple-800" : ""}>
-                    {admin.role === "DEV" ? "DEV (Owner)" : "ADMIN"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center">
-                  <Badge variant={admin.active ? "success" : "destructive"}>
-                    {admin.active ? "Active" : "Disabled"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center">
-                  <div className="flex justify-center items-center gap-2">
-                    <Button 
-                      variant="ghost" className="text-amber-600" disabled={admin.role === "DEV"}
-                      onClick={() => { setSelectedAdmin(admin); setResetPasswordOpen(true); }}
-                    >
-                      <Key className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" className="text-blue-600" disabled={admin.role === "DEV"}
-                      onClick={() => handleOpenForm(admin)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" className="text-red-600" disabled={admin.role === "DEV"}
-                      onClick={() => { setSelectedAdmin(admin); setDeleteOpen(true); }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
+      <Card className="flex flex-col shadow-sm">
+        <div className="flex-1 overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Name</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Email</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Role</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Status</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Created On</TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {!admins || admins.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-10 text-gray-500">
+                    No admins found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                admins.map((admin: any) => (
+                  <TableRow key={admin.id} className="hover:bg-slate-50/60 transition-colors">
+                    <TableCell className="py-5 align-middle text-center font-medium text-slate-900 whitespace-nowrap">
+                      {admin.name}
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center text-slate-600 whitespace-nowrap">
+                      {admin.email}
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
+                      <div className="flex justify-center">
+                        <Badge variant={admin.role === "DEV" ? "default" : "success"} className={admin.role === "DEV" ? "bg-purple-100 text-purple-800" : ""}>
+                          {admin.role === "DEV" ? "DEV (Owner)" : "ADMIN"}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
+                      <div className="flex justify-center">
+                        <Badge variant={admin.active ? "success" : "destructive"}>
+                          {admin.active ? "Active" : "Disabled"}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center text-slate-600 whitespace-nowrap">
+                      {new Date(admin.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
+                      <div className="flex justify-center items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                          disabled={admin.role === "DEV"}
+                          onClick={() => { setSelectedAdmin(admin); setResetPasswordOpen(true); }}
+                        >
+                          <Key className="mr-1.5 h-4 w-4" /> Reset Pwd
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                          disabled={admin.role === "DEV"}
+                          onClick={() => handleOpenForm(admin)}
+                        >
+                          <Edit className="mr-1.5 h-4 w-4" /> Edit
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:cursor-not-allowed" 
+                          disabled={admin.role === "DEV"}
+                          onClick={() => { setSelectedAdmin(admin); setDeleteOpen(true); }}
+                        >
+                          <Trash2 className="mr-1.5 h-4 w-4" /> Delete
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       <AdminFormDialog 
