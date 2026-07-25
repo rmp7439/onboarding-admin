@@ -88,19 +88,19 @@ export default function ActivityLogs() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/80">
-              <TableHead className="font-semibold text-center whitespace-nowrap">
+              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
                 Timestamp
               </TableHead>
-              <TableHead className="font-semibold text-center whitespace-nowrap">
+              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
                 Actor
               </TableHead>
-              <TableHead className="font-semibold text-center whitespace-nowrap">
+              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
                 Action
               </TableHead>
-              <TableHead className="font-semibold text-center whitespace-nowrap">
+              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
                 Target
               </TableHead>
-              <TableHead className="font-semibold text-center whitespace-nowrap">
+              <TableHead className="font-semibold text-center align-middle whitespace-nowrap">
                 Changes
               </TableHead>
             </TableRow>
@@ -110,18 +110,18 @@ export default function ActivityLogs() {
               <TableRow>
                 <TableCell
                   colSpan={5}
-                  className="text-center py-10 text-gray-500"
+                  className="text-center align-middle py-10 text-gray-500"
                 >
                   No logs found.
                 </TableCell>
               </TableRow>
             ) : (
               data?.logs.map((log: any) => (
-                <TableRow key={log.id} className="hover:bg-slate-50/60">
-                  <TableCell className="py-4 text-center text-sm text-gray-600 whitespace-nowrap">
+                <TableRow key={log.id} className="hover:bg-slate-50/60 transition-colors">
+                  <TableCell className="py-4 text-center align-middle text-sm text-gray-600 whitespace-nowrap">
                     {new Date(log.createdAt).toLocaleString()}
                   </TableCell>
-                  <TableCell className="py-4 text-center">
+                  <TableCell className="py-4 text-center align-middle">
                     <div className="flex flex-col items-center justify-center">
                       <div className="font-medium text-gray-900">
                         {log.actorName}
@@ -131,12 +131,12 @@ export default function ActivityLogs() {
                       </Badge>
                     </div>
                   </TableCell>
-                  <TableCell className="py-4 text-center whitespace-nowrap">
+                  <TableCell className="py-4 text-center align-middle whitespace-nowrap">
                     <div className="flex items-center justify-center">
                       {getActionBadge(log.action)}
                     </div>
                   </TableCell>
-                  <TableCell className="py-4 text-center">
+                  <TableCell className="py-4 text-center align-middle">
                     {log.targetName ? (
                       <div className="flex flex-col items-center justify-center">
                         <div className="font-medium text-gray-900">
@@ -150,14 +150,14 @@ export default function ActivityLogs() {
                       <span className="text-gray-400 italic">N/A</span>
                     )}
                   </TableCell>
-                  <TableCell className="py-4 text-center">
+                  <TableCell className="py-4 text-center align-middle">
                     <div className="flex justify-center items-center">
                       {log.changes && log.changes.length > 0 ? (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setSelectedChanges(log.changes)}
-                          className="text-blue-600"
+                          className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
                         >
                           <Eye className="h-4 w-4 mr-2" /> View
                         </Button>
