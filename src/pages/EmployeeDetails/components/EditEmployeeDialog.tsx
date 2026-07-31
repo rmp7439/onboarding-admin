@@ -117,6 +117,28 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
             </div>
           </div>
 
+          {/* Address Details - Restored completely distinct sections */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-gray-900 border-b pb-2">Address Details</h3>
+            
+            <h4 className="text-sm font-semibold text-gray-700 mt-2">Permanent Address</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 space-y-1"><Label>Address</Label><Input {...register("permanentAddress")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>State</Label><Input {...register("state")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>City</Label><Input {...register("city")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>PIN Code</Label><Input {...register("pinCode")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>Police Station</Label><Input {...register("permanentPoliceStation")} disabled={isLoading} /></div>
+            </div>
+
+            <h4 className="text-sm font-semibold text-gray-700 mt-4">Current Address</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 space-y-1"><Label>Address</Label><Input {...register("currentAddress")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>State</Label><Input {...register("currentState")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>City</Label><Input {...register("currentCity")} disabled={isLoading} /></div>
+              <div className="space-y-1"><Label>PIN Code</Label><Input {...register("currentPinCode")} disabled={isLoading} /></div>
+            </div>
+          </div>
+
           {/* Error Banner */}
           {error && (
             <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
