@@ -20,6 +20,7 @@ import {
 } from "../../components/ui/Dialog";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { ErrorState } from "../../components/ui/ErrorState";
+import { Pagination } from "../../components/ui/Pagination"; // Shared Pagination
 import { useActivityLogs } from "../../hooks/useActivityLogs";
 
 export default function ActivityLogs() {
@@ -37,9 +38,9 @@ export default function ActivityLogs() {
     search: debouncedSearch,
   });
 
-  // Handle search delay to avoid excessive API calls
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({ ...filters, search: e.target.value });
+    // Reset to page 1 on new search terms
+    setFilters({ ...filters, search: e.target.value, page: 1 });
     setTimeout(() => setDebouncedSearch(e.target.value), 500);
   };
 
@@ -75,7 +76,7 @@ export default function ActivityLogs() {
     <div className="space-y-6 pb-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900"> Activity Logs</h1>
+          <h1 className="text-2xl font-bold text-gray-950">Activity Logs</h1>
         </div>
       </div>
 
@@ -93,96 +94,109 @@ export default function ActivityLogs() {
       </div>
 
       {/* Data Table */}
-      <Card className="shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
-              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                Timestamp
-              </TableHead>
-              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                Actor
-              </TableHead>
-              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                Action
-              </TableHead>
-              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                Target
-              </TableHead>
-              <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                Changes
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.logs.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="text-center align-middle py-10 text-gray-500"
-                >
-                  No logs found.
-                </TableCell>
+      <Card className="shadow-sm flex flex-col">
+        <div className="flex-1 overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
+                  Timestamp
+                </TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
+                  Actor
+                </TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
+                  Action
+                </TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
+                  Target
+                </TableHead>
+                <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
+                  Changes
+                </TableHead>
               </TableRow>
-            ) : (
-              data?.logs.map((log: any) => (
-                <TableRow
-                  key={log.id}
-                  className="hover:bg-slate-50/60 transition-colors"
-                >
-                  <TableCell className="py-5 text-center align-middle text-sm text-gray-600 whitespace-nowrap">
-                    {new Date(log.createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell className="py-5 text-center align-middle">
-                    <div className="flex flex-col items-center justify-center">
-                      <div className="font-medium text-gray-900">
-                        {log.actorName}
-                      </div>
-                      <Badge className="mt-1.5 text-[10px] px-2 py-0">
-                        {log.actorRole}
-                      </Badge>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-5 text-center align-middle whitespace-nowrap">
-                    <div className="flex items-center justify-center">
-                      {getActionBadge(log.action)}
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-5 text-center align-middle">
-                    {log.targetName ? (
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="font-medium text-gray-900">
-                          {log.targetName}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {log.targetType}
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-gray-400 italic">N/A</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="py-5 text-center align-middle">
-                    <div className="flex items-center justify-center">
-                      {log.changes && log.changes.length > 0 ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedChanges(log.changes)}
-                          className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
-                        >
-                          <Eye className="h-4 w-4 mr-2" /> View
-                        </Button>
-                      ) : (
-                        <span className="text-gray-400 text-sm">-</span>
-                      )}
-                    </div>
+            </TableHeader>
+            <TableBody>
+              {data?.logs.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center align-middle py-10 text-gray-500"
+                  >
+                    No logs found.
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                data?.logs.map((log: any) => (
+                  <TableRow
+                    key={log.id}
+                    className="hover:bg-slate-50/60 transition-colors"
+                  >
+                    <TableCell className="py-5 text-center align-middle text-sm text-gray-600 whitespace-nowrap">
+                      {new Date(log.createdAt).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="py-5 text-center align-middle">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="font-medium text-gray-900">
+                          {log.actorName}
+                        </div>
+                        <Badge className="mt-1.5 text-[10px] px-2 py-0">
+                          {log.actorRole}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 text-center align-middle whitespace-nowrap">
+                      <div className="flex items-center justify-center">
+                        {getActionBadge(log.action)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 text-center align-middle">
+                      {log.targetName ? (
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="font-medium text-gray-900">
+                            {log.targetName}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {log.targetType}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-gray-400 italic">N/A</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="py-5 text-center align-middle">
+                      <div className="flex items-center justify-center">
+                        {log.changes && log.changes.length > 0 ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSelectedChanges(log.changes)}
+                            className="text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                          >
+                            <Eye className="h-4 w-4 mr-2" /> View
+                          </Button>
+                        ) : (
+                          <span className="text-gray-400 text-sm">-</span>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Reusable Pagination Integration */}
+        {data?.logs && data.logs.length > 0 && (
+          <Pagination
+            currentPage={data.currentPage || filters.page}
+            totalPages={data.pages || 1}
+            onPageChange={(newPage) =>
+              setFilters((prev) => ({ ...prev, page: newPage }))
+            }
+          />
+        )}
       </Card>
 
       {/* Changes Modal */}

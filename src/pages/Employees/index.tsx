@@ -14,13 +14,15 @@ import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { EmployeeFilters } from "./components/EmployeeFilters";
-import { Pagination } from "./components/Pagination";
+import { Pagination } from "../../components/ui/Pagination"; // Replaced with shared component
 import { LoadingSkeleton } from "./components/LoadingSkeleton";
 import { RejectDialog, ReturnForCorrectionDialog } from "../EmployeeDetails/components/Dialogs";
 import { useEmployees } from "../../hooks/useEmployees";
 import { useUpdateEmployeeStatus, useReturnEmployeeForCorrection } from "../../hooks/useEmployeeMutations";
 import { useToast } from "../../hooks/useToast";
 import { type EmployeeStatus } from "../../types/employee";
+
+const ITEMS_PER_PAGE = 10;
 
 export default function Employees() {
   const navigate = useNavigate();
@@ -36,12 +38,19 @@ export default function Employees() {
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [returningId, setReturningId] = useState<string | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
     }, 300);
     return () => clearTimeout(handler);
   }, [searchQuery]);
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, joiningDate, statusFilter, unitFilter]);
 
   const {
     data: employees,
@@ -123,9 +132,16 @@ export default function Employees() {
       return matchesDate && matchesStatus && matchesUnit;
     }) || [];
 
+  const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE) || 1;
+  const paginatedEmployees = filteredEmployees.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   const handleRefresh = () => {
     setSearchQuery("");
     setJoiningDate("");
+    setCurrentPage(1);
     refetch();
   };
 
@@ -177,7 +193,7 @@ export default function Employees() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredEmployees.map((employee) => (
+                {paginatedEmployees.map((employee) => (
                   <TableRow
                     key={employee.id}
                     className="hover:bg-slate-50/60 transition-colors"
@@ -254,7 +270,13 @@ export default function Employees() {
             </Table>
           )}
         </div>
-        <Pagination />
+        {!isLoading && !isError && filteredEmployees.length > 0 && (
+          <Pagination 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            onPageChange={setCurrentPage} 
+          />
+        )}
       </Card>
 
       <RejectDialog
