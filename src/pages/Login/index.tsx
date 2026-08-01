@@ -53,7 +53,6 @@ export default function Login() {
             <Lock className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Admin Portal</h1>
-          <p className="text-sm text-slate-500 mt-1">Sign in to manage employee onboarding</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

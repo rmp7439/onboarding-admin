@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LogOut, KeyRound, AlertCircle } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Added for client-side navigation
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { logout, changePassword } from '../../services/authService';
@@ -73,9 +74,20 @@ export default function Header() {
   return (
     <>
       <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0">
-        <h2 className="text-xl font-semibold text-gray-800">
-          Employee Onboarding Admin
-        </h2>
+        
+        {/* BRANDING SECTION */}
+        <Link 
+          to="/dashboard"
+          className="group flex items-center gap-3 rounded-md transition-all duration-200 hover:opacity-80 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+          aria-label="Employee Onboarding Admin - Go to Dashboard"
+        >
+          {/* Logo Placeholder: Structured so an <img> or <svg> can be dropped in easily later */}
+          {/* <img src="/logo.svg" alt="App Logo" className="h-8 w-auto shrink-0" /> */}
+          
+          <h2 className="text-xl font-semibold text-gray-800 transition-colors group-hover:text-gray-900">
+            Employee Onboarding Admin
+          </h2>
+        </Link>
         
         <div className="flex items-center space-x-2">
           <Button 
