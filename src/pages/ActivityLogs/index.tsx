@@ -26,7 +26,7 @@ import { useActivityLogs } from "../../hooks/useActivityLogs";
 export default function ActivityLogs() {
   const [filters, setFilters] = useState({
     page: 1,
-    limit: 20,
+    limit: 10,
     search: "",
     action: "",
   });
