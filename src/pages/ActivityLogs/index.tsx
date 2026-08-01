@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { History, Search, Eye } from "lucide-react";
+import { Search, Eye } from "lucide-react";
 import { Card } from "../../components/ui/Card";
 import {
   Table,
@@ -47,10 +47,22 @@ export default function ActivityLogs() {
     // Force a consistent minimum width for all action badges to ensure visually balanced columns
     const badgeClass = "min-w-[160px] flex justify-center";
     if (action.includes("CREATED"))
-      return <Badge variant="success" className={badgeClass}>{action}</Badge>;
+      return (
+        <Badge variant="success" className={badgeClass}>
+          {action}
+        </Badge>
+      );
     if (action.includes("DELETED") || action.includes("DISABLED"))
-      return <Badge variant="destructive" className={badgeClass}>{action}</Badge>;
-    return <Badge className={`bg-blue-100 text-blue-800 ${badgeClass}`}>{action}</Badge>;
+      return (
+        <Badge variant="destructive" className={badgeClass}>
+          {action}
+        </Badge>
+      );
+    return (
+      <Badge className={`bg-blue-100 text-blue-800 ${badgeClass}`}>
+        {action}
+      </Badge>
+    );
   };
 
   if (isLoading) return <Skeleton className="h-96 w-full mt-10" />;
@@ -63,12 +75,7 @@ export default function ActivityLogs() {
     <div className="space-y-6 pb-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <History className="h-6 w-6 text-gray-700" /> Activity Logs
-          </h1>
-          <p className="text-sm text-gray-500">
-            Immutable audit trail of administrative actions.
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900"> Activity Logs</h1>
         </div>
       </div>
 
@@ -119,7 +126,10 @@ export default function ActivityLogs() {
               </TableRow>
             ) : (
               data?.logs.map((log: any) => (
-                <TableRow key={log.id} className="hover:bg-slate-50/60 transition-colors">
+                <TableRow
+                  key={log.id}
+                  className="hover:bg-slate-50/60 transition-colors"
+                >
                   <TableCell className="py-5 text-center align-middle text-sm text-gray-600 whitespace-nowrap">
                     {new Date(log.createdAt).toLocaleString()}
                   </TableCell>
