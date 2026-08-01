@@ -17,7 +17,7 @@ export default function Sidebar() {
   const { user } = useAuth(); // Destructure user to check role
 
   return (
-    <aside className="w-64 h-full bg-white border-r border-gray-200 flex flex-col hidden md:flex shrink-0">
+    <aside className="w-64 h-full bg-white border border-gray-200 rounded-xl shadow-sm flex flex-col hidden md:flex shrink-0 overflow-hidden">
       {/* ... logo code ... */}
       <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
