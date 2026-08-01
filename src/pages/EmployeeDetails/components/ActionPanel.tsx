@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, X, Tag, Edit} from "lucide-react";
+import { Check, X, Tag, Edit, Trash2 } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -12,12 +12,16 @@ import {
   ConfirmationDialog,
   EmployeeCodeDialog,
   RejectDialog,
+  DeleteEmployeeDialog,
 } from "./Dialogs";
 import {
   useUpdateEmployeeStatus,
   useAssignEmployeeCode,
+  useDeleteEmployee,
 } from "../../../hooks/useEmployeeMutations";
 import { useToast } from "../../../hooks/useToast";
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export function ActionPanel({
   employeeId,
@@ -35,6 +39,29 @@ export function ActionPanel({
   const { toast } = useToast();
   const updateStatusMutation = useUpdateEmployeeStatus();
   const assignCodeMutation = useAssignEmployeeCode();
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteEmployee();
+
+  const canDelete = user?.username === "dev" || user?.username === "nikhil";
+
+  const handleDelete = () => {
+    setDeleteError(null);
+    deleteMutation.mutate(employeeId, {
+      onSuccess: () => {
+        toast("Employee permanently deleted.", "success");
+        setIsDeleteOpen(false);
+        navigate("/employees");
+      },
+      onError: (err: any) => {
+        setDeleteError(getErrorMessage(err));
+      },
+    });
+  };
 
   const handleApprove = () => {
     updateStatusMutation.mutate(
@@ -99,6 +126,18 @@ export function ActionPanel({
             {status}
           </Badge>
         </div>
+
+        {canDelete && (
+          <div className="pt-4 mt-4 border-t border-gray-100">
+            <Button
+              variant="outline"
+              className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+              onClick={() => setIsDeleteOpen(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" /> Delete Employee
+            </Button>
+          </div>
+        )}
 
         <div className="space-y-3">
           <Button
@@ -170,6 +209,14 @@ export function ActionPanel({
             ? getErrorMessage(assignCodeMutation.error)
             : null
         }
+      />
+
+      <DeleteEmployeeDialog
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        onConfirm={handleDelete}
+        isLoading={deleteMutation.isPending}
+        error={deleteError}
       />
     </Card>
   );

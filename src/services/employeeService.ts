@@ -149,3 +149,7 @@ export const adminUpdateEmployee = async ({ id, payload }: { id: string; payload
   const { data } = await apiClient.put(`/admin/employees/${id}`, payload);
   return data.data;
 };
+
+export const deleteEmployee = async (id: string): Promise<void> => {
+  await apiClient.delete(`/employee/${id}`);
+};

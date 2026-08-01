@@ -210,3 +210,38 @@ export function ReturnForCorrectionDialog({
     </Dialog>
   );
 }
+
+export function DeleteEmployeeDialog({
+  open, onOpenChange, onConfirm, isLoading, error
+}: {
+  open: boolean; onOpenChange: (open: boolean) => void; onConfirm: () => void; isLoading?: boolean; error?: string | null;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogHeader>
+        <DialogTitle>Permanent Deletion</DialogTitle>
+      </DialogHeader>
+      <DialogContent className="space-y-4">
+        <p className="text-sm text-gray-500">
+          This permanently deletes the employee, uploaded documents and all related records. This action cannot be undone.
+        </p>
+        {error && (
+          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            <AlertCircle className="h-4 w-4" />
+            <span>{error}</span>
+          </div>
+        )}
+      </DialogContent>
+      <DialogFooter>
+        <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
+        <Button 
+          isLoading={isLoading} 
+          onClick={onConfirm}
+          className="bg-red-600 text-white hover:bg-red-700"
+        >
+          Confirm Delete
+        </Button>
+      </DialogFooter>
+    </Dialog>
+  );
+}
