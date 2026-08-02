@@ -14,13 +14,14 @@ export function Button({
   isLoading, 
   children, 
   disabled,
-  type = "button", // FIXED: Default to button to prevent rogue form submissions
+  type = "button",
   ...props 
 }: ButtonProps) {
   const variants = {
     default: "bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-900 hover:bg-slate-900/90 dark:hover:bg-slate-200",
-    outline: "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 text-gray-900 dark:text-slate-100",
-    ghost: "hover:bg-slate-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100",
+    // Removed strict neutral text and hover text overrides so semantic classes can inherit
+    outline: "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800",
+    ghost: "hover:bg-slate-100 dark:hover:bg-slate-800",
   };
 
   const sizes = {
