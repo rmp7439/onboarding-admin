@@ -45,14 +45,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 transition-colors">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 transition-colors">
         
         <div className="flex flex-col items-center justify-center mb-8">
           <div className="h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-sm">
             <Lock className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Admin Portal</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Admin Portal</h1>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -66,7 +66,7 @@ export default function Login() {
               {...register("username")} 
               disabled={isSubmitting}
             />
-            {errors.username && <p className="text-xs text-red-500">{errors.username.message}</p>}
+            {errors.username && <p className="text-xs text-red-500 dark:text-red-400">{errors.username.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -78,10 +78,10 @@ export default function Login() {
               {...register("password")} 
               disabled={isSubmitting}
             />
-            {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
+            {errors.password && <p className="text-xs text-red-500 dark:text-red-400">{errors.password.message}</p>}
           </div>
 
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white" isLoading={isSubmitting}>
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white" isLoading={isSubmitting}>
             Sign In
           </Button>
         </form>

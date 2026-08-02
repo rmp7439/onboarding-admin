@@ -13,14 +13,14 @@ export function Button({
   size = "default",
   isLoading, 
   children, 
-  disabled, 
+  disabled,
+  type = "button", // FIXED: Default to button to prevent rogue form submissions
   ...props 
 }: ButtonProps) {
-  
   const variants = {
-    default: "bg-slate-900 text-slate-50 hover:bg-slate-900/90",
-    outline: "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900",
-    ghost: "hover:bg-slate-100 hover:text-slate-900",
+    default: "bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-900 hover:bg-slate-900/90 dark:hover:bg-slate-200",
+    outline: "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 text-gray-900 dark:text-slate-100",
+    ghost: "hover:bg-slate-100 dark:hover:bg-slate-800 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100",
   };
 
   const sizes = {
@@ -32,7 +32,8 @@ export function Button({
 
   return (
     <button
-      className={`inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`}
+      type={type}
+      className={`inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 dark:focus-visible:ring-slate-300 disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className || ''}`}
       disabled={disabled || isLoading}
       {...props}
     >

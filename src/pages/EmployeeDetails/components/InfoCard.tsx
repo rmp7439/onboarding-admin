@@ -8,8 +8,8 @@ interface InfoCardProps {
 export function InfoCard({ title, children }: InfoCardProps) {
   return (
     <Card className="shadow-sm">
-      <CardHeader className="pb-4 border-b border-gray-100 mb-4">
-        <CardTitle className="text-lg text-gray-800">{title}</CardTitle>
+      <CardHeader className="pb-4 border-b border-gray-100 dark:border-slate-800 mb-4 transition-colors">
+        <CardTitle className="text-lg text-gray-800 dark:text-slate-100">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         {children}

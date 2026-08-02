@@ -16,9 +16,9 @@ export function ConfirmationDialog({
         <DialogTitle>{title}</DialogTitle>
       </DialogHeader>
       <DialogContent className="space-y-4">
-        <p className="text-sm text-gray-500">This action cannot be easily undone. Are you sure you want to proceed?</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">This action cannot be easily undone. Are you sure you want to proceed?</p>
         {error && (
-          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+          <div className="flex items-center space-x-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 p-3 rounded-md">
             <AlertCircle className="h-4 w-4" />
             <span>{error}</span>
           </div>
@@ -47,18 +47,9 @@ export function EmployeeCodeDialog({
   const [validationError, setValidationError] = useState("");
 
   const handleSave = () => {
-    if (!code.trim()) {
-      setValidationError("Employee Code is required.");
-      return;
-    }
-    if (code.length < 4) {
-      setValidationError("Code must be at least 4 characters.");
-      return;
-    }
-    if (code.length > 15) {
-      setValidationError("Code cannot exceed 15 characters.");
-      return;
-    }
+    if (!code.trim()) { setValidationError("Employee Code is required."); return; }
+    if (code.length < 4) { setValidationError("Code must be at least 4 characters."); return; }
+    if (code.length > 15) { setValidationError("Code cannot exceed 15 characters."); return; }
     setValidationError("");
     onSave(code);
   };
@@ -84,10 +75,10 @@ export function EmployeeCodeDialog({
             }}
             disabled={isLoading}
           />
-          {validationError && <p className="text-sm text-red-600">{validationError}</p>}
+          {validationError && <p className="text-sm text-red-600 dark:text-red-400">{validationError}</p>}
         </div>
         {error && (
-          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+          <div className="flex items-center space-x-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 p-3 rounded-md">
             <AlertCircle className="h-4 w-4" />
             <span>{error}</span>
           </div>
@@ -126,7 +117,7 @@ export function RejectDialog({
           <Label htmlFor="reason">Reason for rejection</Label>
           <textarea
             id="reason"
-            className="flex min-h-[100px] w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[100px] w-full rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50 text-gray-900 dark:text-slate-100"
             placeholder="Reason for rejection"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
@@ -135,7 +126,7 @@ export function RejectDialog({
           />
         </div>
         {error && (
-          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+          <div className="flex items-center space-x-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 p-3 rounded-md">
             <AlertCircle className="h-4 w-4" />
             <span>{error}</span>
           </div>
@@ -181,7 +172,7 @@ export function ReturnForCorrectionDialog({
           <Label htmlFor="remark">Correction Remark</Label>
           <textarea
             id="remark"
-            className="flex min-h-[100px] w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex min-h-[100px] w-full rounded-md border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-600 disabled:cursor-not-allowed disabled:opacity-50 text-gray-900 dark:text-slate-100"
             placeholder="Describe what needs to be corrected..."
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
@@ -190,7 +181,7 @@ export function ReturnForCorrectionDialog({
           />
         </div>
         {error && (
-          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+          <div className="flex items-center space-x-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 p-3 rounded-md">
             <AlertCircle className="h-4 w-4" />
             <span>{error}</span>
           </div>
@@ -222,11 +213,11 @@ export function DeleteEmployeeDialog({
         <DialogTitle>Permanent Deletion</DialogTitle>
       </DialogHeader>
       <DialogContent className="space-y-4">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-slate-400">
           This permanently deletes the employee, uploaded documents and all related records. This action cannot be undone.
         </p>
         {error && (
-          <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+          <div className="flex items-center space-x-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 p-3 rounded-md">
             <AlertCircle className="h-4 w-4" />
             <span>{error}</span>
           </div>

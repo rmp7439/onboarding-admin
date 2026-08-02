@@ -2,9 +2,9 @@ import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { useToast } from '../../hooks/useToast';
 
 const TOAST_STYLES = {
-  error: 'border-red-200 text-red-800',
-  success: 'border-emerald-200 text-emerald-800',
-  info: 'border-blue-200 text-blue-800'
+  error: 'border-red-200 dark:border-red-900 bg-white dark:bg-slate-900 text-red-800 dark:text-red-400',
+  success: 'border-emerald-200 dark:border-emerald-900 bg-white dark:bg-slate-900 text-emerald-800 dark:text-emerald-400',
+  info: 'border-blue-200 dark:border-blue-900 bg-white dark:bg-slate-900 text-blue-800 dark:text-blue-400'
 };
 
 const TOAST_ICONS = {
@@ -21,13 +21,13 @@ export function Toaster() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`flex items-center justify-between space-x-4 rounded-lg p-4 shadow-lg border bg-white min-w-[300px] animate-in slide-in-from-bottom-5 fade-in duration-200 ${TOAST_STYLES[toast.type]}`}
+          className={`flex items-center justify-between space-x-4 rounded-lg p-4 shadow-lg border min-w-[300px] animate-in slide-in-from-bottom-5 fade-in duration-200 transition-colors ${TOAST_STYLES[toast.type]}`}
         >
           <div className="flex items-center space-x-3">
             {TOAST_ICONS[toast.type]}
             <span className="text-sm font-medium">{toast.message}</span>
           </div>
-          <button onClick={() => removeToast(toast.id)} className="text-gray-400 hover:text-gray-600">
+          <button onClick={() => removeToast(toast.id)} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 dark:hover:text-slate-300">
             <X className="h-4 w-4" />
           </button>
         </div>

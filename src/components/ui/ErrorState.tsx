@@ -13,10 +13,10 @@ export function ErrorState({
   onRetry 
 }: ErrorStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center border border-gray-200 rounded-xl bg-white shadow-sm w-full">
+    <div className="flex flex-col items-center justify-center p-12 text-center border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-sm w-full transition-colors">
       <AlertCircle className="h-10 w-10 text-red-500 mb-4" />
-      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-500 mt-1 mb-6 max-w-sm">{message}</p>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{title}</h3>
+      <p className="text-sm text-gray-500 dark:text-slate-400 mt-1 mb-6 max-w-sm">{message}</p>
       {onRetry && (
         <Button onClick={onRetry} variant="outline">
           Try Again

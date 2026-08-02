@@ -8,7 +8,7 @@ export function Label({ className, ref, ...props }: LabelProps) {
   return (
     <label
       ref={ref}
-      className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700 ${className}`}
+      className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-700 dark:text-slate-300 transition-colors ${className || ''}`}
       {...props}
     />
   );

@@ -2,19 +2,12 @@ import { useState, useEffect } from "react";
 import { Eye, Check, X, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../../components/ui/Card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../components/ui/Table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/Table";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
 import { ErrorState } from "../../components/ui/ErrorState";
 import { EmployeeFilters } from "./components/EmployeeFilters";
-import { Pagination } from "../../components/ui/Pagination"; // Replaced with shared component
+import { Pagination } from "../../components/ui/Pagination";
 import { LoadingSkeleton } from "./components/LoadingSkeleton";
 import { RejectDialog, ReturnForCorrectionDialog } from "../EmployeeDetails/components/Dialogs";
 import { useEmployees } from "../../hooks/useEmployees";
@@ -37,125 +30,67 @@ export default function Employees() {
   const [unitFilter] = useState("ALL");
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [returningId, setReturningId] = useState<string | null>(null);
-
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchQuery);
-    }, 300);
+    const handler = setTimeout(() => { setDebouncedSearch(searchQuery); }, 300);
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
-  // Reset to page 1 whenever filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [debouncedSearch, joiningDate, statusFilter, unitFilter]);
+  useEffect(() => { setCurrentPage(1); }, [debouncedSearch, joiningDate, statusFilter, unitFilter]);
 
-  const {
-    data: employees,
-    isLoading,
-    isError,
-    refetch,
-  } = useEmployees(debouncedSearch);
+  const { data: employees, isLoading, isError, refetch } = useEmployees(debouncedSearch);
 
   const getStatusBadge = (status: EmployeeStatus) => {
     switch (status) {
-      case "APPROVED":
-        return <Badge variant="success">APPROVED</Badge>;
-      case "PENDING":
-        return <Badge variant="warning">PENDING</Badge>;
-      case "REJECTED":
-        return <Badge variant="destructive">REJECTED</Badge>;
-      case "RETURNED_FOR_CORRECTION":
-        return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200">RETURNED</Badge>;
-      default:
-        return <Badge>{status}</Badge>;
+      case "APPROVED": return <Badge variant="success">APPROVED</Badge>;
+      case "PENDING": return <Badge variant="warning">PENDING</Badge>;
+      case "REJECTED": return <Badge variant="destructive">REJECTED</Badge>;
+      case "RETURNED_FOR_CORRECTION": return <Badge className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800/50">RETURNED</Badge>;
+      default: return <Badge>{status}</Badge>;
     }
   };
 
   const handleStatusUpdate = (id: string, status: EmployeeStatus) => {
-    updateStatusMutation.mutate(
-      { id, status },
-      {
-        onSuccess: () => {
-          toast(
-            `Employee ${status === "APPROVED" ? "Approved" : "Rejected"} successfully.`,
-            "success",
-          );
-        },
-        onError: (err: any) => {
-          toast(err.message || "Failed to update status", "error");
-        },
-      },
-    );
+    updateStatusMutation.mutate({ id, status }, {
+      onSuccess: () => { toast(`Employee ${status === "APPROVED" ? "Approved" : "Rejected"} successfully.`, "success"); },
+      onError: (err: any) => { toast(err.message || "Failed to update status", "error"); },
+    });
   };
 
   const handleRejectSubmit = (reason: string) => {
     if (!rejectingId) return;
-    updateStatusMutation.mutate(
-      { id: rejectingId, status: "REJECTED", rejectReason: reason },
-      {
-        onSuccess: () => {
-          toast("Employee Rejected successfully.", "success");
-          setRejectingId(null);
-        },
-        onError: (err: any) => {
-          toast(err.message || "Failed to update status", "error");
-        },
-      },
-    );
+    updateStatusMutation.mutate({ id: rejectingId, status: "REJECTED", rejectReason: reason }, {
+      onSuccess: () => { toast("Employee Rejected successfully.", "success"); setRejectingId(null); },
+      onError: (err: any) => { toast(err.message || "Failed to update status", "error"); },
+    });
   };
 
   const handleReturnSubmit = (remark: string) => {
     if (!returningId) return;
-    returnMutation.mutate(
-      { id: returningId, remark },
-      {
-        onSuccess: () => {
-          toast("Employee returned for correction successfully.", "success");
-          setReturningId(null);
-        },
-        onError: (err: any) => {
-          toast(err.message || "Failed to return application", "error");
-        },
-      }
-    );
+    returnMutation.mutate({ id: returningId, remark }, {
+      onSuccess: () => { toast("Employee returned for correction successfully.", "success"); setReturningId(null); },
+      onError: (err: any) => { toast(err.message || "Failed to return application", "error"); }
+    });
   };
 
-  const filteredEmployees =
-    employees?.filter((emp) => {
-      const matchesDate = !joiningDate || emp.joiningDate === joiningDate;
-      const matchesStatus =
-        statusFilter === "ALL" || emp.status === statusFilter;
-      const matchesUnit = unitFilter === "ALL" || emp.unit === unitFilter;
-      return matchesDate && matchesStatus && matchesUnit;
-    }) || [];
+  const filteredEmployees = employees?.filter((emp) => {
+    const matchesDate = !joiningDate || emp.joiningDate === joiningDate;
+    const matchesStatus = statusFilter === "ALL" || emp.status === statusFilter;
+    const matchesUnit = unitFilter === "ALL" || emp.unit === unitFilter;
+    return matchesDate && matchesStatus && matchesUnit;
+  }) || [];
 
   const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE) || 1;
-  const paginatedEmployees = filteredEmployees.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const paginatedEmployees = filteredEmployees.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const handleRefresh = () => {
-    setSearchQuery("");
-    setJoiningDate("");
-    setCurrentPage(1);
-    refetch();
-  };
+  const handleRefresh = () => { setSearchQuery(""); setJoiningDate(""); setCurrentPage(1); refetch(); };
 
   return (
     <div className="space-y-8 pb-8">
-      <EmployeeFilters
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        joiningDate={joiningDate}
-        setJoiningDate={setJoiningDate}
-        onRefresh={handleRefresh}
-      />
+      <EmployeeFilters searchQuery={searchQuery} setSearchQuery={setSearchQuery} joiningDate={joiningDate} setJoiningDate={setJoiningDate} onRefresh={handleRefresh} />
 
-      <Card className="flex flex-col shadow-sm">
+      <Card className="flex flex-col shadow-sm bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700">
         <div className="flex-1 overflow-x-auto">
           {isLoading ? (
             <LoadingSkeleton />
@@ -163,103 +98,41 @@ export default function Employees() {
             <ErrorState onRetry={refetch} />
           ) : filteredEmployees.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-center">
-              <div className="text-gray-400 mb-2">No employees found.</div>
-              <p className="text-sm text-gray-500">
-                Try adjusting your filters or search query.
-              </p>
+              <div className="text-gray-400 dark:text-slate-500 mb-2 font-medium">No employees found.</div>
+              <p className="text-sm text-gray-500 dark:text-slate-400">Try adjusting your filters or search query.</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="bg-slate-50/80 border-b border-slate-200 shadow-sm">
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Employee Code
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Name
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Unit
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Phone Number
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Status
-                  </TableHead>
-                  <TableHead className="font-semibold text-slate-700 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">
-                    Actions
-                  </TableHead>
+                <TableRow className="bg-gray-50/80 dark:bg-slate-800/50 border-b border-gray-200 dark:border-slate-700 shadow-sm">
+                  <TableHead className="font-semibold text-gray-700 dark:text-slate-300 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Employee Code</TableHead>
+                  <TableHead className="font-semibold text-gray-700 dark:text-slate-300 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Name</TableHead>
+                  <TableHead className="font-semibold text-gray-700 dark:text-slate-300 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Unit</TableHead>
+                  <TableHead className="font-semibold text-gray-700 dark:text-slate-300 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Phone Number</TableHead>
+                  <TableHead className="font-semibold text-gray-700 dark:text-slate-300 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Status</TableHead>
+                  <TableHead className="font-semibold text-gray-700 dark:text-slate-300 h-12 uppercase text-xs tracking-wider align-middle !text-center whitespace-nowrap">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedEmployees.map((employee) => (
-                  <TableRow
-                    key={employee.id}
-                    className="hover:bg-slate-50/60 transition-colors"
-                  >
-                    <TableCell className="py-5 align-middle text-center font-medium text-slate-700 whitespace-nowrap">
-                      {employee.code || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center font-semibold text-slate-900 whitespace-nowrap">
-                      {employee.name || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.unit || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center text-slate-500 whitespace-nowrap">
-                      {employee.phone || "-"}
-                    </TableCell>
-                    <TableCell className="py-5 align-middle text-center whitespace-nowrap">
-                      <div className="flex justify-center">
-                        {employee.status
-                          ? getStatusBadge(employee.status)
-                          : "-"}
-                      </div>
-                    </TableCell>
+                  <TableRow key={employee.id} className="hover:bg-gray-50/60 dark:hover:bg-slate-800/60 transition-colors border-gray-200 dark:border-slate-700">
+                    <TableCell className="py-5 align-middle text-center font-medium text-gray-700 dark:text-slate-300 whitespace-nowrap">{employee.code || "-"}</TableCell>
+                    <TableCell className="py-5 align-middle text-center font-semibold text-gray-900 dark:text-slate-100 whitespace-nowrap">{employee.name || "-"}</TableCell>
+                    <TableCell className="py-5 align-middle text-center text-gray-500 dark:text-slate-400 whitespace-nowrap">{employee.unit || "-"}</TableCell>
+                    <TableCell className="py-5 align-middle text-center text-gray-500 dark:text-slate-400 whitespace-nowrap">{employee.phone || "-"}</TableCell>
+                    <TableCell className="py-5 align-middle text-center whitespace-nowrap"><div className="flex justify-center">{employee.status ? getStatusBadge(employee.status) : "-"}</div></TableCell>
                     <TableCell className="py-5 align-middle text-center whitespace-nowrap">
                       <div className="flex justify-center items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          className="h-9 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-colors"
-                          onClick={() => navigate(`/employees/${employee.id}`)}
-                        >
+                        <Button variant="ghost" className="h-9 px-3 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors" onClick={() => navigate(`/employees/${employee.id}`)}>
                           <Eye className="mr-1.5 h-4 w-4" /> View
                         </Button>
-                        <Button
-                          variant="ghost"
-                          disabled={
-                            employee.status === "APPROVED" ||
-                            updateStatusMutation.isPending
-                          }
-                          className="h-9 px-3 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() =>
-                            handleStatusUpdate(employee.id, "APPROVED")
-                          }
-                        >
+                        <Button variant="ghost" disabled={employee.status === "APPROVED" || updateStatusMutation.isPending} className="h-9 px-3 text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors disabled:opacity-40 disabled:hover:bg-transparent" onClick={() => handleStatusUpdate(employee.id, "APPROVED")}>
                           <Check className="mr-1.5 h-4 w-4" /> Approve
                         </Button>
-                        <Button
-                          variant="ghost"
-                          disabled={
-                            employee.status === "REJECTED" ||
-                            updateStatusMutation.isPending
-                          }
-                          className="h-9 px-3 text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() => setRejectingId(employee.id)}
-                        >
+                        <Button variant="ghost" disabled={employee.status === "REJECTED" || updateStatusMutation.isPending} className="h-9 px-3 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-slate-800 transition-colors disabled:opacity-40 disabled:hover:bg-transparent" onClick={() => setRejectingId(employee.id)}>
                           <X className="mr-1.5 h-4 w-4" /> Reject
                         </Button>
-                        <Button
-                          variant="ghost"
-                          disabled={
-                            employee.status === "APPROVED" ||
-                            employee.status === "RETURNED_FOR_CORRECTION" ||
-                            returnMutation.isPending
-                          }
-                          className="h-9 px-3 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors disabled:opacity-40 disabled:hover:bg-transparent"
-                          onClick={() => setReturningId(employee.id)}
-                        >
+                        <Button variant="ghost" disabled={employee.status === "APPROVED" || employee.status === "RETURNED_FOR_CORRECTION" || returnMutation.isPending} className="h-9 px-3 text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-slate-800 transition-colors disabled:opacity-40 disabled:hover:bg-transparent" onClick={() => setReturningId(employee.id)}>
                           <RotateCcw className="mr-1.5 h-4 w-4" /> Return
                         </Button>
                       </div>
@@ -271,32 +144,12 @@ export default function Employees() {
           )}
         </div>
         {!isLoading && !isError && filteredEmployees.length > 0 && (
-          <Pagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
-            onPageChange={setCurrentPage} 
-          />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
         )}
       </Card>
 
-      <RejectDialog
-        open={!!rejectingId}
-        onOpenChange={(open) => !open && setRejectingId(null)}
-        onConfirm={handleRejectSubmit}
-        isLoading={updateStatusMutation.isPending}
-      />
-
-      <ReturnForCorrectionDialog
-        open={!!returningId}
-        onOpenChange={(open) => !open && setReturningId(null)}
-        onConfirm={handleReturnSubmit}
-        isLoading={returnMutation.isPending}
-        error={
-          returnMutation.isError
-            ? (returnMutation.error as any)?.response?.data?.error || returnMutation.error.message || "Failed to return application."
-            : null
-        }
-      />
+      <RejectDialog open={!!rejectingId} onOpenChange={(open) => !open && setRejectingId(null)} onConfirm={handleRejectSubmit} isLoading={updateStatusMutation.isPending} />
+      <ReturnForCorrectionDialog open={!!returningId} onOpenChange={(open) => !open && setReturningId(null)} onConfirm={handleReturnSubmit} isLoading={returnMutation.isPending} error={returnMutation.isError ? (returnMutation.error as any)?.response?.data?.error || returnMutation.error.message || "Failed to return application." : null} />
     </div>
   );
 }

@@ -7,10 +7,8 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
-  // Ensure we always show at least 1 page
   const total = Math.max(1, totalPages);
   
-  // Create a sliding window of up to 5 visible page numbers
   const getVisiblePages = () => {
     const maxVisible = 5;
     let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
@@ -24,12 +22,12 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
   };
 
   return (
-    <div className="flex items-center justify-center px-6 py-4 border-t border-gray-200 bg-white rounded-b-xl">
+    <div className="flex items-center justify-center px-6 py-4 border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-b-xl transition-colors duration-200">
       <div className="flex items-center space-x-1">
         <Button 
           variant="outline" 
           size="sm" 
-          className="h-8 px-3"
+          className="h-8 px-3 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
           disabled={currentPage <= 1}
           onClick={() => onPageChange(currentPage - 1)}
         >
@@ -41,7 +39,11 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
             key={page}
             variant={page === currentPage ? "outline" : "ghost"}
             size="sm"
-            className={`h-8 w-8 p-0 ${page === currentPage ? "bg-gray-100 text-gray-900 border-gray-300" : ""}`}
+            className={`h-8 w-8 p-0 ${
+              page === currentPage 
+                ? "bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-slate-100 border-gray-300 dark:border-slate-600 font-semibold" 
+                : "text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800"
+            }`}
             onClick={() => onPageChange(page)}
           >
             {page}
@@ -51,7 +53,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         <Button 
           variant="outline" 
           size="sm" 
-          className="h-8 px-3"
+          className="h-8 px-3 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
           disabled={currentPage >= total}
           onClick={() => onPageChange(currentPage + 1)}
         >

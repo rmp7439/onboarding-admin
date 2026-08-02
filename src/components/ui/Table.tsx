@@ -3,23 +3,23 @@ import * as React from "react";
 export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
     <div className="w-full overflow-auto">
-      <table className={`w-full caption-bottom text-sm ${className}`} {...props} />
+      <table className={`w-full caption-bottom text-sm ${className || ''}`} {...props} />
     </div>
   );
 }
 
 export function TableHeader({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={`[&_tr]:border-b ${className}`} {...props} />;
+  return <thead className={`[&_tr]:border-b dark:[&_tr]:border-slate-700 ${className || ''}`} {...props} />;
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className={`[&_tr:last-child]:border-0 ${className}`} {...props} />;
+  return <tbody className={`[&_tr:last-child]:border-0 ${className || ''}`} {...props} />;
 }
 
 export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={`border-b border-gray-200 transition-colors hover:bg-slate-50/50 data-[state=selected]:bg-slate-50 ${className}`}
+      className={`border-b border-gray-200 dark:border-slate-700 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-800/50 data-[state=selected]:bg-slate-50 dark:data-[state=selected]:bg-slate-800 ${className || ''}`}
       {...props}
     />
   );
@@ -28,7 +28,7 @@ export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTable
 export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className={`h-10 px-4 text-left align-middle font-medium text-slate-500 [&:has([role=checkbox])]:pr-0 ${className}`}
+      className={`h-10 px-4 text-left align-middle font-medium text-slate-500 dark:text-slate-400 [&:has([role=checkbox])]:pr-0 ${className || ''}`}
       {...props}
     />
   );
@@ -36,6 +36,6 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
 
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className={`p-4 align-middle [&:has([role=checkbox])]:pr-0 ${className}`} {...props} />
+    <td className={`p-4 align-middle text-gray-700 dark:text-slate-300 [&:has([role=checkbox])]:pr-0 ${className || ''}`} {...props} />
   );
 }

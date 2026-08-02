@@ -27,11 +27,11 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6 text-center">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 max-w-md w-full flex flex-col items-center">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-950 p-6 text-center transition-colors">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 max-w-md w-full flex flex-col items-center">
             <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
-            <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
-            <p className="text-sm text-gray-500 mb-6">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-2">Something went wrong</h1>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mb-6">
               An unexpected error occurred in the application. Our team has been notified.
             </p>
             <Button onClick={() => window.location.href = '/dashboard'} className="w-full">
