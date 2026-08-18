@@ -28,7 +28,13 @@ export default function Admins() {
   const extractError = (err: any) => err?.response?.data?.error || err.message || "An unexpected error occurred.";
 
   const handleOpenForm = (admin?: any) => { setSelectedAdmin(admin || null); setApiError(null); setFormOpen(true); };
-  const handleDeleteAdmin = () => { if (selectedAdmin) deleteMutation.mutate(selectedAdmin.id, { onSuccess: () => { toast("Admin deleted successfully", "success"); setDeleteOpen(false); }, onError: (err) => toast(extractError(err), "error") }); };
+  
+  const handleDeleteAdmin = () => { 
+    if (selectedAdmin) deleteMutation.mutate(selectedAdmin.id, { 
+      onSuccess: () => { toast("Admin deleted successfully", "success"); setDeleteOpen(false); }, 
+      onError: (err) => toast(extractError(err), "error") 
+    }); 
+  };
 
   const handleSaveAdmin = (data: AdminFormValues) => {
     setApiError(null);
@@ -37,22 +43,38 @@ export default function Admins() {
     if (!payload.password) delete payload.password;
 
     if (selectedAdmin) {
-      updateMutation.mutate({ id: selectedAdmin.id, payload }, { onSuccess: () => { toast("Admin updated successfully", "success"); setFormOpen(false); }, onError: (err) => setApiError(extractError(err)) });
+      updateMutation.mutate({ id: selectedAdmin.id, payload }, { 
+        onSuccess: () => { toast("Admin updated successfully", "success"); setFormOpen(false); }, 
+        onError: (err) => setApiError(extractError(err)) 
+      });
     } else {
-      createMutation.mutate(payload, { onSuccess: () => { toast("Admin created successfully", "success"); setFormOpen(false); }, onError: (err) => setApiError(extractError(err)) });
+      createMutation.mutate(payload, { 
+        onSuccess: () => { toast("Admin created successfully", "success"); setFormOpen(false); }, 
+        onError: (err) => setApiError(extractError(err)) 
+      });
     }
   };
 
   const handleResetPassword = (password: string) => {
     if (!selectedAdmin) return;
     setApiError(null);
-    resetPasswordMutation.mutate({ id: selectedAdmin.id, password }, { onSuccess: () => { toast("Password reset successfully.", "success"); setResetPasswordOpen(false); }, onError: (err) => setApiError(extractError(err)) });
+    resetPasswordMutation.mutate({ id: selectedAdmin.id, password }, { 
+      onSuccess: () => { toast("Password reset successfully.", "success"); setResetPasswordOpen(false); }, 
+      onError: (err) => setApiError(extractError(err)) 
+    });
   };
 
   if (isLoading) return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center"><Skeleton className="h-10 w-48" /><Skeleton className="h-10 w-32" /></div>
-      <Card className="bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700"><CardContent className="p-6"><Skeleton className="h-64 w-full" /></CardContent></Card>
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-10 w-32" />
+      </div>
+      <Card className="bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700">
+        <CardContent className="p-6">
+          <Skeleton className="h-64 w-full" />
+        </CardContent>
+      </Card>
     </div>
   );
   
@@ -89,7 +111,9 @@ export default function Admins() {
                 admins.map((admin: any) => (
                   <TableRow key={admin.id} className="hover:bg-gray-50/60 dark:hover:bg-slate-800/60 transition-colors border-gray-200 dark:border-slate-700">
                     <TableCell className="py-5 align-middle text-center font-medium text-gray-900 dark:text-slate-100 whitespace-nowrap">{admin.username}</TableCell>
-                    <TableCell className="py-5 align-middle text-center text-gray-600 dark:text-slate-400 whitespace-nowrap">{admin.name}</TableCell>
+                    <TableCell className="py-5 align-middle text-center text-gray-600 dark:text-slate-400 whitespace-nowrap">
+                      {admin.name === "System Admin" ? "Developer" : admin.name}
+                    </TableCell>
                     <TableCell className="py-5 align-middle text-center whitespace-nowrap">
                       <div className="flex justify-center">
                         <Badge variant={admin.role === "DEV" ? "default" : "success"} className={admin.role === "DEV" ? "bg-purple-100 dark:bg-purple-950/50 text-purple-800 dark:text-purple-400 border border-purple-200 dark:border-purple-800" : ""}>

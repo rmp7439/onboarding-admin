@@ -310,7 +310,7 @@ export function ResetAdminPasswordDialog({
             <div className="space-y-1">
               <Label className="text-gray-500 dark:text-slate-400">Name</Label>
               <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
-                {admin.name}
+                {admin.name === "System Admin" ? "Developer" : admin.name}
               </div>
             </div>
             <div className="space-y-1">
