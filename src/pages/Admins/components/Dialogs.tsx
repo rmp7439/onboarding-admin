@@ -137,7 +137,7 @@ export function AdminFormDialog({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 mt-2">
+          <div className="grid grid-cols-2 gap-4 border-t border-gray-100 dark:border-slate-700 pt-4 mt-2">
             <div className="space-y-2">
               <Label htmlFor="password">
                 {isEdit ? "New Password" : "Password *"}
@@ -149,7 +149,7 @@ export function AdminFormDialog({
                 disabled={isLoading}
               />
               {!isEdit && !errors.password && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-slate-400">
                   Required for new admins.
                 </p>
               )}
@@ -171,7 +171,7 @@ export function AdminFormDialog({
             </div>
           </div>
 
-          <div className="space-y-2 border-t border-gray-100 pt-4 mt-2">
+          <div className="space-y-2 border-t border-gray-100 dark:border-slate-700 pt-4 mt-2">
             <Label htmlFor="active">Status</Label>
 
             <Select
@@ -227,7 +227,7 @@ export function DeleteAdminDialog({
         <DialogTitle>Delete Admin?</DialogTitle>
       </DialogHeader>
       <DialogContent>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-slate-400">
           This action cannot be undone. Are you sure you want to delete this
           admin account?
         </p>
@@ -306,16 +306,16 @@ export function ResetAdminPasswordDialog({
           onSubmit={handleSubmit((data) => onConfirm(data.password))}
           className="space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4 pb-2 border-b border-gray-100">
+          <div className="grid grid-cols-2 gap-4 pb-2 border-b border-gray-100 dark:border-slate-800">
             <div className="space-y-1">
-              <Label className="text-gray-500">Name</Label>
-              <div className="text-sm font-medium text-gray-900">
+              <Label className="text-gray-500 dark:text-slate-400">Name</Label>
+              <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
                 {admin.name}
               </div>
             </div>
             <div className="space-y-1">
-              <Label className="text-gray-500">Username</Label>
-              <div className="text-sm font-medium text-gray-900">
+              <Label className="text-gray-500 dark:text-slate-400">Username</Label>
+              <div className="text-sm font-medium text-gray-900 dark:text-slate-100">
                 {admin.username}
               </div>
             </div>

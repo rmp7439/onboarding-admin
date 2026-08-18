@@ -103,11 +103,11 @@ export function UserFormDialog({
             {errors.mobile && <p className="text-xs text-red-500">{errors.mobile.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 mt-2">
+          <div className="grid grid-cols-2 gap-4 border-t border-gray-100 dark:border-slate-700 pt-4 mt-2">
             <div className="space-y-2">
               <Label htmlFor="password">{isEdit ? "New Password" : "Password *"}</Label>
               <Input id="password" type="password" {...register("password")} disabled={isLoading} />
-              {!isEdit && !errors.password && <p className="text-xs text-gray-500">Required for new users.</p>}
+              {!isEdit && !errors.password && <p className="text-xs text-gray-500 dark:text-slate-400">Required for new users.</p>}
             </div>
 
             <div className="space-y-2">
@@ -117,7 +117,7 @@ export function UserFormDialog({
             </div>
           </div>
 
-          <div className="space-y-2 border-t border-gray-100 pt-4 mt-2">
+          <div className="space-y-2 border-t border-gray-100 dark:border-slate-700 pt-4 mt-2">
             <Label htmlFor="active">Status</Label>
             <Select id="active" {...register("active")} disabled={isLoading} onChange={(e) => reset(prev => ({ ...prev, active: e.target.value === 'true' }))}>
               <option value="true">Active</option>
@@ -128,9 +128,9 @@ export function UserFormDialog({
           <div className="space-y-2">
             <Label>Assign Units</Label>
             {isLoadingUnits ? (
-              <div className="flex items-center justify-center p-4"><Loader2 className="h-5 w-5 animate-spin text-gray-400" /></div>
+              <div className="flex items-center justify-center p-4"><Loader2 className="h-5 w-5 animate-spin text-gray-400 dark:text-slate-500" /></div>
             ) : units.length === 0 ? (
-              <p className="text-sm text-gray-500 p-2 border border-gray-100 rounded-md bg-gray-50">No units available in the system.</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400 p-2 border border-gray-100 dark:border-slate-700 rounded-md bg-gray-50 dark:bg-slate-800/50">No units available in the system.</p>
             ) : (
               <Controller
                 name="unitIds"
@@ -154,7 +154,7 @@ export function UserFormDialog({
                   return (
                     <div className="space-y-3">
                       <div 
-                        className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 cursor-pointer border border-gray-200 bg-gray-50" 
+                        className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 dark:hover:bg-slate-700/50 cursor-pointer border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50" 
                         onClick={handleSelectAll}
                       >
                         <input
@@ -182,14 +182,14 @@ export function UserFormDialog({
                         />
                       </div>
 
-                      <div className="space-y-1 max-h-40 overflow-y-auto p-1 bg-gray-50 rounded-md border border-gray-100">
+                      <div className="space-y-1 max-h-40 overflow-y-auto p-1 bg-gray-50 dark:bg-slate-800/50 rounded-md border border-gray-100 dark:border-slate-700">
                         {filteredUnits.length === 0 ? (
-                          <p className="text-sm text-gray-500 p-2">No units match your search.</p>
+                          <p className="text-sm text-gray-500 dark:text-slate-400 p-2">No units match your search.</p>
                         ) : (
                           filteredUnits.map((unit) => {
                             const isChecked = field.value.includes(unit.id);
                             return (
-                              <div key={unit.id} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 cursor-pointer" 
+                              <div key={unit.id} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 dark:hover:bg-slate-700/50 cursor-pointer" 
                                 onClick={() => {
                                   const newValue = isChecked ? field.value.filter(id => id !== unit.id) : [...field.value, unit.id];
                                   field.onChange(newValue);
@@ -244,7 +244,7 @@ export function DeleteUserDialog({
         <DialogTitle>Delete User?</DialogTitle>
       </DialogHeader>
       <DialogContent>
-        <p className="text-sm text-gray-500">This action cannot be undone. Are you sure you want to delete this user?</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">This action cannot be undone. Are you sure you want to delete this user?</p>
       </DialogContent>
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
@@ -298,14 +298,14 @@ export function ResetPasswordDialog({
       <DialogContent className="space-y-4">
         <form id="reset-password-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           
-          <div className="grid grid-cols-2 gap-4 pb-2 border-b border-gray-100">
+          <div className="grid grid-cols-2 gap-4 pb-2 border-b border-gray-100 dark:border-slate-700">
             <div className="space-y-1">
-              <Label className="text-gray-500">Name</Label>
-              <div className="text-sm font-medium text-gray-900">{user.name}</div>
+              <Label className="text-gray-500 dark:text-slate-400">Name</Label>
+              <div className="text-sm font-medium text-gray-900 dark:text-slate-100">{user.name}</div>
             </div>
             <div className="space-y-1">
-              <Label className="text-gray-500">User ID</Label>
-              <div className="text-sm font-medium text-gray-900">{user.userId}</div>
+              <Label className="text-gray-500 dark:text-slate-400">User ID</Label>
+              <div className="text-sm font-medium text-gray-900 dark:text-slate-100">{user.userId}</div>
             </div>
           </div>
 

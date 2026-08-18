@@ -137,7 +137,7 @@ export default function Users() {
                       </div>
                     </TableCell>
                     <TableCell className="py-5 align-middle text-center text-gray-600 dark:text-slate-400 max-w-[250px] truncate whitespace-nowrap">
-                      {user.units && user.units.length > 0 ? user.units.map((u) => u.unit.name).join(", ") : <span className="text-gray-400 dark:text-slate-500 italic">None</span>}
+                      {user.units && user.units.length > 0 ? user.units.map((u) => u.unit.name).join(", ") : <span className="text-gray-400 dark:text-slate-500">None</span>}
                     </TableCell>
                     <TableCell className="py-5 align-middle text-center whitespace-nowrap">
                       <div className="flex justify-center items-center gap-2">

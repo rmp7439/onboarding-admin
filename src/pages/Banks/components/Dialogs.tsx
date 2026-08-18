@@ -70,7 +70,7 @@ export function DeleteBankDialog({
         <DialogTitle>Delete Bank?</DialogTitle>
       </DialogHeader>
       <DialogContent>
-        <p className="text-sm text-gray-500">This action cannot be undone. Are you sure you want to delete this bank? It will no longer be available for selection during employee registration.</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">This action cannot be undone. Are you sure you want to delete this bank? It will no longer be available for selection during employee registration.</p>
       </DialogContent>
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>

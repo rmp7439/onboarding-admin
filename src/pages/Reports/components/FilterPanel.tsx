@@ -78,7 +78,13 @@ export function FilterPanel({ filters, setFilters, onApply, onReset }: FilterPan
       </div>
 
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 dark:border-slate-800">
-        <Button variant="outline" onClick={onReset}>Reset Filters</Button>
+        <Button 
+          variant="outline" 
+          onClick={onReset}
+          className="text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100"
+        >
+          Reset Filters
+        </Button>
         <Button onClick={onApply} disabled={!!isInvalid}>Apply Filters</Button>
       </div>
     </div>

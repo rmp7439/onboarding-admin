@@ -63,10 +63,10 @@ export function UnitFormDialog({
             )}
           </div>
 
-          <div className="space-y-3 pt-4 border-t border-gray-100">
+          <div className="space-y-3 pt-4 border-t border-gray-100 dark:border-slate-700">
             <Label>Required Employee Fields</Label>
-            <p className="text-xs text-gray-500 mb-2">Select the fields that must be mandatory for employees in this unit.</p>
-            <div className="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto p-3 bg-gray-50 rounded-md border border-gray-100">
+            <p className="text-xs text-gray-500 dark:text-slate-400 mb-2">Select the fields that must be mandatory for employees in this unit.</p>
+            <div className="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto p-3 bg-gray-50 dark:bg-slate-800/50 rounded-md border border-gray-100 dark:border-slate-700">
               {CONFIGURABLE_FIELDS.map(field => (
                 <div key={field.key} className="flex items-center space-x-2">
                   <input
@@ -111,7 +111,7 @@ export function DeleteUnitDialog({
         <DialogTitle>Delete Unit?</DialogTitle>
       </DialogHeader>
       <DialogContent>
-        <p className="text-sm text-gray-500">This action cannot be undone. Are you sure you want to delete this unit? It will be unassigned from all users.</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">This action cannot be undone. Are you sure you want to delete this unit? It will be unassigned from all users.</p>
       </DialogContent>
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>

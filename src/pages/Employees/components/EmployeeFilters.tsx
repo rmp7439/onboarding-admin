@@ -53,7 +53,11 @@ export function EmployeeFilters({
       </div>
 
       <div className="flex items-center gap-3">
-        <Button variant="outline" onClick={onRefresh}>
+        <Button 
+          variant="outline" 
+          onClick={onRefresh} 
+          className="text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100"
+        >
           <RefreshCw className="mr-2 h-4 w-4 text-gray-500 dark:text-slate-400" />
           Refresh
         </Button>

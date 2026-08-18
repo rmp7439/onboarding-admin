@@ -76,7 +76,7 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
           
           {/* Employment */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900 border-b pb-2">Employment</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 border-b border-gray-200 dark:border-slate-700 pb-2">Employment</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label>Unit</Label>
@@ -94,7 +94,7 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
 
           {/* Personal */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900 border-b pb-2">Personal Information</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 border-b border-gray-200 dark:border-slate-700 pb-2">Personal Information</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1"><Label>First Name</Label><Input {...register("firstName")} disabled={isLoading} /></div>
               <div className="space-y-1"><Label>Surname</Label><Input {...register("surname")} disabled={isLoading} /></div>
@@ -107,7 +107,7 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
 
           {/* Identity */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900 border-b pb-2">Identity</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 border-b border-gray-200 dark:border-slate-700 pb-2">Identity</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1"><Label>Aadhaar</Label><Input {...register("aadhaar")} disabled={isLoading} /></div>
               <div className="space-y-1"><Label>PAN</Label><Input {...register("pan")} disabled={isLoading} /></div>
@@ -119,9 +119,9 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
 
           {/* Address Details - Restored completely distinct sections */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900 border-b pb-2">Address Details</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-slate-100 border-b border-gray-200 dark:border-slate-700 pb-2">Address Details</h3>
             
-            <h4 className="text-sm font-semibold text-gray-700 mt-2">Permanent Address</h4>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mt-2">Permanent Address</h4>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 space-y-1"><Label>Address</Label><Input {...register("permanentAddress")} disabled={isLoading} /></div>
               <div className="space-y-1"><Label>State</Label><Input {...register("state")} disabled={isLoading} /></div>
@@ -130,7 +130,7 @@ export function EditEmployeeDialog({ open, onOpenChange, employee, onSave, isLoa
               <div className="space-y-1"><Label>Police Station</Label><Input {...register("permanentPoliceStation")} disabled={isLoading} /></div>
             </div>
 
-            <h4 className="text-sm font-semibold text-gray-700 mt-4">Current Address</h4>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mt-4">Current Address</h4>
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 space-y-1"><Label>Address</Label><Input {...register("currentAddress")} disabled={isLoading} /></div>
               <div className="space-y-1"><Label>State</Label><Input {...register("currentState")} disabled={isLoading} /></div>
