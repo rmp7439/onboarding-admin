@@ -71,7 +71,7 @@ export default function Reports() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <ReportCard
             title="Excel Report"
-            action={<DownloadButton label="Export Excel" onClick={() => exportExcelMutation.mutate(appliedFilters)} isLoading={exportExcelMutation.isPending} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" />}
+            action={<DownloadButton label="Download Excel" onClick={() => exportExcelMutation.mutate(appliedFilters)} isLoading={exportExcelMutation.isPending} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" />}
           />
           <ReportCard
             title="PDF Report"
