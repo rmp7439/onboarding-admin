@@ -158,6 +158,7 @@ export default function Header() {
         <DialogFooter>
           <Button
             variant="outline"
+            className="text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-slate-100"
             onClick={() => setIsLogoutOpen(false)}
             disabled={isLoggingOut}
           >
