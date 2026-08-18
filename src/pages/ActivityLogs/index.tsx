@@ -78,7 +78,9 @@ export default function ActivityLogs() {
                     </TableCell>
                     <TableCell className="py-5 text-center align-middle">
                       <div className="flex flex-col items-center justify-center">
-                        <div className="font-medium text-gray-900 dark:text-slate-100">{log.actorName}</div>
+                        <div className="font-medium text-gray-900 dark:text-slate-100">
+                          {log.actorRole === "DEV" ? "Developer" : log.actorName}
+                        </div>
                         <Badge className="mt-1.5 text-[10px] px-2 py-0">{log.actorRole}</Badge>
                       </div>
                     </TableCell>
