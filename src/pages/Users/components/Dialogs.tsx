@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -7,7 +7,7 @@ import { Button } from "../../../components/ui/Button";
 import { Input } from "../../../components/ui/Input";
 import { Label } from "../../../components/ui/Label";
 import { Select } from "../../../components/ui/Select";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, Search } from "lucide-react";
 import { type User } from "../../../types/user";
 import { useUnits } from "../../../hooks/useUnits";
 
@@ -43,6 +43,7 @@ export function UserFormDialog({
 }) {
   const isEdit = !!user;
   const { data: units = [], isLoading: isLoadingUnits } = useUnits();
+  const [unitSearch, setUnitSearch] = useState("");
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
@@ -51,6 +52,7 @@ export function UserFormDialog({
 
   useEffect(() => {
     if (open) {
+      setUnitSearch("");
       reset(user ? { 
         userId: user.userId,
         name: user.name, 
@@ -127,39 +129,87 @@ export function UserFormDialog({
             <Label>Assign Units</Label>
             {isLoadingUnits ? (
               <div className="flex items-center justify-center p-4"><Loader2 className="h-5 w-5 animate-spin text-gray-400" /></div>
+            ) : units.length === 0 ? (
+              <p className="text-sm text-gray-500 p-2 border border-gray-100 rounded-md bg-gray-50">No units available in the system.</p>
             ) : (
-              <div className="space-y-3 max-h-40 overflow-y-auto p-1 bg-gray-50 rounded-md border border-gray-100">
-                {units.length === 0 ? (
-                  <p className="text-sm text-gray-500 p-2">No units available in the system.</p>
-                ) : (
-                  <Controller
-                    name="unitIds"
-                    control={control}
-                    render={({ field }) => (
-                      <>
-                        {units.map((unit) => {
-                          const isChecked = field.value.includes(unit.id);
-                          return (
-                            <div key={unit.id} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 cursor-pointer" 
-                              onClick={() => {
-                                const newValue = isChecked ? field.value.filter(id => id !== unit.id) : [...field.value, unit.id];
-                                field.onChange(newValue);
-                              }}>
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => {}}
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
-                              />
-                              <Label className="cursor-pointer">{unit.name}</Label>
-                            </div>
-                          );
-                        })}
-                      </>
-                    )}
-                  />
-                )}
-              </div>
+              <Controller
+                name="unitIds"
+                control={control}
+                render={({ field }) => {
+                  const allUnitsSelected = units.length > 0 && units.every(unit => field.value.includes(unit.id));
+                  const someUnitsSelected = field.value.length > 0 && field.value.length < units.length;
+                  
+                  const handleSelectAll = () => {
+                    if (allUnitsSelected) {
+                      field.onChange([]);
+                    } else {
+                      field.onChange(units.map((u) => u.id));
+                    }
+                  };
+
+                  const filteredUnits = units.filter((unit) =>
+                    unit.name.toLowerCase().includes(unitSearch.trim().toLowerCase())
+                  );
+
+                  return (
+                    <div className="space-y-3">
+                      <div 
+                        className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 cursor-pointer border border-gray-200 bg-gray-50" 
+                        onClick={handleSelectAll}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={allUnitsSelected}
+                          ref={(input) => {
+                            if (input) {
+                              input.indeterminate = someUnitsSelected;
+                            }
+                          }}
+                          onChange={() => {}}
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                        />
+                        <Label className="cursor-pointer font-semibold">Select All</Label>
+                      </div>
+
+                      <div className="relative flex items-center">
+                        <Search className="absolute left-3 h-4 w-4 text-gray-500 dark:text-slate-400 z-10" />
+                        <Input
+                          value={unitSearch}
+                          onChange={(e) => setUnitSearch(e.target.value)}
+                          placeholder="Search units..."
+                          className="pl-9"
+                          disabled={isLoading || isLoadingUnits}
+                        />
+                      </div>
+
+                      <div className="space-y-1 max-h-40 overflow-y-auto p-1 bg-gray-50 rounded-md border border-gray-100">
+                        {filteredUnits.length === 0 ? (
+                          <p className="text-sm text-gray-500 p-2">No units match your search.</p>
+                        ) : (
+                          filteredUnits.map((unit) => {
+                            const isChecked = field.value.includes(unit.id);
+                            return (
+                              <div key={unit.id} className="flex items-center space-x-3 p-2 rounded hover:bg-gray-100 cursor-pointer" 
+                                onClick={() => {
+                                  const newValue = isChecked ? field.value.filter(id => id !== unit.id) : [...field.value, unit.id];
+                                  field.onChange(newValue);
+                                }}>
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => {}}
+                                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                                />
+                                <Label className="cursor-pointer">{unit.name}</Label>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    </div>
+                  );
+                }}
+              />
             )}
           </div>
 
