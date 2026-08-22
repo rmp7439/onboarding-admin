@@ -16,6 +16,103 @@ import { triggerDownload } from "../../hooks/useReports";
 import { EditEmployeeDialog } from "./components/EditEmployeeDialog";
 import { useAdminUpdateEmployee } from "../../hooks/useEmployeeMutations";
 
+/**
+ * Transforms a legacy circular photo (with white/transparent corners) into a 
+ * true square passport-style photo by extracting the maximum inscribed square.
+ */
+async function convertCircularBlobToSquarePassport(blob: Blob): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const sourceUrl = URL.createObjectURL(blob);
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // Handle safe extraction
+
+    img.onload = () => {
+      try {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        const diameter = Math.min(width, height);
+
+        // Quick heuristic: Check if corners are white or transparent to detect the legacy circular mask
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+        const tempCtx = tempCanvas.getContext("2d", { willReadFrequently: true });
+        
+        let isLegacyCircular = false;
+        if (tempCtx) {
+          tempCtx.drawImage(img, 0, 0);
+          const offset = Math.floor(diameter * 0.05); // Sample 5% inward
+          
+          const isWhiteOrTrans = (data: Uint8ClampedArray) => {
+            const [r, g, b, a] = data;
+            return (r > 240 && g > 240 && b > 240) || a < 10;
+          };
+          
+          const corners = [
+            tempCtx.getImageData(offset, offset, 1, 1).data,
+            tempCtx.getImageData(width - offset, offset, 1, 1).data,
+            tempCtx.getImageData(offset, height - offset, 1, 1).data,
+            tempCtx.getImageData(width - offset, height - offset, 1, 1).data
+          ];
+          
+          isLegacyCircular = corners.every(isWhiteOrTrans);
+        }
+
+        let sx = 0, sy = 0, sWidth = width, sHeight = height;
+
+        if (isLegacyCircular) {
+          // CASE B: Circular photo -> Extract the largest square INSCRIBED inside the circle
+          const squareSide = Math.floor(diameter / Math.sqrt(2));
+          const circleLeft = (width - diameter) / 2;
+          const circleTop = (height - diameter) / 2;
+
+          sx = circleLeft + (diameter - squareSide) / 2;
+          sy = circleTop + (diameter - squareSide) / 2;
+          sWidth = squareSide;
+          sHeight = squareSide;
+        } else {
+          // CASE A: True square/rectangle -> Standard center crop
+          sWidth = diameter;
+          sHeight = diameter;
+          sx = (width - diameter) / 2;
+          sy = (height - diameter) / 2;
+        }
+
+        // Export to a clean 600x600 passport-style canvas
+        const canvas = document.createElement("canvas");
+        canvas.width = 600;
+        canvas.height = 600;
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) throw new Error("Canvas context unavailable");
+
+        // Draw ONLY the calculated photographic region
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, 600, 600);
+
+        canvas.toBlob(
+          (croppedBlob) => {
+            URL.revokeObjectURL(sourceUrl);
+            if (croppedBlob) resolve(croppedBlob);
+            else reject(new Error("Failed to create blob"));
+          },
+          "image/jpeg",
+          0.92
+        );
+      } catch (e) {
+        URL.revokeObjectURL(sourceUrl);
+        reject(e);
+      }
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(sourceUrl);
+      reject(new Error("Failed to load image"));
+    };
+
+    img.src = sourceUrl;
+  });
+}
+
 export default function EmployeeDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: employee, isLoading, isError, refetch } = useEmployee(id);
@@ -46,17 +143,21 @@ export default function EmployeeDetails() {
     }, {});
   }, [employee?.documents]);
 
-  if (isLoading) return <EmployeeDetailsSkeleton />;
-  if (isError || !employee) return <div className="pt-8"><ErrorState title="Employee Not Found" message="The employee record you are looking for does not exist or failed to load." onRetry={refetch} /></div>;
-
-  const { employmentInfo, personalInfo, identityInfo, addressInfo, bankInfo, emergencyContact, nomineeInfo } = employee;
-
   const handleDownloadSelfie = async () => {
     if (!employee?.id) return;
     try {
-      const blob = await downloadEmployeeSelfie(employee.id);
-      triggerDownload(blob, `selfie-${personalInfo?.firstName}.jpg`);
-    } catch (error) { toast("Failed to download selfie", "error"); }
+      const originalBlob = await downloadEmployeeSelfie(employee.id);
+      
+      // Transform the incoming blob strictly prior to download
+      const passportBlob = await convertCircularBlobToSquarePassport(originalBlob);
+      
+      triggerDownload(
+        passportBlob, 
+        `selfie-${employee.personalInfo?.firstName || "employee"}.jpg`
+      );
+    } catch (error) { 
+      toast("Failed to download selfie", "error"); 
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -68,6 +169,11 @@ export default function EmployeeDetails() {
       default: return <Badge>{status}</Badge>;
     }
   };
+
+  if (isLoading) return <EmployeeDetailsSkeleton />;
+  if (isError || !employee) return <div className="pt-8"><ErrorState title="Employee Not Found" message="The employee record you are looking for does not exist or failed to load." onRetry={refetch} /></div>;
+
+  const { employmentInfo, personalInfo, identityInfo, addressInfo, bankInfo, emergencyContact, nomineeInfo } = employee;
 
   return (
     <div className="space-y-6 pb-8">
